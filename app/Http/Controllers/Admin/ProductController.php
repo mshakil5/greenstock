@@ -136,7 +136,7 @@ class ProductController extends Controller
             //   }
 
               if (Auth::user()) {
-                $btn .= '<a href="https://www.ezpos.tech/admin/product-edit/'.$product->id.'" class="btn btn-sm btn-primary"><span title="Return"><i class="fa fa-pencil"></i>Edit</span></a>';
+                $btn .= '<a href="https://www.greenstock.greentechnology.com.bd/admin/product-edit/'.$product->id.'" class="btn btn-sm btn-primary"><span title="Return"><i class="fa fa-pencil"></i>Edit</span></a>';
             }
 
               $btn .= '</div>';

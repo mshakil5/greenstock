@@ -947,17 +947,17 @@ class OrderController extends Controller
                 $btn = '<div class="table-actions text-right">';
 
                         if (Auth::user()->type == '1' && in_array('13', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('13', json_decode(Auth::user()->role->permission))) {
-                            $btn .= '<a href="https://www.ezpos.tech/sales-return/'.$invoice->id.'" class="btn btn-sm btn-success ms-1"><span title="Return">Return</span></a>';
+                            $btn .= '<a href="https://www.greenstock.greentechnology.com.bd/sales-return/'.$invoice->id.'" class="btn btn-sm btn-success ms-1"><span title="Return">Return</span></a>';
                         }
 
                         if (Auth::user()->type == '1' && in_array('4', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('4', json_decode(Auth::user()->role->permission))) {
-                            $btn .= '<a href="https://www.ezpos.tech/sales-edit/'.$invoice->id.'" class="btn btn-sm btn-theme ms-1"><span title="Edit">Edit</span></a>';
+                            $btn .= '<a href="https://www.greenstock.greentechnology.com.bd/sales-edit/'.$invoice->id.'" class="btn btn-sm btn-theme ms-1"><span title="Edit">Edit</span></a>';
                         }
 
 
-                    $btn .= '<a href="https://www.ezpos.tech/invoice/customer/'.$invoice->id.'" class="btn btn-sm btn-theme ms-1"><span title="Download Invoice">Download</span></a>';
+                    $btn .= '<a href="https://www.greenstock.greentechnology.com.bd/invoice/customer/'.$invoice->id.'" class="btn btn-sm btn-theme ms-1"><span title="Download Invoice">Download</span></a>';
 
-                    $btn .= '<a href="https://www.ezpos.tech/invoice/print/'.$invoice->id.'" class="btn btn-sm btn-theme ms-1 print-window"><span title="Print Invoice">Print</span></a>';
+                    $btn .= '<a href="https://www.greenstock.greentechnology.com.bd/invoice/print/'.$invoice->id.'" class="btn btn-sm btn-theme ms-1 print-window"><span title="Print Invoice">Print</span></a>';
 
                     $btn .= '<a href="#" class="btn btn-sm btn-theme ms-1 viewThis" data-bs-toggle="modal" data-bs-target="#view" oid="'.$invoice->id.'" id="viewThis">View</a>';
 
@@ -1003,12 +1003,12 @@ class OrderController extends Controller
                 $btn = '<div class="table-actions text-right">';
 
                 if (Auth::user()->type == '1' && in_array('10', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('10', json_decode(Auth::user()->role->permission))) {
-                    $btn .= '<a href="https://www.ezpos.tech/quotation-edit/'.$invoice->id.'" class="btn btn-sm btn-theme ms-1"><span title="Edit">Edit</span></a>';
+                    $btn .= '<a href="https://www.greenstock.greentechnology.com.bd/quotation-edit/'.$invoice->id.'" class="btn btn-sm btn-theme ms-1"><span title="Edit">Edit</span></a>';
                 }
 
-                $btn .= '<a href="https://www.ezpos.tech/invoice/customer/'.$invoice->id.'" class="btn btn-sm btn-theme ms-1"><span title="Download Invoice">Download</span></a>';
+                $btn .= '<a href="https://www.greenstock.greentechnology.com.bd/invoice/customer/'.$invoice->id.'" class="btn btn-sm btn-theme ms-1"><span title="Download Invoice">Download</span></a>';
 
-                $btn .= '<a href="https://www.ezpos.tech/invoice/print/'.$invoice->id.'" class="btn btn-sm btn-theme ms-1 print-window"><span title="Print Invoice">Print</span></a>';
+                $btn .= '<a href="https://www.greenstock.greentechnology.com.bd/invoice/print/'.$invoice->id.'" class="btn btn-sm btn-theme ms-1 print-window"><span title="Print Invoice">Print</span></a>';
 
                 $btn .= '<a href="#" class="btn btn-sm btn-theme ms-1 viewThis" data-bs-toggle="modal" data-bs-target="#view" oid="'.$invoice->id.'" id="viewThis">View</a>';
 
@@ -1055,12 +1055,12 @@ class OrderController extends Controller
                 $btn = '<div class="table-actions text-right">';
 
                 if (Auth::user()->type == '1' && in_array('12', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('12', json_decode(Auth::user()->role->permission))) {
-                    $btn .= '<a href="https://www.ezpos.tech/delivery-note-edit/'.$invoice->id.'" class="btn btn-sm btn-theme ms-1"><span title="Edit">Edit</span></a>';
+                    $btn .= '<a href="https://www.greenstock.greentechnology.com.bd/delivery-note-edit/'.$invoice->id.'" class="btn btn-sm btn-theme ms-1"><span title="Edit">Edit</span></a>';
                 }
 
-                $btn .= '<a href="https://www.ezpos.tech/invoice/customer/'.$invoice->id.'" class="btn btn-sm btn-theme ms-1"><span title="Download Invoice">Download</span></a>';
+                $btn .= '<a href="https://www.greenstock.greentechnology.com.bd/invoice/customer/'.$invoice->id.'" class="btn btn-sm btn-theme ms-1"><span title="Download Invoice">Download</span></a>';
 
-                $btn .= '<a href="https://www.ezpos.tech/invoice/print/'.$invoice->id.'" class="btn btn-sm btn-theme ms-1 print-window" target="blank"><span title="Print Invoice">Print</span></a>';
+                $btn .= '<a href="https://www.greenstock.greentechnology.com.bd/invoice/print/'.$invoice->id.'" class="btn btn-sm btn-theme ms-1 print-window" target="blank"><span title="Print Invoice">Print</span></a>';
 
                 $btn .= '<a href="#" class="btn btn-sm btn-theme ms-1 viewThis" data-bs-toggle="modal" data-bs-target="#view" oid="'.$invoice->id.'" id="viewThis">View</a>';
 

@@ -824,7 +824,7 @@
                             $(".ermsg").html(d.message);
                             pagetop();
                             window.setTimeout(function(){location.reload()},2000)
-                            window.open(`https://www.ezpos.tech/invoice/print/${d.id}`, '_blank');
+                            window.open(`https://www.greenstock.greentechnology.com.bd/invoice/print/${d.id}`, '_blank');
                             
                         }
                     },
