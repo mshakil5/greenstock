@@ -16,6 +16,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->command('stock:log-daily')->daily();
+        $schedule->command('log:purchase-history:daily')->daily();
     }
 
     /**

@@ -149,7 +149,7 @@ class UserController extends Controller
           $data->role_id = $request['role_id'];
           $data->phone = $request['phone'];
           $data->save();
-           return redirect()->back()->with('success', 'User Updated Successfully'); 
+           return redirect()->back()->with('success', 'Updated Successfully'); 
         }
   	}
 
@@ -160,7 +160,13 @@ class UserController extends Controller
 
     public function manage_admin()
     {
-      $users = User::where('type','=','1')->where('id','>', '4')->get();
+      // $users = User::where('type','=','1')->where('id','>', '4')->get();
+      $users = User::when(Auth::user()->role_id != 1, function($query) {
+        return $query->where('branch_id', Auth::user()->branch_id);
+      })
+      ->where('type', '=', '1')
+      // ->where('id','>', '4')
+      ->get();
       // dd($users );
     	return view('admin.user.manageadmin', compact('users'));
     }
@@ -171,9 +177,11 @@ class UserController extends Controller
             'email' => 'required|unique:users,email',
             'username' => 'required|unique:users,username',
             'branch_id' => 'required',
+            'name' => 'required',
             'role_id' => 'required',
             'password' => [
-              'required'
+              'required',
+              'min:6',
             ],
             'password_confirmation' => 'required|same:password'
         ]);
@@ -226,16 +234,17 @@ class UserController extends Controller
                                 'unique:users,username,'.$id
                             ],
               'branch_id' => [ 'required' ],
+              'name' => 'required',
               'role_id' => [ 'required' ],
               'password' => [
-                                'required',
-                                Password::min(8)
-                                    ->letters()
-                                    ->mixedCase()
-                                    ->numbers()
-                                    ->symbols()
-                                    ->uncompromised()
-                            ]
+                  'nullable',
+                  'min:6',
+              ],
+              'password_confirmation' => [
+                  'nullable',
+                  'same:password',
+                  'required_with:password',
+              ],
           ]);
       } else {
             $request->validate([
@@ -245,6 +254,7 @@ class UserController extends Controller
                           ],
               'branch_id' => [ 'required' ],
               'role_id' => [ 'required' ],
+              'name' => 'required',
               'username' => [
                                 'required',
                                 'unique:users,username,'.$id
@@ -278,7 +288,7 @@ class UserController extends Controller
           }
           $data->branchaccess = json_encode($branchIDs);
           $data->save();
-           return redirect()->back()->with('success', 'User Updated Successfully'); 
+           return redirect()->back()->with('success', 'Updated Successfully'); 
         }
   	}
 
@@ -317,15 +327,13 @@ class UserController extends Controller
                                 'unique:users,username,'.$id
                             ],
               'password' => [
-                                'required',
-                                Password::min(8)
-                                    ->letters()
-                                    ->mixedCase()
-                                    ->numbers()
-                                    ->symbols()
-                                    ->uncompromised()
+                  'required',
+                  'min:6',
               ],
-              'password_confirmation' => 'required|same:password'
+              'password_confirmation' => [
+                  'required_with:password',
+                  'same:password',
+              ],
           ]);
       } else {
             $request->validate([
@@ -359,7 +367,7 @@ class UserController extends Controller
             $data->password = Hash::make($request['password']);
           }
           $data->save();
-           return redirect()->back()->with('success', 'User Updated Successfully'); 
+           return redirect()->back()->with('success', 'Updated Successfully'); 
         }
   	}
 

@@ -1,5 +1,3 @@
-
-
 @extends('admin.layouts.master')
 @section('content')
 
@@ -53,7 +51,7 @@
                         @endslot
                         @slot('head')
                             <th>Name</th>
-                            <th>Email</th>
+                            <th>Email/Phone</th>
                             <th>Role</th>
                             <th>Branch</th>
                             <th>Status</th>
@@ -63,9 +61,9 @@
                         @slot('body')
                             @foreach ($users as $data)
                                 <tr>
-                                    <td>{{$data->name}}</td>
-                                    <td>{{$data->email}}</td>
-                                    <td>{{$data->role->name}}</td>
+                                    <td>{{$data->name}} <br> {{$data->username}}</td>
+                                    <td>{{$data->email}} <br> {{$data->phone}}</td>
+                                    <td>{{ $data->role ? $data->role->name : 'No Role' }}</td>
                                     <td>{{$data->branch->name}}</td>
                                     @if ($data->status == 1)
                                         <td><label style="margin-bottom:0px" class="switch"><button  onclick='user_status("unpublished-user","{{$data->id}}")' ><input id="switchMenu" type="checkbox" checked><span class="slider round"></span></button></label></td>
@@ -88,7 +86,7 @@
         <div class="col-md-6">
             @component('components.widget')
                 @slot('title')
-                    User Information
+                    Admin Information
                 @endslot
                 @slot('description')
                 @endslot
@@ -96,7 +94,24 @@
                     <hr/>
 
                     <div class="col-sm-12" id="editDiv">
-                        <form class="form-horizontal" action="{{ route('update_admin')}}" method="POST">
+                        <!-- <form class="form-horizontal" action="{{ route('update_admin')}}" method="POST"> -->
+
+                        <form id="adminForm" class="form-horizontal"
+                            @if (old('userid'))
+                                action="{{ route('update_admin')}}"
+                            @else
+                                action="{{ route('save_admin')}}"
+                            @endif method="POST">
+
+                            @if ($errors->any())
+                                <p class="text-danger d-none"> 
+                                    @foreach ($errors->all() as $error)
+                                        {{$error}}
+                                        <br>
+                                    @endforeach
+                                </p>
+                            @endif
+                            
                             {{csrf_field()}}
                         
                             <div class="form-group">
@@ -123,7 +138,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="email" class="col-sm-3 control-label">Email</label>
+                                <label for="email" class="col-sm-3 control-label">Email<span class="text-danger">*</span></label>
                                 <div class="col-sm-9">
                                     <input type="email" name="email" class="form-control" id="email"  value="{{ old('email') }}" required autocomplete="email">
                                     @if ($errors->has('email'))
@@ -148,17 +163,18 @@
 
                             
                             <div class="form-group">
-                                <label for="branch_id" class="col-sm-3 control-label">Branch</label>
+                                <label for="branch_id" class="col-sm-3 control-label">Branch<span class="text-danger">*</span></label>
                                 <div class="col-sm-9">
-                                    <select name="branch_id[]" id="branch_id" class="form-control" multiple>
-                                        @foreach (\App\Models\Branch::where('status','1')->get() as $branch)
-                                        @if (old('branch_id') == $branch->id)
-                                            <option value="{{$branch->id}}" selected>{{$branch->name}}</option>
-                                        @else
-                                            <option value="{{$branch->id}}">{{$branch->name}}</option>
-                                        @endif
-                                        @endforeach
-                                    </select>
+                                <select name="branch_id[]" id="branch_id" class="form-control" multiple>
+                                    @foreach (\App\Models\Branch::where('status', '1')->get() as $branch)
+                                        <option value="{{ $branch->id }}" 
+                                            @if (is_array(old('branch_id')) && in_array($branch->id, old('branch_id'))) 
+                                                selected 
+                                            @endif>
+                                            {{ $branch->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                                     @if ($errors->has('branch_id'))
                                         <span class="invalid-feedback text-danger" role="alert">
                                         <strong>{{ $errors->first('branch_id') }}</strong>
@@ -168,7 +184,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="role_id" class="col-sm-3 control-label">Role</label>
+                                <label for="role_id" class="col-sm-3 control-label">Role<span class="text-danger">*</span></label>
                                 <div class="col-sm-9">
                                     <select name="role_id" id="role_id" class="form-control">
                                         <option value="">Select</option>
@@ -202,9 +218,28 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="password-confirm" class="col-sm-3 control-label"> Confirm Password<span class="text-danger">*</span></label>
+                                <div class="col-sm-9">
+                                    <input type="password" name="password_confirmation" class="form-control" id="password_confirmation">
+                                    @error('password_confirmation')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label for="" class="col-sm-3 control-label"></label>
                                 <div class="col-sm-9">
-                                    <button type="submit" class="btn btn-primary text-center"><i class="fa fa-save"></i> Update</button>
+                                <button type="submit" class="btn btn-primary text-center" id="submitButton"> 
+                                    @if (old('userid')) 
+                                        Update 
+                                    @else 
+                                    <i class="fa fa-save"></i>
+                                        Create 
+                                    @endif
+                                </button>
                                     <input type="button" class="btn btn-warning text-center" id="FormCloseBtn" value="Close">
                                 </div>
                             </div>
@@ -347,6 +382,22 @@
         $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
         // 
 
+        function updateFormAction() {
+            const form = document.getElementById('adminForm');
+            const userIdField = document.getElementById('userid');
+            const submitButton = document.getElementById('submitButton');
+
+            const userId = userIdField.value;
+
+            if (userId) {
+                form.action = `{{ route('update_admin') }}`;
+                submitButton.textContent = 'Update';
+            } else {
+                form.action = `{{ route('save_admin') }}`;
+                submitButton.textContent = 'Create';
+            }
+        }
+
         // return stock
         $("#userTBL").on('click','#editThis', function(){
             $("#editDiv").show();
@@ -357,22 +408,27 @@
             name = $(this).attr('name');
             email = $(this).attr('email');
             branchaccess = $(this).attr('branchaccess');
-            console.log(branchaccess);
             username = $(this).attr('username');
             phone = $(this).attr('phone');
 
             $('#userid').val(id);
             $('#role_id').val(role_id);
-            // $('#branch_id').val(branchaccess);
-            $('#branch_id').val(branch_id);
+            let branchIds = JSON.parse(branchaccess);
+            $('#branch_id').val([]);
+            $('#branch_id option').each(function() {
+                if (branchIds.includes($(this).val())) {
+                    $(this).prop('selected', true);
+                }
+            });
             $('#name').val(name);
             $('#email').val(email);
             $('#username').val(username);
             $('#phone').val(phone);
 
+            updateFormAction();
             
             
-            });
+        });
         // return stock end
 
 

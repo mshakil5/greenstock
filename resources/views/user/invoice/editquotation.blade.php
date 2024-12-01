@@ -455,7 +455,7 @@
                         <label for="name" class="col-sm-3 control-label">Name</label>
                         <div class="col-sm-9">
                             <input type="text" name="name" class="form-control" id="name"
-                                   placeholder="ex. John Doe" required>
+                                   placeholder="" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -827,11 +827,10 @@
                             $(".ermsg").html(d.message);
                             pagetop();
                         }else if(d.status == 300){
-                            console.log(d);
                             $(".ermsg").html(d.message);
                             pagetop();
                             window.setTimeout(function(){location.reload()},2000)
-                            window.open(`https://www.greenstock.greentechnology.com.bd/invoice/print/${d.id}`, '_blank');
+                            window.open(`{{ route('customer.invoice.print', '') }}/${d.id}`, '_blank');
                             
                         }
                     },
@@ -902,7 +901,7 @@
                             $(".ermsg").html(d.message);
                             pagetop();
                             window.setTimeout(function(){location.reload()},2000)
-                            window.open(`https://www.greenstock.greentechnology.com.bd/invoice/print/${d.id}`, '_blank');
+                            window.open(`{{ route('customer.invoice.print', '') }}/${d.id}`, '_blank');
                             
                         }
                     },
@@ -974,7 +973,7 @@
                             $(".ermsg").html(d.message);
                             pagetop();
                             window.setTimeout(function(){location.reload()},2000)
-                            window.open(`https://www.greenstock.greentechnology.com.bd/invoice/print/${d.id}`, '_blank');
+                            window.open(`{{ route('customer.invoice.print', '') }}/${d.id}`, '_blank');
                             
                         }
                     },
@@ -1138,6 +1137,13 @@
             var customerurl = "{{URL::to('/customers')}}";
             
             $(document).on('click', '.save-btn', function () {
+
+                let name = $('#name').val().trim();
+
+                if (name === '') {
+                    alert("Name field is required.");
+                    return;
+                }
                 let formData = $('#customer-form').serialize();
                 
                 $.ajax({

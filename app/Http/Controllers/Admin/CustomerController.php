@@ -20,7 +20,9 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         if($request->ajax()){
-            $customers = Customer::all();
+            $customers = Customer::where('branch_id', auth()->user()->branch_id)
+               ->orderBy('id', 'desc')
+               ->get();
             return Datatables::of($customers)->make(true);
         }
         return view('admin.customer.index');
@@ -42,6 +44,7 @@ class CustomerController extends Controller
         ]);
         $customer = new Customer();
         $customer->name = $request->name;
+        $customer->branch_id = auth()->user()->branch_id;
         $customer->email = $request->email;
         $customer->phone = $request->phone;
         $customer->address = $request->address;
@@ -52,7 +55,11 @@ class CustomerController extends Controller
         $customer->type = $request->type;
         $customer->save();
 
-        return $customer;
+        return response()->json([
+            'status' => 201,
+            'message' => 'Customer created successfully.',
+            'data' => $customer
+        ], 201);
 
 
     }
@@ -83,7 +90,11 @@ class CustomerController extends Controller
         $customer->member_id = $request->member_id;
         $customer->type = $request->type;
         $customer->save();
-        return $customer;
+        return response()->json([
+            'status' => 200,
+            'message' => 'Customer updated successfully.',
+            'data' => $customer
+        ], 200);
     }
 
     public function changeStatus($id)

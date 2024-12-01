@@ -22,6 +22,8 @@ use App\Http\Controllers\Admin\ProductController;
 
 // cache clear
 Route::get('/clear', function() {
+    Auth::logout();
+    session()->flush();
     Artisan::call('cache:clear');
     Artisan::call('config:clear');
     Artisan::call('config:cache');
@@ -30,11 +32,12 @@ Route::get('/clear', function() {
  });
 //  cache clear
   
-Route::get('/', function () {
-    return view('auth.login');
-});
+// Route::get('/', function () {
+//     return view('auth.login');
+// });
   
 Auth::routes();
+Route::get('/', [App\Http\Controllers\FrontendController::class, 'index'])->name('homepage');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('invoice/customer/{id}', [InvoiceController::class, 'customer_invoice_download'])->name('customer.invoice.download');
 Route::get('invoice/print/{id}', [InvoiceController::class, 'customer_invoice_print'])->name('customer.invoice.print');
@@ -124,6 +127,8 @@ Route::group(['middleware' => ['auth']], function(){
     Route::post('sales-return', [OrderController::class, 'salesReturnStore'])->name('salesReturn.store');
     Route::get('all-sales-return', [OrderController::class, 'getAllReturnInvoice'])->name('user.allreturninvoices');
     Route::get('sales-return-detail/{id}', [OrderController::class, 'salesReturnDetails'])->name('user.salesreturndetails');
+
+    Route::post('damage-return', [OrderController::class, 'damageReturnStore'])->name('damageReturn.store');
 
     // partno status 
     Route::get('/published-partno/{id}', [OrderController::class, 'published_partno']);

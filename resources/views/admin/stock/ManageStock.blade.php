@@ -66,18 +66,41 @@ echo Session::put('info', '');
 }
 </style>
 
-<div class="row">
+{{-- <div class="row">
 <div class="conainer-fluid">
     <div class="col-md-12">
         <div class="overview">
-            <div class="alert alert-danger h4"> Manage Stock(All Branch) - Show all products purchase
+            <div class="alert alert-danger h4  d-none"> Manage Stock(All Branch) - Show all products purchase
                 details and transfer products to branches.
             </div>
             <div id="ermsg" class="ermsg"></div>
         </div>
     </div>
 </div>
-</div>
+</div> --}}
+
+{{-- <div class="row well d-none">
+    <form class="form-horizontal" role="form" method="POST" action="{{ route('managestock.search') }}">
+        {{ csrf_field() }}
+
+        <div class="col-md-4">
+            <label class="label label-primary">Branch</label>
+            <select class="form-control select2" name="branch_id">
+                @foreach ($branches as $branch)
+                    <option value="{{ $branch->id }}" {{ request()->input('branch_id') == $branch->id ? 'selected' : '' }}>
+                        {{ $branch->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <br>
+            <button type="submit" class="btn btn-primary btn-sm">Search</button>
+        </div>
+    </form>
+</div> --}}
+
 <div class="row">
 <div class="col-md-12">
     <div class="box box-widget">
@@ -86,7 +109,7 @@ echo Session::put('info', '');
                 <thead>
                 <tr>
                     <th><i class="icon-sort"></i>Products</th>
-                    <th><i class="icon-sort"></i>Branch</th>
+                    {{-- <th><i class="icon-sort"></i>Branch</th> --}}
                     <th class="text-center"><i class="icon-sort"></i>Unit</th>
                     <th class="text-center"><i class="icon-sort"></i>Location</th>
                     <th class="text-center"><i class="icon-sort"></i>Stock QTY</th>
@@ -100,7 +123,7 @@ echo Session::put('info', '');
                             <td>
                                 {{ $stock->productname }} ({{ $stock->product_id }})
                             </td>
-                            <td>{{ \App\Models\Branch::where('id',$stock->branch_id)->first()->name }}</td>
+                            {{-- <td>{{ \App\Models\Branch::where('id',$stock->branch_id)->first()->name }}</td> --}}
                             <td class="text-center">{{ $stock->unit }}</td>
                             <td class="text-center">{{ $stock->location }}</td>
                             <td class="text-center stockQuantity">{{ $stock->quantity }}</td>
@@ -111,10 +134,14 @@ echo Session::put('info', '');
                                             onclick="manageStockPurchaseDetails({{ $stock->id }})">
                                         <i class="fa fa-eye"></i> Details
                                     </button> --}}
-                                    <button class="btn btn-primary btn-sm btn-transfer" data-toggle="modal"
-                                            data-target="#transferModal" pname="{{$stock->productname}}" bid="{{$stock->branch_id}}" pid="{{ $stock->product_id }}" tstock="{{ $stock->quantity }}" value="{{$stock->id}}">
-                                        <i class="fa fa-arrow-up"></i> Transfer
-                                    </button>
+                                    @if((Auth::user()->type == '1' || Auth::user()->type == '0') && in_array('7', json_decode(Auth::user()->role->permission)))
+                                        <button class="btn btn-primary btn-sm btn-transfer" data-toggle="modal"
+                                                data-target="#transferModal" pname="{{ $stock->productname }}" 
+                                                bid="{{ $stock->branch_id }}" pid="{{ $stock->product_id }}" 
+                                                tstock="{{ $stock->quantity }}" value="{{ $stock->id }}">
+                                            <i class="fa fa-arrow-up"></i> Transfer
+                                        </button>
+                                    @endif
                             </td>
                         </tr>
                     @endforeach

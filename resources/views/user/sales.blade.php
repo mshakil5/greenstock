@@ -22,6 +22,7 @@
                                         <label for="">Sales Type</label>
                                         <select name="salestype" id="salestype" class="form-control input-sm">
                                             <option value="Cash">Cash</option>
+                                            <option value="Bank">Bank</option>
                                             <option value="Credit">Credit</option>
                                         </select>
                                     </div>
@@ -285,11 +286,11 @@
                                 <div class="col-lg-6">
                                     <div class="form-group mx-1 flex-fill">
                                         <label for="">Discount Amount</label>
-                                        <input type="number" id="discount_amount" name="discount_amount" class="form-control " style="flex: 0.6;">
+                                        <input type="number" id="discount_amount" name="discount_amount" class="form-control " style="flex: 0.6;" min="0">
                                     </div>
                                     <div class="form-group mx-1 flex-fill">
                                         <label for="">Vat Percent(%)</label>
-                                        <input type="number" id="vat_percent" name="vat_percent" value="5" class="form-control" style="flex: 0.6;">
+                                        <input type="number" id="vat_percent" name="vat_percent" value="5" class="form-control" style="flex: 0.6;" min="0">
                                     </div>
                                     <div class="form-group mx-1 flex-fill">
                                         <label for="">Total Vat Amount</label>
@@ -424,7 +425,7 @@
                         <label for="name" class="col-sm-3 control-label">Name</label>
                         <div class="col-sm-9">
                             <input type="text" name="name" class="form-control" id="name"
-                                   placeholder="ex. John Doe" required>
+                                   placeholder="" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -803,7 +804,7 @@
             // var paymentmethod = $("#paymentmethod").val();
             // var comment = $("#comment").val();
 
-            console.log(product_id, paymentmethod, comment);
+            // console.log(product_id, paymentmethod, comment);
 
                 $.ajax({
                     url: orderurl,
@@ -812,20 +813,19 @@
 
                     success: function (d) {
                         if (d.status == 303) {
-                            console.log(d);
+                            // console.log(d);
                             $(".ermsg").html(d.message);
                             pagetop();
                         }else if(d.status == 300){
                             console.log(d);
                             $(".ermsg").html(d.message);
                             pagetop();
-                            window.setTimeout(function(){location.reload()},2000)
-                            window.open(`https://www.greenstock.greentechnology.com.bd/invoice/print/${d.id}`, '_blank');
-                            
+                            window.setTimeout(function() { location.reload(); }, 2000);
+                            window.open(`{{ route('customer.invoice.print', '') }}/${d.id}`, '_blank');
                         }
                     },
-                    error: function (d) {
-                        console.log(d);
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
                     }
                 });
         });
@@ -883,7 +883,7 @@
                             $(".ermsg").html(d.message);
                             pagetop();
                             window.setTimeout(function(){location.reload()},2000)
-                            window.open(`https://www.greenstock.greentechnology.com.bd/invoice/print/${d.id}`, '_blank');
+                            window.open(`{{ route('customer.invoice.print', '') }}/${d.id}`, '_blank');
                             
                         }
                     },
@@ -947,7 +947,7 @@
                             $(".ermsg").html(d.message);
                             pagetop();
                             window.setTimeout(function(){location.reload()},2000)
-                            window.open(`https://www.greenstock.greentechnology.com.bd/invoice/print/${d.id}`, '_blank');
+                            window.open(`{{ route('customer.invoice.print', '') }}/${d.id}`, '_blank');
                             
                         }
                     },
@@ -1022,7 +1022,7 @@
                         if (d.status == 303) {
 
                         }else if(d.status == 300){
-                            console.log(d);
+                            // console.log(d);
                             $("#customer_id").val(d.customer_id);
                             $("#showcustomername").val(d.customername);
                             $("#showcustomeraddress").val(d.address);
@@ -1041,16 +1041,13 @@
             });
 
             // calculation start 
-			$("#discount_amount, #vat_percent").keyup(function(){
-				// var dInput = this.value;
+			$("#discount_amount, #vat_percent").on('input', function(){
 				var grand_total = $("#grand_total").val();
 				var dInput = $("#discount_amount").val();
 				var vat_percent = $("#vat_percent").val();
-				var payingAmount = $("#vat_percent").val();
 			    var customer_paid = $("#customer_paid").val();
-
 				var grand_total_with_discount = grand_total - dInput;
-				var net_vat_amount = grand_total_with_discount * (vat_percent/100);
+				var net_vat_amount = grand_total_with_discount * (vat_percent / 100);
 				var net_total = grand_total -  dInput + net_vat_amount;
                 var dueAmountCal = net_total - customer_paid;
 
@@ -1149,6 +1146,13 @@
             // new customer Store
             var customerurl = "{{URL::to('/customers')}}";
             $(document).on('click', '.save-btn', function () {
+
+                var name = $('#name').val().trim();
+
+                if (name === '') {
+                    alert("Name field is required.");
+                    return;
+                }
                 let formData = $('#customer-form').serialize();
                 
                 $.ajax({
@@ -1195,7 +1199,7 @@
                         return request.setRequestHeader('X-CSRF-Token', $("meta[name='csrf-token']").attr('content'));
                     },
                     success: function (response) {
-                        console.log(response);
+                        // console.log(response);
                         $('#reqStockModal').modal('toggle');
                         $(".stockreqermsg").html(response.message);
                         // $("#customers").val("").trigger('change');

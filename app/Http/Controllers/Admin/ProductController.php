@@ -21,7 +21,7 @@ class ProductController extends Controller
 {
     public function addProduct()
     {
-        $product = Product::select('id','productname','part_no')->get();
+        $product = Product::select('id','productname','part_no')->where('branch_id', Auth::user()->branch_id)->get();
         return view("admin.product.addproduct", compact('product'));
     }
 
@@ -29,20 +29,23 @@ class ProductController extends Controller
   {
 
     $validator = Validator::make($request->all(), [
-                'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-            ]);
+            'product' => 'required',
+            'pbrandselect' => 'required',
+        ]);
+
     if($validator->fails()) {
           Session::put('warning', 'Already warned you to use jpeg,png,jpg,gif format and max size 2048 KB !');
           return back();
     }
 
-    $check = Product::where('part_no', $request->part_no)->first();
-    if ($check) {
-        if ($check->category_id == $request->pcategoryselect) {
-            Session::put('warning', 'This Part no Already Exist !');
+    $check = Product::where('part_no', $request->part_no)
+                ->where('branch_id', Auth::user()->branch_id)
+                ->first();
+
+        if ($check) {
+            Session::put('warning', 'The part number "' . $request->part_no . '" already exists in your branch. Please use a different part number for this branch.');
             return back();
         }
-    }
 
     $image = $request->image;
 
@@ -105,7 +108,7 @@ class ProductController extends Controller
 
   public function view_manage_product()
   {
-    $product = Product::all();
+    $product = Product::where('branch_id', Auth::user()->branch_id)->get();
     return view("admin.product.manageproduct", compact('product'));
   }
 
@@ -113,7 +116,7 @@ class ProductController extends Controller
   {
       $category = request('category');
       $brand = request('brand');
-      $products = Product::with('brand','category');
+      $products = Product::with('brand','category')->where('branch_id', Auth::user()->branch_id);
 
       if($category){
           $products = $products->whereHas('category',function($query) use($category){
@@ -128,6 +131,12 @@ class ProductController extends Controller
           });
       }
       return Datatables::of($products)
+            ->addColumn('category_name', function ($product) {
+                return $product->category_id ? $product->category->name : 'No Category';
+            })
+            ->addColumn('brand_name', function ($product) {
+                return $product->brand_id ? $product->brand->name : 'No Brand';
+            })
           ->addColumn('action', function ($product) {
               $btn = '<div class="table-actions">';
 
@@ -136,7 +145,8 @@ class ProductController extends Controller
             //   }
 
               if (Auth::user()) {
-                $btn .= '<a href="https://www.greenstock.greentechnology.com.bd/admin/product-edit/'.$product->id.'" class="btn btn-sm btn-primary"><span title="Return"><i class="fa fa-pencil"></i>Edit</span></a>';
+                $url = route('admin.editproduct', ['id' => $product->id]);
+                $btn .= '<a href="'.$url.'" class="btn btn-sm btn-primary"><span title="Return"><i class="fa fa-pencil"></i>Edit</span></a>';
             }
 
               $btn .= '</div>';
@@ -150,7 +160,7 @@ class ProductController extends Controller
     {
         $product = Product::with('brand','size','category','alternativeproduct','group','replacement')->where('id',$id)->first();
         // dd($product);
-        $alternatives = Product::all();
+        $alternatives = Product::where('branch_id', Auth::user()->branch_id)->where('id','!=', $id)->get();
         return view("admin.product.editproduct", compact('product','alternatives'));
     }
 
@@ -160,72 +170,84 @@ class ProductController extends Controller
 
     public function update_product_details(Request $request)
     {
-      $data = $request->data;
-    //   $product = Product::where('id',$data['id'])
-    //             ->update($data);
-
-
-    $image = $request->image;
-
-    $product = Product::find($request->id);
-    $product->productname = $request->productname;
-    $product->part_no = $request->part_no;
-    $product->category_id = $request->category_id;
-    $product->brand_id = $request->brand_id;
-    $product->group_id = $request->group;
-    $product->unit = $request->unit;
-    $product->model = $request->model;
-    $product->location = $request->location;
-    $product->replacement = $request->replacement;
-    $product->vat_percent = $request->vat_percent;
-    $product->vat_amount = $request->selling_price * ($request->vat_percent/100);
-    $product->selling_price = $request->selling_price;
-    $product->selling_price_with_vat = $request->selling_price + $request->selling_price * ($request->vat_percent/100);
-    $product->description = $request->description;
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|string',
+            'productname' => 'required',
+            'category_id' => 'required|integer',
+            'brand_id' => 'required|integer',
+            'part_no' => 'nullable|string',
+        ]);
     
-    if ($image) {
-    	$rand = mt_rand(100000, 999999);
-      $imageName = time(). $rand .'.'.$request->image->extension();
-      $request->image->move(public_path('images/product'), $imageName);
-      $product->image= $imageName;
-    }
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed. Please ensure all required fields are filled correctly.',
+                'errors' => $validator->errors()
+            ], 422);
+        }
     
-    if ($product->save()) {
-        if ($request->input('alternative')) {
-
-            $collection = AlternativeProduct::where('product_id', $request->id)->get(['id']);
-            AlternativeProduct::destroy($collection->toArray());
-
-
-          foreach($request->input('alternative') as $key => $value)
-          {
-              $alt = new AlternativeProduct();
-              $alt->product_id = $product->id;
-              $alt->alternative_product_id = $value;
-              $alt->created_by = Auth::user()->id;
-              $alt->save();
-          }
+        $check = Product::where('part_no', $request->part_no)
+            ->where('branch_id', Auth::user()->branch_id)
+            ->where('id', '!=', $request->id)
+            ->first();
+    
+        if ($check) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'The part number "' . $request->part_no . '" already exists in your branch. Please use a different part number.'
+            ], 409);
         }
 
-        if ($request->replacement) {
+        $product = Product::find($request->id);
+        $product->productname = $request->productname;
+        $product->part_no = $request->part_no;
+        $product->category_id = $request->category_id;
+        $product->brand_id = $request->brand_id;
+        $product->group_id = $request->group;
+        $product->unit = $request->unit;
+        $product->model = $request->model;
+        $product->location = $request->location;
+        $product->replacement = $request->replacement;
+        $product->vat_percent = $request->vat_percent;
+        $product->vat_amount = $request->selling_price * ($request->vat_percent / 100);
+        $product->selling_price = $request->selling_price;
+        $product->selling_price_with_vat = $request->selling_price + $request->selling_price * ($request->vat_percent / 100);
+        $product->description = $request->description;
 
-            $rplmnt = Replacement::where('product_id', $request->id)->get(['id']);
-            Replacement::destroy($rplmnt->toArray());
+        if ($product->save()) {
+            if ($request->input('alternative')) {
 
-            $allreplacementid = explode(',',$request->replacement);
+                $collection = AlternativeProduct::where('product_id', $request->id)->get(['id']);
+                AlternativeProduct::destroy($collection->toArray());
 
-            foreach($allreplacementid as $key => $value)
-            {
-                $replace = new Replacement();
-                $replace->product_id = $product->id;
-                $replace->replacementid = $value;
-                $replace->created_by = Auth::user()->id;
-                $replace->save();
+
+                foreach ($request->input('alternative') as $key => $value) {
+                    $alt = new AlternativeProduct();
+                    $alt->product_id = $product->id;
+                    $alt->alternative_product_id = $value;
+                    $alt->created_by = Auth::user()->id;
+                    $alt->save();
+                }
+            }
+
+            if ($request->replacement) {
+
+                $rplmnt = Replacement::where('product_id', $request->id)->get(['id']);
+                Replacement::destroy($rplmnt->toArray());
+
+                $allreplacementid = explode(',', $request->replacement);
+
+                foreach ($allreplacementid as $key => $value) {
+                    $replace = new Replacement();
+                    $replace->product_id = $product->id;
+                    $replace->replacementid = $value;
+                    $replace->created_by = Auth::user()->id;
+                    $replace->save();
+                }
             }
         }
-    }
 
-      return $product;
+        return response()->json(['status' => 200, 'message' => 'Product details updated successfully!']);
     }
 
     public function getproduct(Request $request)

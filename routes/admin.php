@@ -21,7 +21,22 @@ use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\OrderController;
-
+use App\Http\Controllers\Admin\ChartOfAccountController;
+use App\Http\Controllers\Admin\ExpenseController;
+use App\Http\Controllers\Admin\AssetController;
+use App\Http\Controllers\Admin\IncomeController;
+use App\Http\Controllers\Admin\LiabilityController;
+use App\Http\Controllers\Admin\EquityController;
+use App\Http\Controllers\Admin\EquityHolderController;
+use App\Http\Controllers\Admin\LedgerController;
+use App\Http\Controllers\Admin\DaybookController;
+use App\Http\Controllers\Admin\CashflowController;
+use App\Http\Controllers\Admin\IncomestatementController;
+use App\Http\Controllers\Admin\BalancesheetController;
+use App\Http\Controllers\Admin\EmployeeController;
+use App\Http\Controllers\Admin\CompanyDetailsController;
+use App\Http\Controllers\Admin\FinancialStatementController;
+use App\Http\Controllers\Admin\SalesController;
 
 /*------------------------------------------
 --------------------------------------------
@@ -46,6 +61,11 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::post('/create-user', [UserController::class, 'save_user'])->name('save_user');
     Route::get('/manage-user', [UserController::class, 'manage_user'])->name('manage_user');
     Route::post('/update-user', [UserController::class, 'update_user'])->name('update_user');
+
+    Route::get('/create-employee', [EmployeeController::class, 'create_employee'])->name('create_employee');
+    Route::post('/create-employee', [EmployeeController::class, 'save_employee'])->name('save_employee');
+    Route::get('/manage-employee', [EmployeeController::class, 'manage_employee'])->name('manage_employee');
+    Route::post('/update-employee', [EmployeeController::class, 'update_employee'])->name('update_employee');
 
     Route::get('/create-admin', [UserController::class, 'create_admin'])->name('create_admin');
     Route::post('/create-admin', [UserController::class, 'save_admin'])->name('save_admin');
@@ -102,11 +122,11 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::post('/edit-size/{id}', [SizeController::class, 'edit_size']);
     
     //Vendor
-    Route::get('vendor/add', [VendorController::class, 'add_vendor'])->name('admin.addvendor');
-    Route::post('vendor/save', [VendorController::class, 'save_vendor'])->name('admin.savevendor');
-    Route::post('vendor/update', [VendorController::class, 'update_vendor'])->name('admin.updatevendor');
-    Route::get('vendor/type', [VendorController::class, 'vendor_type'])->name('admin.addtype');
-    Route::post('vendor/type', [VendorController::class, 'save_type']);
+    Route::get('suppliers', [VendorController::class, 'add_vendor'])->name('admin.addvendor');
+    Route::post('supplier/save', [VendorController::class, 'save_vendor'])->name('admin.savevendor');
+    Route::post('supplier/update', [VendorController::class, 'update_vendor'])->name('admin.updatevendor');
+    Route::get('supplier/type', [VendorController::class, 'vendor_type'])->name('admin.addtype');
+    Route::post('supplier/type', [VendorController::class, 'save_type']);
 
     // Customer
     Route::get('customers', [CustomerController::class, 'index'])->name('admin.addcustomer');
@@ -129,7 +149,9 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('stock-re-entry-old-purchase-get/{id}', [StockController::class, 'getOldPurchase']);
     Route::get('filter-stock-all', [StockController::class, 'filter_product'])->name('stock.filterall');
     Route::get('manage-stock', [StockController::class, 'managestock'])->name('admin.managestock');
+    Route::post('manage-stock', [StockController::class, 'managestock'])->name('managestock.search');
     Route::get('stock-return-history', [StockController::class, 'stockReturnHistory'])->name('admin.stockReturnHistory');
+    Route::get('damaged-products', [StockController::class, 'damagedProducts'])->name('admin.damagedProducts');
 
     // stock history 
     Route::get('product-purchase-history', [StockController::class, 'productPurchaseHistory'])->name('admin.product.purchasehistory');
@@ -147,6 +169,7 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     // invoices
     Route::get('all-sellsinvoice', [InvoiceController::class, 'all_sell_invoice'])->name('admin.allsellinvoice');
     Route::get('invoice/{id}', [InvoiceController::class, 'get_invoice'])->name('admin.get_invoice');
+    Route::get('invoice-download/{id}', [InvoiceController::class, 'customer_invoice_download'])->name('admin.download_invoice');
     Route::get('filter', [InvoiceController::class, 'filter'])->name('invoice-filter');
 
     // payment method
@@ -160,6 +183,30 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     // for purchase 
     Route::post('getproduct', [ProductController::class, 'getproduct']);
 
+    Route::get('sales', [SalesController::class, 'sales'])->name('admin.sales');
+    Route::post('sales-store', [SalesController::class, 'salesStore'])->name('admin.sales.store');
+    Route::get('sales-edit/{id}', [SalesController::class, 'salesEdit'])->name('admin.sales.edit');
+    Route::post('sales-update', [SalesController::class, 'salesUpdate'])->name('admin.sales.update');
+
+    Route::post('quotation-store', [SalesController::class, 'quotationStore'])->name('admin.quotation.store');
+    Route::get('quotation-edit/{id}', [SalesController::class, 'quotationEdit'])->name('admin.quotation.edit');
+    Route::post('quotation-update', [SalesController::class, 'quotationUpdate'])->name('admin.quotation.update');
+
+    Route::post('delivery-note-store', [SalesController::class, 'deliveryNoteStore'])->name('admin.deliverynote.store');
+    Route::get('delivery-note-edit/{id}', [SalesController::class, 'deliveryNoteEdit'])->name('admin.deliverynote.edit');
+    Route::post('delivery-note-update', [SalesController::class, 'deliveryNoteUpdate'])->name('admin.deliverynote.update');
+
+    Route::get('all-quotation', [SalesController::class, 'getAllQuoation'])->name('admin.allquotation');
+    Route::get('filter-quotation', [SalesController::class, 'filterQuotation'])->name('quotation-filter.admin');
+
+    Route::get('all-delivery-note', [SalesController::class, 'getAllDeliveryNote'])->name('admin.alldeliverynote');
+    Route::get('filter-delivery-note', [SalesController::class, 'filterDeliveryNote'])->name('delivery-note-filter.admin');
+
+    Route::get('/sales-return/{id}', [SalesController::class, 'salesReturn'])->name('admin.sales.return');
+
+    Route::get('all-sales-return', [SalesController::class, 'getAllReturnInvoice'])->name('admin.allreturninvoices');
+
+    Route::post('saveCustomer', [SalesController::class, 'saveCustomer'])->name('admin.saveCustomer');
     
     // partno status 
     Route::get('/published-partno/{id}', [OrderController::class, 'published_partno']);
@@ -197,6 +244,85 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('profit-loss-report', [ReportController::class, 'getProfitLossReport'])->name('profitLossReport');
     Route::post('profit-loss-report', [ReportController::class, 'getProfitLossReport'])->name('profitLossReport.search');
 
-    
+    //Chart of account
+    Route::get('chart-of-account', [ChartOfAccountController::class, 'index'])->name('admin.addchartofaccount');
+    Route::post('chart-of-accounts', [ChartOfAccountController::class, 'index'])->name('admin.addchartofaccount.filter');
+    Route::post('chart-of-account', [ChartOfAccountController::class, 'store']);
+    Route::get('chart-of-account/{id}', [ChartOfAccountController::class, 'edit']);
+    Route::put('chart-of-account/{id}', [ChartOfAccountController::class, 'update']);
+    Route::get('chart-of-account/{id}/change-status', [ChartOfAccountController::class, 'changeStatus']);
 
+    //Equity holders
+    Route::get('share-holders', [EquityHolderController::class, 'index'])->name('admin.equityholders');
+    Route::post('share-holders', [EquityHolderController::class, 'store']);
+    Route::get('share-holders/{id}', [EquityHolderController::class, 'edit']);
+    Route::put('share-holders/{id}', [EquityHolderController::class, 'update']);
+    Route::get('share-holders/{id}/change-status', [EquityHolderController::class, 'changeStatus']);
+
+    // Share holder ledger
+    Route::get('shareholder-ledger/{id}', [EquityHolderController::class, 'shareHolderLedger'])->name('admin.shareholders-ledger');
+
+    //Expense
+    Route::get('expense', [ExpenseController::class, 'index'])->name('admin.expense');
+    Route::post('expenses', [ExpenseController::class, 'index'])->name('admin.expense.filter');
+    Route::post('expense', [ExpenseController::class, 'store']);
+    Route::get('expense/{id}', [ExpenseController::class, 'edit']);
+    Route::put('expense/{id}', [ExpenseController::class, 'update']); 
+
+    //Asset
+    Route::get('asset', [AssetController::class, 'index'])->name('admin.asset');
+    Route::post('assets', [AssetController::class, 'index'])->name('admin.asset.filter');
+    Route::post('asset', [AssetController::class, 'store']);
+    Route::get('asset/{id}', [AssetController::class, 'edit']);
+    Route::put('asset/{id}', [AssetController::class, 'update']); 
+
+    //Income
+    Route::get('income', [IncomeController::class, 'index'])->name('admin.income');
+    Route::post('incomes', [IncomeController::class, 'index'])->name('admin.income.filter');
+    Route::post('income', [IncomeController::class, 'store']);
+    Route::get('income/{id}', [IncomeController::class, 'edit']);
+    Route::put('income/{id}', [IncomeController::class, 'update']); 
+
+    //Liability
+    Route::get('liabilities', [LiabilityController::class, 'index'])->name('admin.liabilities');
+    Route::post('liability', [LiabilityController::class, 'index'])->name('admin.liability.filter');
+    Route::post('liabilities', [LiabilityController::class, 'store']);
+    Route::get('liabilities/{id}', [LiabilityController::class, 'edit']);
+    Route::put('liabilities/{id}', [LiabilityController::class, 'update']); 
+
+    //Equity
+    Route::get('equity', [EquityController::class, 'index'])->name('admin.equity');
+    Route::post('equities', [EquityController::class, 'index'])->name('admin.equity.filter');
+    Route::post('equity', [EquityController::class, 'store']);
+    Route::get('equity/{id}', [EquityController::class, 'edit']);
+    Route::put('equity/{id}', [EquityController::class, 'update']); 
+
+    //Ledger
+    Route::get('ledger', [LedgerController::class, 'index'])->name('admin.ledger');
+    Route::get('ledger/asset-details/{id}', [LedgerController::class, 'asset']);
+    Route::get('ledger/expense-details/{id}', [LedgerController::class, 'expense']);
+    Route::get('ledger/income-details/{id}', [LedgerController::class, 'income']);
+    Route::get('ledger/liability-details/{id}', [LedgerController::class, 'liability']);
+    Route::get('ledger/equity-details/{id}', [LedgerController::class, 'equity']);
+
+    // Daybook
+    Route::get('cashbook', [DaybookController::class, 'cashBook'])->name('admin.cashbook');
+    Route::post('cashbook', [DaybookController::class, 'cashBook'])->name('admin.cashbook');
+    Route::get('bankbook', [DaybookController::class, 'bankBook'])->name('admin.bankbook');
+    Route::post('bankbook', [DaybookController::class, 'bankBook'])->name('admin.bankbook');
+
+    //Financial Statement
+    Route::get('cash-flow', [CashflowController::class, 'cashFlowByDate'])->name('admin.cashflow');
+    Route::post('cash-flow', [CashflowController::class, 'cashFlowByDate'])->name('admin.cashflow');
+    Route::get('income-statement', [IncomestatementController::class, 'incomeStatement'])->name('admin.incomestatement');
+    Route::post('income-statement', [IncomestatementController::class, 'incomeStatement'])->name('admin.incomestatement');
+
+    Route::get('get-start-date', [FinancialStatementController::class, 'getStartDate'])->name('admin.getStartDate');
+    Route::post('get-start-date', [FinancialStatementController::class, 'postStartDate'])->name('admin.getStartDate');
+    Route::get('balance-sheet', [FinancialStatementController::class, 'balanceSheet'])->name('admin.balancesheet');
+    Route::post('balance-sheet', [FinancialStatementController::class, 'balanceSheet'])->name('admin.balancesheet');
+
+    // company information
+    Route::get('/company-details', [CompanyDetailsController::class, 'index'])->name('admin.companyDetail');
+    Route::post('/company-details', [CompanyDetailsController::class, 'update'])->name('admin.companyDetails');
 });

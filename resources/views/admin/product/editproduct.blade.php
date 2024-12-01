@@ -49,44 +49,46 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <table class="table table-hover">
+
+                                    
+                                        <tr>
+                                            <td><label class="control-label">Part No</label></td>
+                                            <td colspan="2"><input name="part_no" id="part_no" type="text" class="form-control"
+                                                       maxlength="50px" placeholder="" value="{{ $product->part_no }}"/>
+                                                @if ($errors->has('part_no'))
+                                                    <span class="text-danger">{{ $errors->first('part_no') }}</span>
+                                                @endif
+                                            </td>
+                                        </tr>
                                         
                                         <tr>
                                             <td><label class="control-label">Product Name*</label></td>
-                                            <td colspan="2"><input name="product" id="product" type="text" class="form-control" maxlength="50px" placeholder="Enter Product" required="required" value="{{ $product->productname }}"/>
+                                            <td colspan="2"><input name="product" id="product" type="text" class="form-control" maxlength="50px" placeholder="" required="required" value="{{ $product->productname }}"/>
                                                 <input type="hidden" id="productid" value="{{ $product->id }}">
                                                 @if ($errors->has('product'))
                                                     <span class="text-danger">{{ $errors->first('product') }}</span>
                                                 @endif
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td><label class="control-label">Part No</label></td>
-                                            <td colspan="2"><input name="part_no" id="part_no" type="text" class="form-control"
-                                                       maxlength="50px" placeholder="Enter Part no" required="required" value="{{ $product->part_no }}"/>
-                                                @if ($errors->has('part_no'))
-                                                    <span class="text-danger">{{ $errors->first('part_no') }}</span>
-                                                @endif
-                                            </td>
-                                        </tr>
 
                                         <tr>
-                                            <td><label class="control-label">Code</label></td>
+                                            <td><label class="control-label">Code*</label></td>
                                             <td colspan="2">
                                                 <select name="pcategoryselect" id="pcategoryselect" class="form-control select2">
-                                                    @foreach (\App\Models\Category::select('id','categoryid','name')->get() as $cat)
-                                                    <option value="{{ $cat->id }}" @if ($cat->id == $product->category_id) selected @endif>{{ $cat->name }}-{{ $cat->categoryid}}</option>
+                                                    @foreach (\App\Models\Category::select('id','categoryid','name')->where('branch_id',Auth::user()->branch_id)->get() as $cat)
+                                                    <option value="{{ $cat->id }}" required="required" @if ($cat->id == $product->category_id) selected @endif>{{ $cat->name }}-{{ $cat->categoryid}}</option>
                                                     @endforeach
                                                 </select>
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <td><label class="control-label">Brand</label></td>
+                                            <td><label class="control-label">Brand*</label></td>
                                             
                                             <td colspan="2">
                                                 <select name="pbrandselect" id="pbrandselect" class="form-control select2">
                                                     @foreach (\App\Models\Brand::select('id','brandid','name')->get() as $brand)
-                                                    <option value="{{ $brand->id }}" @if ($brand->id == $product->brand_id) selected @endif>{{ $brand->name }}-{{ $brand->brandid}}</option>
+                                                    <option value="{{ $brand->id }}" required="required" @if ($brand->id == $product->brand_id) selected @endif>{{ $brand->name }}-{{ $brand->brandid}}</option>
                                                     @endforeach
                                                 </select>
                                             </td>
@@ -95,7 +97,7 @@
                                         <tr>
                                             <td><label class="control-label">Unit</label></td>
                                             <td colspan="2"><input name="unit" id="unit" type="text" class="form-control"
-                                                       maxlength="50px" placeholder="pcs,ltr,kg etc" required="required" value="{{ $product->unit }}"/>
+                                                       maxlength="50px" placeholder="" required="required" value="{{ $product->unit }}"/>
                                                 @if ($errors->has('unit'))
                                                     <span class="text-danger">{{ $errors->first('unit') }}</span>
                                                 @endif
@@ -106,7 +108,7 @@
                                         
                                         <tr>
                                             <td><label class="control-label">Sell price*</label></td>
-                                            <td colspan="2"><input name="sell_price" id="sell_price" type="number" class="form-control" oninput="this.value=(parseInt(this.value)||0)" value="{{ $product->selling_price }}" maxlength="50px" placeholder="Enter price" required="required" />
+                                            <td colspan="2"><input name="sell_price" id="sell_price" type="number" class="form-control" oninput="this.value=(parseInt(this.value)||0)" value="{{ $product->selling_price }}" maxlength="50px" placeholder="" required="required" />
                                                 @if ($errors->has('sell_price'))
                                                     <span class="text-danger">{{ $errors->first('sell_price') }}</span>
                                                 @endif
@@ -147,7 +149,7 @@
                                     <table class="table table-hover">
                                         <tr>
                                             <td><label class="control-label">Model</label></td>
-                                            <td><input name="model" id="model" type="text" class="form-control" maxlength="50px" placeholder="Enter model" required="required" value="{{ $product->model }}"/>
+                                            <td><input name="model" id="model" type="text" class="form-control" maxlength="50px" placeholder="" required="required" value="{{ $product->model }}"/>
                                                 @if ($errors->has('model'))
                                                     <span class="text-danger">{{ $errors->first('model') }}</span>
                                                 @endif
@@ -217,6 +219,8 @@
                 <!-- /.box-body -->
                 <!-- /.box -->
             </div>
+
+            @if((Auth::user()->type == '1' || Auth::user()->type == '0') && in_array('37', json_decode(Auth::user()->role->permission)))
             <div class="col-md-3">
                 <!-- Widget: user widget style 1 -->
                 <div class="box box-widget widget-user-2">
@@ -235,7 +239,7 @@
                                 <br>
 
                                 <input type="text" class="" id="categoryid" placeholder="ID">
-                                <input type="text" class="" id="category" placeholder="Type">
+                                <input type="text" class="" id="category" placeholder="Code Name">
                                 <br>
                                 <button onclick="save_category()" type="submit" class="btn btn-primary mb-2" style="margin-top: 5px;">Save
                                     </button>
@@ -245,7 +249,7 @@
                                 <label for="brand" class="">Brand</label>
                                 <br>
                                 <input type="text" class="" id="brandid" placeholder="ID">
-                                <input type="text" class="" id="brand" placeholder="Brandname">
+                                <input type="text" class="" id="brand" placeholder="Brand Name">
                                 <br>
                                     <button onclick="save_brand()" type="submit" class="btn btn-primary mb-2" style="margin-top: 5px;">Save
                                     </button>
@@ -255,7 +259,7 @@
                                 <label for="group" class="">Group</label>
                                 <br>
                                 <input type="text" class="" id="groupid" placeholder="ID">
-                                <input type="text" class="" id="group" placeholder="Groupname">
+                                <input type="text" class="" id="group" placeholder="Group Name">
                                 <br>
                                     <button onclick="save_group()" type="submit" class="btn btn-primary mb-2" style="margin-top: 5px;">Save
                                     </button>
@@ -267,6 +271,8 @@
                 </div>
                 <!-- /.box -->
             </div>
+            @endif
+
         </div>
     </div>
 
@@ -367,21 +373,25 @@
                     return;
                 } else {
 
-
                     $.ajax({
-                        data: {id: id,productname:productname,selling_price:selling_price,category_id:category_id,brand_id:brand_id,part_no:part_no,unit:unit,model:model,location:location,vat_percent:vat_percent,group:group,description:description,replacement:replacement,alternative:alternative,},
+                        data: {id: id,productname:productname,selling_price:selling_price,category_id:category_id,brand_id:brand_id,part_no:part_no,unit:unit,model:model,location:location,vat_percent:vat_percent,group:group,description:description,replacement:replacement,alternative:alternative},
                         url: updateurl,
                         type: 'POST',
                         beforeSend: function (request) {
                             return request.setRequestHeader('X-CSRF-Token', $("meta[name='csrf-token']").attr('content'));
                         },
                         success: function (response) {
-                            console.log(response);
                             showSnakBar();
                         },
-                        error: function (err) {
-                            console.log(err);
-                            alert("Something Went Wrong, Please check again");
+                        error: function(xhr) {
+                            if (xhr.status === 422) {
+                                let errors = xhr.responseJSON.errors;
+                                alert("Validation Error: " + Object.values(errors).join(", "));
+                            } else if (xhr.status === 409) {
+                                alert(xhr.responseJSON.message);
+                            } else {
+                                alert("Something Went Wrong, Please check again.");
+                            }
                         }
                     });
                 }
@@ -396,12 +406,11 @@
 
         var categoryurl = "{{URL::to('/admin/category')}}";
         function save_category() {
-            if ($("#category").val() == "") {
-                alert("Please Provide Category Name");
-            }
             if ($("#categoryid").val() == "") {
-                alert("Please Provide Category ID");
-            } else {
+                alert("Please Provide Code ID");
+            }if ($("#category").val() == "") {
+                alert("Please Provide Code Name");
+            }else {
                 
                  var categoryid = $("#categoryid").val();
                  var category = $("#category").val();
@@ -435,13 +444,12 @@
         }
 
         var brandurl = "{{URL::to('/admin/brand')}}";
-        function save_brand() {
-            if ($("#brand").val() == "") {
-                alert("Please Provide Brand Name");
-            }
+        function save_brand() {   
             if ($("#brandid").val() == "") {
                 alert("Please Provide Brand ID");
-            } else {
+            }if ($("#brand").val() == "") {
+                alert("Please Provide Brand Name");
+            }else {
                 
                 var brand = $("#brand").val()
                 var brandid = $("#brandid").val()
@@ -480,12 +488,11 @@
 
         var groupurl = "{{URL::to('/admin/group')}}";
         function save_group() {
-            if ($("#group").val() == "") {
-                alert("Please Provide Group Name");
-            }
             if ($("#groupid").val() == "") {
                 alert("Please Provide Group ID");
-            } else {
+            }if ($("#group").val() == "") {
+                alert("Please Provide Group Name");
+            }else {
                 
                 var group = $("#group").val()
                 var groupid = $("#groupid").val()

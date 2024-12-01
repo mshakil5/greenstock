@@ -77,8 +77,33 @@
                                             <td>
                                                 <input type="text" value="{{$salesdetail->total_amount}}" class="form-control" readonly>
                                             </td>
-                                            <td width="50px">
-                                                <span class="btn btn-success btn-sm" id="returnThisProduct" ordid="{{$salesdetail->id}}" product_id="{{$salesdetail->product->id}}"> <i class="bi bi-arrow-bar-right"></i> return  </span>
+                                            <td width="100px">
+                                                <span 
+                                                    class="btn btn-success btn-sm returnThisProduct" 
+                                                    id="returnThisProduct" 
+                                                    ordid="{{$salesdetail->id}}" 
+                                                    product_id="{{$salesdetail->product_id}}" 
+                                                    product_name="{{$salesdetail->product->productname}}" 
+                                                    unit_price="{{$salesdetail->sellingprice}}" 
+                                                    total_price="{{$salesdetail->sellingprice}}"
+                                                    quantity="{{$salesdetail->quantity}}" 
+                                                    purchase_history_id="{{$salesdetail->purchase_history_id}}" 
+                                                    style="margin-bottom: 5px; display: inline-block;">
+                                                    <i class="bi bi-arrow-bar-right"></i> Return To Stock
+                                                </span>
+                                                <br>
+                                                <span 
+                                                    class="btn btn-danger btn-sm returnToDamage" 
+                                                    id="returnToDamage" 
+                                                    ordid="{{$salesdetail->id}}" 
+                                                    product_id="{{$salesdetail->product_id}}" 
+                                                    product_name="{{$salesdetail->product->productname}}" 
+                                                    unit_price="{{$salesdetail->sellingprice}}" 
+                                                    total_price="{{$salesdetail->sellingprice}}"
+                                                    quantity="{{$salesdetail->quantity}}" 
+                                                    style="display: inline-block;">
+                                                    <i class="bi bi-x-circle"></i> Return to Damage
+                                                </span>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -93,6 +118,7 @@
 
             <div class="col-lg-6 ">
                 <div class="box">
+                    <div id="returnbox" style="display: none">
                     <div class="row">
                         <p class="poppins-bold txt-primary">Number of quantity you want to return</p>
                         <div class="row">
@@ -135,8 +161,49 @@
                             </table>
                         </div> 
                     </div>
+                    </div>
 
 
+                    <div id="damagebox"  style="display: none">
+                        <div class="row">
+                            <p class="poppins-bold txt-primary">Number of quantity you want to send to damaged</p>
+                            <div class="row">
+                                <div class="box">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <td>Product</td>
+                                                <td>Qty</td>
+                                                <td>Unit Price</td>
+                                                <td>Total</td> 
+                                                <td>Action</td>
+                                            </tr>
+                                        </thead>                                   
+                                        <tbody id="damageinner">  
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="box">
+                                <table class="table table-striped table-hover" style="width: 100%">                       
+                                    <tbody> 
+                                        
+                                        <tr>
+                                            <td colspan="4" style="width: 50%"></td>
+                                            <td colspan="2" style="text-align: left"></td>
+                                            <td colspan="2" style="text-align: center">
+                                                <button class="btn btn-theme mt-2" id="damageReturnBtn" type="button">submit</button>
+                                            </td>
+                                        </tr> 
+                                        
+                                    </tbody>
+                                </table>
+                            </div> 
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -158,112 +225,122 @@
 
 <script type="text/javascript">
 
-        function removeRow(event) {
-            event.target.parentElement.parentElement.remove();
-            net_total();  
-        }
-
     $(document).ready(function() {
-        // header for csrf-token is must in laravel
+
         $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') } });
-        // 
-
-        
-        var salesproducturl = "{{URL::to('/get-product-details')}}";
-        $("#productsTBL").on('click','#returnThisProduct', function(){
-                    event.preventDefault();
-                    orderdetailid = $(this).attr('ordid');
-                    var product = $(this).attr('product_id');
-                    var product_id = $("input[name='product_id[]']")
-                        .map(function(){return $(this).val();}).get();
-                    product_id.push(product);
-                    seen = product_id.filter((s => v => s.has(v) || !s.add(v))(new Set));
-
-                    if (Array.isArray(seen) && seen.length) {
-                        return;
-                    }
-                    $.ajax({
-                    url: salesproducturl,
-                    method: "POST",
-                    data: {orderdetailid:orderdetailid},
-
-                    success: function (d) {
-                        if (d.status == 303) {
-
-                        }else if(d.status == 300){
-                            console.log(d);
-                                var markup = '<tr class="item-row pdetails" style="position:realative;"><td><input name="productname[]" type="text" value="'+d.productname+'" class="form-control" readonly></td><td><input type="number" class="form-control quantity" name="quantity[]" min="1" value="1" placeholder="Type quantity"><input type="hidden" class="form-control oldquantity" name="oldquantity[]" min="1" value="'+d.quantity+'"></td><td><input name="sellingprice[]" type="text" value="'+d.selling_price_with_vat+'" class="form-control uamount" readonly><input type="hidden" name="product_id[]" value="'+d.product_id+'"></td><td><input name="total[]" type="text" value="'+d.selling_price_with_vat+'" class="form-control total" readonly></td><td width="30px"><div style="color: white;  user-select:none;  padding: 5px;    background: red;    width: 25px;    display: flex;    align-items: center; margin-right:2px;   justify-content: center;    border-radius: 4px;   left: 4px;    top: 81px;" onclick="removeRow(event)" >X</div></td></tr>';
-                                $("table #returninner ").append(markup);
-
-                                net_total();
-                        }
-                    },
-                    error: function (d) {
-                        console.log(d);
-                    }
-                });
-                
-            }); 
-            
-            
-            // change quantity start  
-        $("body").delegate(".quantity","change",function(event){
+  
+        $("#productsTBL").on('click','.returnThisProduct', function(event) {
             event.preventDefault();
-            var row = $(this).parent().parent();
-            var price = row.find('.uamount').val();
-            var vatamount = row.find('.uvatamount').val();
-            // var update_id = row.find('.price').attr("update_id");
-            var qty = row.find('.quantity').val();
-            var oldquantity = row.find('.oldquantity').val();
-            availableqty = parseInt(oldquantity);
-            if ( qty  > availableqty) {
-                alert('Please Input lower quantity !!');
-                row.find('.quantity').val('1');
+            var product = $(this).attr('product_id');
+            var product_name = $(this).attr('product_name');
+            var unit_price = parseFloat($(this).attr('unit_price'));
+            var quantity = parseInt($(this).attr('quantity'));
+            var purchase_history_id = $(this).attr('purchase_history_id');
+            var total_price = unit_price * quantity;
+
+            var product_id = $("input[name='return_product_id[]']")
+                .map(function() { return $(this).val(); }).get();
+
+            product_id.push(product);
+            var seen = [...new Set(product_id)];
+            if (product_id.length !== seen.length) {
+                return;
             }
+
+            var markup = 
+                '<tr class="item-row pdetails" style="position:relative;">' +
+                    '<td><input name="productname[]" type="text" value="' + product_name + '" class="form-control" readonly></td>' +
+                    '<td><input type="number" class="form-control quantity" name="quantity[]" min="1" value="' + quantity + '" placeholder="Type quantity">' +
+                    '<input type="hidden" class="form-control oldquantity" name="oldquantity[]" value="' + quantity + '"></td>' +
+                    '<td><input name="sellingprice[]" type="text" value="' + unit_price.toFixed(2) + '" class="form-control uamount" readonly>' +
+                    '<input type="hidden" name="return_product_id[]" value="' + product + '"></td>' +
+                    '<td><input name="total[]" type="text" value="' + total_price.toFixed(2) + '" class="form-control total" readonly></td>' +
+                    '<td><input type="hidden" name="purchase_history_id[]" value="' + purchase_history_id + '"></td>' +
+                    '<td width="30px"><div class="removeRowBtn" style="color: white; user-select:none; padding: 5px; background: red; width: 25px; display: flex; align-items: center; justify-content: center; border-radius: 4px; cursor: pointer;">X</div></td>' +
+                '</tr>';
+
+            $("table #returninner").append(markup);
+
+            updateTotals();
+        });
+           
+        $("#productsTBL").on('click','.returnToDamage', function(){
+            event.preventDefault();
+            orderdetailid = $(this).attr('ordid');
+            var product = $(this).attr('product_id');
+            var product_name = $(this).attr('product_name');
+            var unit_price = parseFloat($(this).attr('unit_price'));
+            var quantity = parseInt($(this).attr('quantity'));
+            var total_price = unit_price * quantity;
+
+            var product_id = $("input[name='damage_product_id[]']")
+                .map(function(){return $(this).val();}).get();
+            product_id.push(product);
+            seen = product_id.filter((s => v => s.has(v) || !s.add(v))(new Set));
+
             
-                if (isNaN(qty)) {
-                    qty = 1;
-                }
-                if (qty < 1) {
-                    qty = 1;
-                }
-            var total = price * qty;
-            var totalvat = vatamount * qty;
+            if (Array.isArray(seen) && seen.length) {
+                return;
+            }
+
+            var markup = '<tr class="item-row pdetails" style="position:realative;">' +
+                '<td><input name="productname[]" type="text" value="' + product_name + '" class="form-control" readonly></td>' +
+                '<td><input type="number" class="form-control quantity" name="quantity[]" min="1" value="' + quantity + '" placeholder="Type quantity">' +
+                '<input type="hidden" class="form-control oldquantity" name="oldquantity[]" value="' + quantity + '"></td>' +
+                '<td><input name="sellingprice[]" type="text" value="' + unit_price.toFixed(2) + '" class="form-control uamount" readonly>' +
+                '<input type="hidden" name="damage_product_id[]" value="' + product + '"></td>' +
+                '<td><input name="total[]" type="text" value="' + total_price.toFixed(2) + '" class="form-control total" readonly></td>' +
+                '<td width="30px"><div class="removeRowBtn" style="color: white; user-select:none; padding: 5px; background: red; width: 25px; display: flex; align-items: center; justify-content: center; border-radius: 4px; cursor: pointer;">X</div></td>' +
+                '</tr>';
+
+            $("table #damageinner").append(markup);
+    
+        }); 
+
+        $(document).on('click', '.removeRowBtn', function() {
+            var row = $(this).closest('tr');
+            row.remove();
+            updateTotals();
+        });
+                   
+        // change quantity start  
+        $("body").delegate(".quantity", "input", function(event) {
+            event.preventDefault();
+            var row = $(this).closest('.item-row');
+            var price = parseFloat(row.find('.uamount').val());
+            var qty = parseInt($(this).val());
+            var oldquantity = parseInt(row.find('.oldquantity').val());
+
+            if (isNaN(price)) price = 0;
+            if (isNaN(qty) || qty < 1) {
+                $(this).val(1);
+            }
+            if (qty > oldquantity) {
+                alert('Invalid Quantity !!');
+                $(this).val(oldquantity);
+            }
+
+            var total = price * $(this).val();
             row.find('.total').val(total.toFixed(2));
 
-            var grand_total=0;
-            var vat_total=0;
-            $('.total').each(function(){
-                grand_total += ($(this).val()-0);
-            })
-            $('.vatamount').each(function(){
-                vat_total += ($(this).val()-0);
-            })
-            $('#net_vat_amount').val(vat_total.toFixed(2));
-            $('#grand_total').val(grand_total.toFixed(2));
-            $('#net_total').val(grand_total.toFixed(2));
-            // $('#ttm').html("<input type='hidden' class='ttm' name='ttm' value="+grand_total+">"); 
-            net_total();           
-        })
-        //Change Quantity end here 
-        
-        function net_total(){
-            var grand_total=0;
-            $('.total').each(function(){
-                grand_total += ($(this).val()-0);
-            })
+            updateTotals();
+        });
+
+        function updateTotals() {
+            var grand_total = 0;
+
+            $('.total').each(function() {
+                grand_total += parseFloat($(this).val()) || 0;
+            });
+
             $('#net_total').val(grand_total.toFixed(2));
         }
-
-
 
         // sales return start
         var returnurl = "{{URL::to('/sales-return')}}";
 
-        // $("#addvoucher").click(function(){
-
-            $("body").delegate("#returnOrderBtn","click",function(event){
-                event.preventDefault();
+        $("body").delegate("#returnOrderBtn","click",function(event){
+            event.preventDefault();
 
             var returndate = $("#returndate").val();
             var customer_id = $("#customer_id").val();
@@ -271,17 +348,8 @@
             var net_total = $("#net_total").val();
             var order_id = $("#order_id").val();
 
-            var product_id = $("input[name='product_id[]']")
+            var product_id = $("input[name='return_product_id[]']")
               .map(function(){return $(this).val();}).get();
-
-            var vat_percent = $("input[name='vat_percent[]']")
-            .map(function(){return $(this).val();}).get();
-
-            var vat_amount = $("input[name='vat_amount[]']")
-            .map(function(){return $(this).val();}).get();
-
-            var sellingprice = $("input[name='sellingprice[]']")
-            .map(function(){return $(this).val();}).get();
 
             var quantity = $("input[name='quantity[]']")
               .map(function(){return $(this).val();}).get();
@@ -289,11 +357,13 @@
             var total = $("input[name='total[]']")
               .map(function(){return $(this).val();}).get();
 
+            var purchase_history_id = $("input[name='purchase_history_id[]']")
+                .map(function(){return $(this).val();}).get();
 
                 $.ajax({
                     url: returnurl,
                     method: "POST",
-                    data: {product_id,order_id,vat_percent,vat_amount,sellingprice,quantity,total,net_total,returndate,customer_id,reason},
+                    data: {product_id,order_id,quantity,total,net_total,returndate,customer_id,reason,purchase_history_id},
 
                     success: function (d) {
                         if (d.status == 303) {
@@ -303,28 +373,66 @@
                             $(".ermsg").html(d.message);
                             pagetop();
                             window.setTimeout(function(){location.reload()},2000)
-                            
+                        
                         }
                     },
-                    error: function (d) {
-                        console.log(d);
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
                     }
                 });
 
         });
         // sales return end
 
+        // Damage Return start
+        var damageurl = "{{URL::to('/damage-return')}}";
 
+        $("body").delegate("#damageReturnBtn","click",function(event){
+            event.preventDefault();
 
+            var customer_id = $("#customer_id").val();
 
+            var product_id = $("input[name='damage_product_id[]']")
+              .map(function(){return $(this).val();}).get();
 
+            var quantity = $("input[name='quantity[]']")
+              .map(function(){return $(this).val();}).get();
 
+            $.ajax({
+                url: damageurl,
+                method: "POST",
+                data: {product_id,quantity,customer_id},
 
+                success: function (d) {
+                    if (d.status == 303) {
+                        $(".ermsg").html(d.message);
+                        pagetop();
+                    }else if(d.status == 300){
+                        $(".ermsg").html(d.message);
+                        pagetop();
+                        window.setTimeout(function(){location.reload()},2000)
+                        
+                    }
+                },
+                error: function (d) {
+                    console.log(d);
+                }
+            });
+        });
+        // Damage return end
 
-
-
-
-
+        //Open Close
+        $("#productsTBL").on('click','#returnToDamage', function(){
+            $('#damagebox').show();
+            $('#returnbox').hide();
+            $('#returninner').empty();
+        });
+        
+        $("#productsTBL").on('click','#returnThisProduct', function(){
+            $('#damagebox').hide();
+            $('#returnbox').show();
+            $('#damageinner').empty();
+        });
 
     });
 </script>

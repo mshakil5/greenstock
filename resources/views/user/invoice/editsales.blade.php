@@ -23,6 +23,7 @@
                                         <input type="hidden" id="order_id" value="{{ $invoices->id }}">
                                         <select name="salestype" id="salestype" class="form-control input-sm">
                                             <option value="Cash" @if ( $invoices->salestype == "Cash" ) selected @endif>Cash</option>
+                                            <option value="Bank" @if ( $invoices->salestype == "Bank" ) selected @endif>Bank</option>
                                             <option value="Credit" @if ( $invoices->salestype == "Credit" ) selected @endif>Credit</option>
                                         </select>
                                     </div>
@@ -321,7 +322,7 @@
                                     </div>
                                     <div class="form-group mx-1 flex-fill">
                                         <label for="">Vat Percent(%)</label>
-                                        <input type="number" id="vat_percent" name="vat_percent" value="5"  value="{{$invoices->vatpercentage }}"class="form-control" style="flex: 0.6;">
+                                        <input type="number" id="vat_percent" name="vat_percent" value="5"  value="{{$invoices->vatpercentage }}"class="form-control" style="flex: 0.6;"  min="0">
                                     </div>
                                     <div class="form-group mx-1 flex-fill">
                                         <label for="">Total Vat Amount</label>
@@ -449,7 +450,7 @@
                         <label for="name" class="col-sm-3 control-label">Name</label>
                         <div class="col-sm-9">
                             <input type="text" name="name" class="form-control" id="name"
-                                   placeholder="ex. John Doe" required>
+                                   placeholder="" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -820,16 +821,15 @@
                             $(".ermsg").html(d.message);
                             pagetop();
                         }else if(d.status == 300){
-                            console.log(d);
                             $(".ermsg").html(d.message);
                             pagetop();
                             window.setTimeout(function(){location.reload()},2000)
-                            window.open(`https://www.greenstock.greentechnology.com.bd/invoice/print/${d.id}`, '_blank');
+                            window.open(`{{ route('customer.invoice.print', '') }}/${d.id}`, '_blank');
                             
                         }
                     },
-                    error: function (d) {
-                        console.log(d);
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
                     }
                 });
         });
@@ -916,7 +916,7 @@
             });
 
             // calculation start 
-			$("#discount_amount, #vat_percent").keyup(function(){
+			$("#discount_amount, #vat_percent").on('input', function(){
 				// var dInput = this.value;
 				var grand_total = $("#grand_total").val();
 				var dInput = $("#discount_amount").val();
@@ -989,6 +989,13 @@
             var customerurl = "{{URL::to('/customers')}}";
             
             $(document).on('click', '.save-btn', function () {
+
+                let name = $('#name').val().trim();
+
+                if (name === '') {
+                    alert("Name field is required.");
+                    return;
+                }
                 let formData = $('#customer-form').serialize();
                 
                 $.ajax({

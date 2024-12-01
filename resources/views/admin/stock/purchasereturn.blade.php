@@ -40,7 +40,7 @@
                             <div class="form-row">
                                 <div class="form-group col-md-4">
                                   <label for="date">Return Date</label>
-                                  <input type="date" class="form-control" id="date" name="date" value="{{date('Y-d-m')}}">
+                                  <input type="date" class="form-control" id="date" name="date" value="{{ date('Y-m-d') }}">
                                   <input type="hidden" class="form-control" id="purchase_id" name="purchase_id" value="{{ $purchase->id }}">
                                 </div>
                                 <div class="form-group col-md-4">
@@ -69,9 +69,10 @@
                             <div class="form-row">
                                 <div class="form-group col-md-4">
                                   <label for="date">Transaction Type</label>
-                                  <select name="type" id="type" class="form-control" readonly>
+                                  <select name="type" id="type" class="form-control" disabled>
                                     <option value="">Select</option>
                                     <option value="Cash" @if ($purchase->purchase_type == "Cash") selected @endif>Cash</option>
+                                    <option value="Bank" @if ($purchase->purchase_type == "Bank") selected @endif>Bank</option>
                                     <option value="Credit" @if ($purchase->purchase_type == "Credit") selected @endif>Credit</option>
                                   </select>
                                 </div>
@@ -103,8 +104,8 @@
                                 </div>
 
                                 <div class="form-group col-md-8">
-                                    <label for="reason">Reason</label>
-                                    <input type="text" class="form-control" id="reason" name="reason">
+                                    <label for="reason">Reason*</label>
+                                    <input type="text" class="form-control" id="reason" name="reason" required>
                                 </div>
                             </div>
                           </form>
