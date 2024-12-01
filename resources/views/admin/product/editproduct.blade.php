@@ -71,7 +71,7 @@
                                             </td>
                                         </tr>
 
-                                        <tr>
+                                        <tr class="d-none">
                                             <td><label class="control-label">Code*</label></td>
                                             <td colspan="2">
                                                 <select name="pcategoryselect" id="pcategoryselect" class="form-control select2">
@@ -94,7 +94,7 @@
                                             </td>
                                         </tr>
 
-                                        <tr>
+                                        <tr class="d-none">
                                             <td><label class="control-label">Unit</label></td>
                                             <td colspan="2"><input name="unit" id="unit" type="text" class="form-control"
                                                        maxlength="50px" placeholder="" required="required" value="{{ $product->unit }}"/>
@@ -124,7 +124,7 @@
                                             </td>
                                         </tr>
 
-                                        <tr>
+                                        <tr class="d-none">
                                             <td><label class="control-label">Alternative Product</label></td>
                                             <td>
                                                 <select name="alternative[]" id="alternative" class="form-control select2" multiple>
@@ -155,7 +155,7 @@
                                                 @endif
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr class="d-none">
                                             <td><label class="control-label">Location</label></td>
                                             <td><input name="location" id="location" type="text" class="form-control" maxlength="50px" placeholder=""  required="required" value="{{ $product->location }}"/>
                                                 @if ($errors->has('location'))
@@ -164,7 +164,7 @@
                                             </td>
                                         </tr>
 
-                                        <tr>
+                                        <tr class="d-none">
                                             <td><label class="control-label">Group</label></td>
                                             <td>
                                                 <select name="group_id" id="group_id" class="form-control select2">
@@ -196,7 +196,7 @@
                                         </tr>
 
 
-                                        <tr>
+                                        <tr class="d-none">
                                             <td><label class="control-label">Replacement</label></td>
                                             <td>
                                                 <input type="text" name="replacement" id="replacement" class="form-control"  rows="3" value="{{ $product->replacement }}"  />
@@ -234,7 +234,7 @@
                         <div class="info-inner">
                             <!-- <form class="form"> -->
                                 <div class="catermsg"></div>
-                            <div class="form-group mx-sm-3 mb-2">
+                            <div class="form-group mx-sm-3 mb-2 d-none">
                                 <label for="category" class="">Code</label>
                                 <br>
 
@@ -246,16 +246,16 @@
                             </div>
                             <div class="brandermsg"></div>
                             <div class="form-group mx-sm-3 mb-2">
-                                <label for="brand" class="">Brand</label>
+                                <label for="brand" class="">Create new Brand</label>
                                 <br>
-                                <input type="text" class="" id="brandid" placeholder="ID">
-                                <input type="text" class="" id="brand" placeholder="Brand Name">
+                                <input type="text" class="form-control" id="brandid" placeholder="ID">
+                                <input type="text" class="form-control" id="brand" placeholder="Brand Name">
                                 <br>
                                     <button onclick="save_brand()" type="submit" class="btn btn-primary mb-2" style="margin-top: 5px;">Save
                                     </button>
                             </div>
                             <div class="grpermsg"></div>
-                            <div class="form-group mx-sm-3 mb-2">
+                            <div class="form-group mx-sm-3 mb-2 d-none">
                                 <label for="group" class="">Group</label>
                                 <br>
                                 <input type="text" class="" id="groupid" placeholder="ID">

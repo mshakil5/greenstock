@@ -6,6 +6,9 @@
     .bootstrap-tagsinput {
         width: 100% !important;
     }
+    .d-none{
+        display: none;
+    }
 </style>
 <meta name="csrf-token" content="{{ csrf_token() }}" />
 
@@ -68,7 +71,7 @@
                                         </td>
                                     </tr>
 
-                                    <tr>
+                                    <tr class="d-none">
                                         <td><label class="control-label">Code/Category*</label></td>
                                         <td colspan="2">
                                             <select name="pcategoryselect" id="pcategoryselect"  class="form-control select2">
@@ -85,7 +88,7 @@
                                         </td>
                                     </tr>
 
-                                    <tr>
+                                    <tr class="d-none">
                                         <td><label class="control-label">Unit</label></td>
                                         <td colspan="2"><input name="unit" id="unit" type="text" class="form-control"
                                                 maxlength="50px" placeholder="" value="{{ old('unit') }}" />
@@ -109,7 +112,7 @@
                                     </tr>
 
 
-                                    <tr style="display: none">
+                                    <tr class="d-none">
                                         <td><label for="image">Image*</label></td>
                                         <td colspan="2">
                                             <input type="file" id="image" name="image">
@@ -117,7 +120,7 @@
                                         </td>
                                     </tr>
 
-                                    <tr>
+                                    <tr class="d-none">
                                         <td><label class="control-label">Alternative Product</label></td>
                                         <td>
                                             <select name="alternative[]" id="alternative" class="form-control select2" multiple>
@@ -143,7 +146,7 @@
                                             @endif
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr class="d-none">
                                         <td><label class="control-label">Location</label></td>
                                         <td><input name="location" id="location" type="text" class="form-control"
                                                 maxlength="50px" placeholder="" value="{{ old('location') }}" />
@@ -153,7 +156,7 @@
                                         </td>
                                     </tr>
 
-                                    <tr>
+                                    <tr class="d-none">
                                         <td><label class="control-label">Group</label></td>
                                         <td>
                                             <select name="group_id" id="group_id" class="form-control select2">
@@ -191,7 +194,7 @@
                                         </td>
                                     </tr>
 
-                                    <tr>
+                                    <tr class="d-none">
                                         <td><label class="control-label">Replacement</label></td>
                                         <td>
                                             <input type="text" name="replacement" id="replacement" class="form-control" rows="3" value="" />
@@ -231,7 +234,7 @@
                     <div class="info-inner">
                         <!-- <form class="form"> -->
                         <div class="catermsg"></div>
-                        <div class="form-group mx-sm-3 mb-2">
+                        <div class="form-group mx-sm-3 mb-2 d-none">
                             <label for="category" class="">Code/Category</label>
                             <br>
 
@@ -243,20 +246,20 @@
                         </div>
                         <div class="brandermsg"></div>
                         <div class="form-group mx-sm-3 mb-2">
-                            <label for="brand" class="">Brand</label>
+                            <label for="brand" class="">Create new Brand</label>
                             <br>
-                            <input type="text" class="" id="brandid" placeholder="ID">
-                            <input type="text" class="" id="brand" placeholder="Brand Name">
+                            <input type="text" class="form-control" id="brandid" placeholder="ID"> <br>
+                            <input type="text" class="form-control" id="brand" placeholder="Brand Name">
                             <br>
                             <button onclick="save_brand()" type="submit" class="btn btn-primary mb-2" style="margin-top: 5px;">Save
                             </button>
                         </div>
                         <div class="grpermsg"></div>
-                        <div class="form-group mx-sm-3 mb-2">
+                        <div class="form-group mx-sm-3 mb-2 d-none">
                             <label for="group" class="">Group</label>
                             <br>
-                            <input type="text" class="" id="groupid" placeholder="ID">
-                            <input type="text" class="" id="group" placeholder="Group Name">
+                            <input type="text" class="form-control" id="groupid" placeholder="ID">
+                            <input type="text" class="form-control" id="group" placeholder="Group Name">
                             <br>
                             <button onclick="save_group()" type="submit" class="btn btn-primary mb-2" style="margin-top: 5px;">Save
                             </button>

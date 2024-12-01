@@ -37,7 +37,11 @@
     <link href="{{ asset('admin/css/gijgo.min.css') }}" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-bs4.min.css">
     <!-- Google Font -->
-
+    <style>
+        .d-none{
+            display: none;
+        }
+    </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
