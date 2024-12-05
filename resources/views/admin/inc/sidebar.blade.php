@@ -36,6 +36,28 @@
             @endif
         </ul>
     </li>
+
+    {{-- service section  --}}
+
+    <li class="treeview {{ (request()->is('admin/add-services')) ? 'active' : '' }}{{ (request()->is('admin/all-services')) ? 'active' : '' }}">
+        <a href="#">
+            <i class="fa fa-files-o"></i>
+            <span> Service</span>
+            <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i></span>
+        </a>
+        <ul class="treeview-menu">
+            
+            <li class="{{ (request()->is('admin/add-services')) ? 'active' : '' }}"><a href="{{ route('admin.addService')}}"><i class="fa fa-clone"></i> Add New Service</a> </li>
+
+            <li class="{{ (request()->is('admin/all-services') || request()->routeIs('admin.editproduct')) ? 'active' : '' }}"><a href="{{ route('admin.manageService')}}"><i class="fa fa-leaf"></i> Manage Service</a> </li>
+        </ul>
+    </li>
+
+
+
+
+
     @endif
 
 

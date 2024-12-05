@@ -56,6 +56,11 @@ class Product extends Model
         return $this->hasMany('App\Models\OrderDetail');
     }
 
+    public function serviceDetail()
+    {
+        return $this->hasMany('App\Models\ServiceDetail');
+    }
+
     public function salesreturndetails()
     {
         return $this->hasMany('App\Models\SalesReturnDetail');

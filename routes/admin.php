@@ -37,6 +37,7 @@ use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\CompanyDetailsController;
 use App\Http\Controllers\Admin\FinancialStatementController;
 use App\Http\Controllers\Admin\SalesController;
+use App\Http\Controllers\Admin\ServiceController;
 
 /*------------------------------------------
 --------------------------------------------
@@ -134,6 +135,11 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('customers/{id}', [CustomerController::class, 'edit']);
     Route::put('customers/{id}', [CustomerController::class, 'update']);
     Route::get('customers/{id}/change-status', [CustomerController::class, 'changeStatus']);
+
+    // service section
+    Route::get('add-services', [ServiceController::class, 'addService'])->name('admin.addService');
+    Route::post('add-services', [ServiceController::class, 'storeService'])->name('admin.storeService');
+    Route::get('all-services', [ServiceController::class, 'allService'])->name('admin.manageService');
 
     // stock
     Route::get('add-stock', [StockController::class, 'addstock'])->name('admin.addstock');
