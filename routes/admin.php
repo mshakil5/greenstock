@@ -38,6 +38,7 @@ use App\Http\Controllers\Admin\CompanyDetailsController;
 use App\Http\Controllers\Admin\FinancialStatementController;
 use App\Http\Controllers\Admin\SalesController;
 use App\Http\Controllers\Admin\ServiceController;
+use App\Http\Controllers\Admin\ServiceSalesController;
 
 /*------------------------------------------
 --------------------------------------------
@@ -188,6 +189,7 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
 
     // for purchase 
     Route::post('getproduct', [ProductController::class, 'getproduct']);
+    Route::post('getservice', [ServiceSalesController::class, 'getservice']);
 
     Route::get('sales', [SalesController::class, 'sales'])->name('admin.sales');
     Route::post('sales-store', [SalesController::class, 'salesStore'])->name('admin.sales.store');
@@ -209,10 +211,11 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('filter-delivery-note', [SalesController::class, 'filterDeliveryNote'])->name('delivery-note-filter.admin');
 
     Route::get('/sales-return/{id}', [SalesController::class, 'salesReturn'])->name('admin.sales.return');
-
     Route::get('all-sales-return', [SalesController::class, 'getAllReturnInvoice'])->name('admin.allreturninvoices');
-
     Route::post('saveCustomer', [SalesController::class, 'saveCustomer'])->name('admin.saveCustomer');
+
+    // service order
+    Route::get('service-sales', [ServiceSalesController::class, 'salesService'])->name('admin.salesService');
     
     // partno status 
     Route::get('/published-partno/{id}', [OrderController::class, 'published_partno']);
