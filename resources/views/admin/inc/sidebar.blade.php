@@ -195,6 +195,15 @@
             <span class="pull-right-container"> </span>
         </a>
     </li>
+
+    <li class="{{ (request()->is('admin/company')) ? 'active' : '' }}">
+        <a href="{{ route('admin.company')}}">
+            <i class="fa fa-users"></i>
+            <span>Company</span>
+            <span class="pull-right-container"> </span>
+        </a>
+    </li>
+
     @endif
 
 

@@ -81,11 +81,11 @@
                             </div>
 
                             <div class="form-group col-md-3">
-                                <label for="brand_id">Company/Brand</label>
-                                <select name="brand_id" id="brand_id" class="form-control select2">
+                                <label for="company_id">Company</label>
+                                <select name="company_id" id="company_id" class="form-control select2">
                                     <option value="">Select</option>
-                                    @foreach (\App\Models\Brand::where('branch_id', Auth::user()->branch_id)->where('status','1')->get() as $brand)
-                                    <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                    @foreach (\App\Models\Brand::where('branch_id', Auth::user()->branch_id)->where('status','1')->get() as $company)
+                                    <option value="{{ $company->id }}">{{ $company->name }}</option>
                                     @endforeach
                                 </select>
                             </div>

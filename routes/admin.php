@@ -33,6 +33,7 @@ use App\Http\Controllers\Admin\DaybookController;
 use App\Http\Controllers\Admin\CashflowController;
 use App\Http\Controllers\Admin\IncomestatementController;
 use App\Http\Controllers\Admin\BalancesheetController;
+use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\CompanyDetailsController;
 use App\Http\Controllers\Admin\FinancialStatementController;
@@ -106,6 +107,12 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('/published-brand/{id}', [BrandController::class, 'published_brand']);
     Route::get('/unpublished-brand/{id}', [BrandController::class, 'unpublished_brand']);
     Route::post('/edit-brand/{id}', [BrandController::class, 'edit_brand']);
+
+    // company
+    Route::get('company', [CompanyController::class, 'index'])->name('admin.company');
+    Route::post('company', [CompanyController::class, 'store']);
+    Route::get('company/{id}', [CompanyController::class, 'edit']);
+    Route::put('company/{id}', [CompanyController::class, 'update']);
 
     // add group
     Route::get('/product-group', [GroupController::class, 'view_product_group'])->name('view_product_group');
