@@ -28,7 +28,7 @@ echo Session::put('info', '');
         <div class="ermsg2"></div>
         @component('components.widget')
             @slot('title')
-                Product Group
+                Specification
             @endslot
             @slot('description')
                 Particular products information
@@ -192,9 +192,6 @@ echo Session::put('info', '');
     function save_group2() {
         if ($("#groupName2").val() == "") {
             alert("Please Provide Group Name");
-        }
-        if ($("#groupid").val() == "") {
-            alert("Please Provide Group ID");
         } else {
             
             var group = $("#groupName2").val()

@@ -88,7 +88,7 @@
                                         </td>
                                     </tr>
 
-                                    <tr class="d-none">
+                                    <tr class="">
                                         <td><label class="control-label">Unit</label></td>
                                         <td colspan="2"><input name="unit" id="unit" type="text" class="form-control"
                                                 maxlength="50px" placeholder="" value="{{ old('unit') }}" />
@@ -183,19 +183,19 @@
                                         </td>
                                     </tr>
 
-                                    <tr style="display: none">
-                                        <td><label class="control-label">Substitute Product</label></td>
+                                    <tr style="">
+                                        <td><label class="control-label">Specification</label></td>
                                         <td>
                                             <select name="substitute[]" id="substitute" class="form-control select2" multiple>
-                                                @foreach ($product as $item)
-                                                <option value="{{ $item->id }}">{{ $item->productname }} - {{ $item->part_no }}</option>
+                                                @foreach (\App\Models\Group::all() as $item)
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
                                                 @endforeach
                                             </select>
                                         </td>
                                     </tr>
 
                                     <tr class="d-none">
-                                        <td><label class="control-label">Replacement</label></td>
+                                        <td><label class="control-label">replacement</label></td>
                                         <td>
                                             <input type="text" name="replacement" id="replacement" class="form-control" rows="3" value="" />
                                         </td>

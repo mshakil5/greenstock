@@ -57,7 +57,7 @@
 
                         <div class="form-row">
 
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
                                 <label for="product">Product*</label>
                                 <select name="product" id="product" class="form-control select2">
                                     <option value="">Select</option>
@@ -67,7 +67,12 @@
                                 </select>
                             </div>
 
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
+                                <label for="capacity">Capacity</label>
+                                <input type="text" class="form-control" id="capacity" name="capacity">
+                            </div>
+
+                            <div class="form-group col-md-4">
                                 <label for="price">Price</label>
                                 <input type="number" class="form-control" id="price" name="price">
                             </div>
@@ -221,6 +226,7 @@
             var code = $("#code").val();
             var name = $("#name").val();
             var price = $("#price").val();
+            var capacity = $("#capacity").val();
 
             var product_id = $("input[name='product_id[]']")
                 .map(function() {
@@ -242,6 +248,7 @@
                     price,
                     product_id,
                     quantity,
+                    capacity,
                 },
 
                 success: function(d) {

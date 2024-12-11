@@ -21,13 +21,13 @@ class GroupController extends Controller
   
     public function save_group(Request $request)
     {
-      $check = Group::where('groupid', $request->groupid)->first();
-      if ($check) {
-        $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>This ID already exits..!</b></div>";
-        return response()->json(['status'=> 303,'message'=>$message]);
-        exit();
+      // $check = Group::where('groupid', $request->groupid)->first();
+      // if ($check) {
+      //   $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>This ID already exits..!</b></div>";
+      //   return response()->json(['status'=> 303,'message'=>$message]);
+      //   exit();
 
-      }
+      // }
       
 
 
@@ -70,13 +70,13 @@ class GroupController extends Controller
     public function edit_group(Request $request, $id)
     {
 
-      $check = Group::where('groupid', $request['data']['groupid'])->where('id','!=', $id)->first();
-      if ($check) {
-        $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>This ID already exits..!</b></div>";
-        return response()->json(['status'=> 303,'message'=>$message]);
-        exit();
+      // $check = Group::where('groupid', $request['data']['groupid'])->where('id','!=', $id)->first();
+      // if ($check) {
+      //   $message ="<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>This ID already exits..!</b></div>";
+      //   return response()->json(['status'=> 303,'message'=>$message]);
+      //   exit();
 
-      }
+      // }
           $group = Group::where('id',$id)
                   ->update(['name' =>$request['data']['groupname'], 'groupid' =>$request['data']['groupid']]);
 

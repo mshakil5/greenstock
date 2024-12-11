@@ -33,11 +33,14 @@ class ServiceController extends Controller
                 $service->code = $request->code;
                 $service->name = $request->name;
                 $service->price = $request->price;
+                $service->capacity = $request->capacity;
                 $service->created_by= Auth::user()->id;
 
             if ($service->save()) {
 
-                foreach($request->input('product_id') as $key => $value)
+                if (isset($request->product_id)) {
+
+                    foreach($request->input('product_id') as $key => $value)
                     {
 
                         $purchasehistry = new ServiceDetail();
@@ -48,6 +51,9 @@ class ServiceController extends Controller
                         $purchasehistry->save();
 
                     }
+                }
+
+                
 
                 $message ="<div class='alert alert-success' style='color:white'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Service Create Successfully.</b></div>";
                 return response()->json(['status'=> 300,'message'=>$message]);
