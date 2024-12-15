@@ -180,16 +180,12 @@
                     console.log(d);
                     $("#loader").removeClass('fa fa-spinner fa-spin');
                     $(".btn-submit").removeAttr("disabled", true);
-                    if (d.status == 303) {
-                        $(".ermsg").html(d.message);
-                        pagetop();
-                    } else if (d.status == 300) {
-                        $(".ermsg").html(d.message);
-                        pagetop();
-                        // window.setTimeout(function() {
-                        //     location.reload()
-                        // }, 2000)
 
+                    if (d.status == 400) {
+                        $(".ermsg").html(d.message);
+                    } else {
+                        $(".ermsg").html(d.message);
+                        window.setTimeout(function(){location.reload()},2000)
                     }
                 },
                 error: function(xhr, status, error) {
