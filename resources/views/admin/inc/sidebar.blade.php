@@ -156,6 +156,12 @@
                 <a href="{{ route('admin.salesServiceRequest')}}"><i class="fa fa-adjust"></i>Service Request
                 </a>
             </li>
+
+            <li class="{{ (request()->is('admin/get-service-request')) ? 'active' : '' }}">
+                <a href="{{ route('admin.getServiceRequest')}}"><i class="fa fa-adjust"></i>Manage Service Request
+                </a>
+            </li>
+
             @endif
 
             @if(Auth::user()->type == '1' && in_array('3', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('3', json_decode(Auth::user()->role->permission)))

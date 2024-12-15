@@ -122,4 +122,11 @@ class ServiceSalesController extends Controller
         }
 
     }
+
+    public function getServiceRequest()
+    {
+        
+        $data = ServiceRequest::orderby('id', 'DESC')->get();
+        return view('admin.salesService.allrequest',compact('data'));
+    }
 }
