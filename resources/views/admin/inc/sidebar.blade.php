@@ -42,15 +42,15 @@
     <li class="treeview {{ (request()->is('admin/add-services')) ? 'active' : '' }}{{ (request()->is('admin/all-services')) ? 'active' : '' }}">
         <a href="#">
             <i class="fa fa-files-o"></i>
-            <span> Service</span>
+            <span> Service Package</span>
             <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i></span>
         </a>
         <ul class="treeview-menu">
             
-            <li class="{{ (request()->is('admin/add-services')) ? 'active' : '' }}"><a href="{{ route('admin.addService')}}"><i class="fa fa-clone"></i> Add New Service</a> </li>
+            <li class="{{ (request()->is('admin/add-services')) ? 'active' : '' }}"><a href="{{ route('admin.addService')}}"><i class="fa fa-clone"></i> Add New Package</a> </li>
 
-            <li class="{{ (request()->is('admin/all-services') || request()->routeIs('admin.editproduct')) ? 'active' : '' }}"><a href="{{ route('admin.manageService')}}"><i class="fa fa-leaf"></i> Manage Service</a> </li>
+            <li class="{{ (request()->is('admin/all-services') || request()->routeIs('admin.editproduct')) ? 'active' : '' }}"><a href="{{ route('admin.manageService')}}"><i class="fa fa-leaf"></i>  Package List</a> </li>
         </ul>
     </li>
 
@@ -149,12 +149,23 @@
             <i class="fa fa-angle-left pull-right"></i></span>
         </a>
         <ul class="treeview-menu">
+
+
+            @if(Auth::user()->type == '1' && in_array('3', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('3', json_decode(Auth::user()->role->permission)))
+            <li class="{{ (request()->is('admin/service-request')) ? 'active' : '' }}">
+                <a href="{{ route('admin.salesServiceRequest')}}"><i class="fa fa-adjust"></i>Service Request
+                </a>
+            </li>
+            @endif
+
             @if(Auth::user()->type == '1' && in_array('3', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('3', json_decode(Auth::user()->role->permission)))
             <li class="{{ (request()->is('admin/service-sales')) ? 'active' : '' }}">
                 <a href="{{ route('admin.salesService')}}"><i class="fa fa-adjust"></i>Create Service Sales
                 </a>
             </li>
             @endif
+
+
             {{-- @if(Auth::user()->type == '1' && in_array('4', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('4', json_decode(Auth::user()->role->permission)))
             <li class="{{ (request()->is('admin/all-sellsinvoice') || request()->routeIs('admin.sales.edit') || request()->routeIs('admin.sales.return')) ? 'active' : '' }}">
                 <a href="{{ route('admin.allsellinvoice')}}"><i class="fa fa-adjust"></i> Manage Sales
