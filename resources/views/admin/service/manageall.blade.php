@@ -25,9 +25,12 @@
                             </td>
                             <td class="text-center">{{ $data->code }}</td>
                             <td class="text-center"> 
-                                @foreach ($data->serviceDetail as $item)
-                                    <p>Product Name: {{$item->product->productname}}, <br> Qty: {{$item->quantity}} </p>
-                                @endforeach
+                                @if (isset($data->serviceDetail))
+                                    @foreach ($data->serviceDetail as $item)
+                                        <p>Product Name: {{$item->product->productname ?? " "}}, <br> Qty: {{$item->quantity ?? " "}} </p>
+                                    @endforeach
+                                @endif
+                                
                             </td>
                             <td class="text-center">{{ $data->price }}</td>
                             <td class="text-center"> </td>

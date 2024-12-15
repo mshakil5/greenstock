@@ -72,6 +72,7 @@ class ServiceController extends Controller
     public function allService()
     {
         $data = Service::with('serviceDetail')->orderby('id', 'DESC')->get();
+        // dd($data);
         return view('admin.service.manageall', compact('data'));
     }
 

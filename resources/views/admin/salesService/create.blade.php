@@ -35,12 +35,12 @@
                         <div class="form-row">
 
                             <div class="form-group col-md-2">
-                                <label for="date">Invoice Date *</label>
+                                <label for="date">Date *</label>
                                 <input type="date" class="form-control" id="date" name="date" value="{{ date('Y-m-d') }}">
                             </div>
 
                             <div class="form-group col-md-3">
-                                <label for="invoiceno">Invoice No *</label>
+                                <label for="invoiceno">Job Number</label>
                                 <input type="number" class="form-control" id="invoiceno" name="invoiceno">
                             </div>
 
@@ -54,7 +54,7 @@
                             </div>
 
                             <div class="form-group col-md-3">
-                                <label for="customer_id">Customer *</label>
+                                <label for="customer_id">Customer</label>
                                 <select name="customer_id" id="customer_id" class="form-control select2">
                                     <option value="">Select</option>
                                     @foreach (\App\Models\Customer::where('branch_id', Auth::user()->branch_id)->where('status','1')->get() as $customer)
@@ -80,15 +80,58 @@
                                 </select>
                             </div>
 
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-6">
                                 <label for="company_id">Company</label>
                                 <select name="company_id" id="company_id" class="form-control select2">
                                     <option value="">Select</option>
-                                    @foreach (\App\Models\Brand::where('branch_id', Auth::user()->branch_id)->where('status','1')->get() as $company)
+                                    @foreach (\App\Models\Company::all() as $company)
                                     <option value="{{ $company->id }}">{{ $company->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
+
+                            <div class="form-group col-md-2">
+                                <label for="distance">Distance</label>
+                                <input type="text" class="form-control" id="distance" name="distance">
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label for="in_house">In House</label>
+                                <input type="number" class="form-control" id="in_house" name="in_house">
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label for="installation">Installation</label>
+                                <input type="number" class="form-control" id="installation" name="installation">
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label for="before_service">Before Service</label>
+                                <input type="number" class="form-control" id="before_service" name="before_service">
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label for="stock_repair">Stock Repair</label>
+                                <input type="number" class="form-control" id="stock_repair" name="stock_repair">
+                            </div>
+
+                            <div class="form-group col-md-2">
+                                <label for="travel_charge">Travel Charge</label>
+                                <input type="number" class="form-control" id="travel_charge" name="travel_charge">
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <label for="product">Product</label>
+                                <select name="product" id="product" class="form-control select2">
+                                    <option value="">Select</option>
+                                    @foreach (\App\Models\Product::select('id','productname')->get() as $product)
+                                    <option value="{{ $product->id }}">{{ $product->productname }}</option>
+                                    @endforeach
+                                </select>
+
+                            </div>
+
+
                         </div>
 
                     </form>
@@ -114,6 +157,32 @@
                     </thead>
 
                     <tbody id="inner">
+                    </tbody>
+                </table>
+
+
+            </div>
+
+
+            <div class="box box-default box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Product List</h3>
+                </div>
+
+                <table class="table table-hover" id="productTable">
+                    <thead>
+                        <tr>
+                            <th class="text-center">New</th>
+                            <th class="text-center">Product Name</th>
+                            <th class="text-center">Qty</th>
+                            <th class="text-center">Unit Purchase Price</th>
+                            <th class="text-center">Unit Selling Price</th>
+                            <th class="text-center">Total Price</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="productinner">
                     </tbody>
                 </table>
 
@@ -187,6 +256,11 @@
 
                     <div class="form-group row">
                         <div class="col-sm-12">
+
+                            <input class="form-check-input" type="checkbox" value="1" id="partnoshow" checked>
+                            <label class="form-check-label" for="partnoshow">
+                                Reduce from stock
+                            </label>
 
                             <div class="button-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
                                 <button class="btn btn-success btn-md btn-submit" id="quotationBtn" type="submit">
