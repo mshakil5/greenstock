@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class ServiceRequest extends Model
 {
     use HasFactory;
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
+
+    public function company()
+    {
+        return $this->belongsTo('App\Models\Company');
+    }
 }

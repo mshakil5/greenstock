@@ -57,8 +57,8 @@ echo Session::put('message', '');
                                 <td>{{$item->customer_name}}</td>
                                 <td>{{$item->customer_phone}}</td>
                                 <td>{{$item->address}}</td>
-                                <td>{{$item->user_id}}</td>
-                                <td>{{$item->company_id}}</td>
+                                <td>{{$item->user->name}}</td>
+                                <td>{{$item->company->name}}</td>
                                 <td></td>
                             </tr>
                             @endforeach
