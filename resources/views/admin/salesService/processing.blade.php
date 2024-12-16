@@ -141,7 +141,6 @@
                     <thead>
                         <tr>
                             <th class="text-center">Service Name</th>
-                            <th class="text-center">product</th>
                             <th class="text-center">Qty</th>
                             <th class="text-center">Unit Price</th>
                             <th class="text-center">Total Price</th>
@@ -174,8 +173,28 @@
                     <tbody id="productinner">
                     </tbody>
                 </table>
+            </div>
 
+            <div class="box box-default box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Additional Product List</h3>
+                </div>
 
+                <table class="table table-hover" id="productTable">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Product Name</th>
+                            <th class="text-center">Qty</th>
+                            <th class="text-center">Purchase price per unit</th>
+                            <th class="text-center">Total Purchase Price</th>
+                            <th class="text-center">Selling Price</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="additionalitem">
+                    </tbody>
+                </table>
             </div>
 
         </div>
@@ -421,8 +440,6 @@
                                     value="${d.service_id}" class="form-control ckservice_id" readonly>
                             </td>
                             <td class="text-center">
-                            </td>
-                            <td class="text-center">
                                 <input type="number" id="quantity" name="quantity[]" 
                                     value="1" min="1" class="form-control quantity">
                             </td>
@@ -456,6 +473,101 @@
 
                         $("table #inner ").append(markup);
                         $("table #productinner").append(d.serviceDtl);
+                        net_total();
+                        net_total_vat();
+
+                    }
+                },
+                error: function(d) {
+                    console.log(d);
+                }
+            });
+
+        });
+
+
+        var apurl = "{{URL::to('/admin/getproduct')}}";
+        $("#product").change(function() {
+            event.preventDefault();
+            var product = $(this).val();
+
+
+            var product_id = $("input[name='product_id[]']")
+                .map(function() {
+                    return $(this).val();
+                }).get();
+
+                product_id.push(product);
+            seen = product_id.filter((s => v => s.has(v) || !s.add(v))(new Set));
+
+            console.log("product: " + product, product_id);
+            if (Array.isArray(seen) && seen.length) {
+                $(".ermsg").html("<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Duplicate product found..!</b></div>");
+                return;
+            }
+
+
+            $.ajax({
+                url: apurl,
+                method: "POST",
+                data: {
+                    product: product
+                },
+
+                success: function(d) {
+                    if (d.status == 303) {
+
+                    } else if (d.status == 300) {
+
+                        console.log(d);
+
+                        var markup = `
+                        <tr>
+                            <td class="text-center">
+                                <input type="text" id="name" name="name[]" 
+                                    value="${d.productname}" class="form-control" readonly>
+                                <input type="hidden" id="product_id" name="product_id[]" 
+                                    value="${d.product_id}" class="form-control ckproduct_id" readonly>
+                            </td>
+                            <td class="text-center">
+                                <input type="number" id="quantity" name="quantity[]" 
+                                    value="1" min="1" class="form-control quantity">
+                            </td>
+                            <td class="text-center">
+                                <input type="number" id="unit_price" name="unit_price[]" 
+                                    value="${d.price}" class="form-control unit-price">
+                            </td>
+                            <td class="text-center">
+                                <input type="text" id="total_amount" name="total_amount[]" 
+                                    value="" class="form-control total" >
+                            </td>
+                            
+                            <td class="text-center">
+                                <input type="text" id="selling_price" name="selling_price[]" 
+                                    value="" class="form-control sellingtotal" >
+                            </td>
+
+                            <td class="text-center">
+                                <div style="
+                                    color: white; 
+                                    user-select: none; 
+                                    padding: 5px; 
+                                    background: red; 
+                                    width: 45px; 
+                                    display: flex; 
+                                    align-items: center; 
+                                    margin-right: 5px; 
+                                    justify-content: center; 
+                                    border-radius: 4px;
+                                    left: 4px;
+                                    top: 81px;" 
+                                    onclick="removeRow(event)">
+                                    X
+                                </div>
+                            </td>
+                        </tr>`;
+
+                        $("table #additionalitem ").append(markup);
                         net_total();
                         net_total_vat();
 
