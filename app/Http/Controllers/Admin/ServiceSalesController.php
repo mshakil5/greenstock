@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Service;
+use App\Models\ServiceDetail;
 use App\Models\ServiceRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,8 +37,28 @@ class ServiceSalesController extends Controller
         if(empty($serviceDtl)){
             return response()->json(['status'=> 303,'message'=>"No data found"]);
         }else{
-            
-            return response()->json(['status'=> 300,'name'=>$serviceDtl->name,'product_id'=>$serviceDtl->id, 'price'=>$serviceDtl->price]);
+            $serviceProducts = ServiceDetail::where('service_id', $serviceDtl->id)->get();
+
+            $prop = '';
+
+            foreach ($serviceProducts as $rate){
+                // <!-- Single Property Start -->
+                $prop.= '<div class="form-row dynamic-row">
+                            <div class="form-group col-md-3">
+                                <input type="text" class="form-control" name="productname[]" value="'.$rate->product->productname.'"><input type="hidden" class="form-control" name="product_id[]" value="'.$rate->product_id.'"<input type="hidden" class="form-control" name="servicedtlid[]" value="'.$rate->id.'">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <input type="number" class="form-control" name="quantity[]" value="'.$rate->quantity.'">
+                            </div>
+                            <div class="form-group col-md-1">
+                                <button type="button" class="btn btn-danger remove-row"><i class="fas fa-minus"></i></button>
+                            </div>
+                        </div>';
+            }
+
+
+
+            return response()->json(['status'=> 300,'name'=>$serviceDtl->name,'product_id'=>$serviceDtl->id, 'price'=>$serviceDtl->price, 'serviceDtl'=>$prop]);
             
         }
 

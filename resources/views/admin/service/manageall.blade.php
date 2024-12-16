@@ -21,7 +21,7 @@
                     @foreach($data as $data)
                         <tr>
                             <td>
-                                {{ $data->name }}
+                                {{ $data->name }}-{{ $data->id }}
                             </td>
                             <td class="text-center">{{ $data->code }}</td>
                             <td class="text-center"> 

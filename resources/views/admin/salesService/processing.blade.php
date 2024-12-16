@@ -141,6 +141,7 @@
                     <thead>
                         <tr>
                             <th class="text-center">Service Name</th>
+                            <th class="text-center">product</th>
                             <th class="text-center">Qty</th>
                             <th class="text-center">Unit Price</th>
                             <th class="text-center">Total Price</th>
@@ -411,7 +412,7 @@
 
                     } else if (d.status == 300) {
 
-                        // console.log(d);
+                        console.log(d);
 
                         var markup = `
                         <tr>
@@ -420,6 +421,9 @@
                                     value="${d.name}" class="form-control" readonly>
                                 <input type="hidden" id="service_id" name="service_id[]" 
                                     value="${d.service_id}" class="form-control ckservice_id" readonly>
+                            </td>
+                            <td class="text-center">
+                                <div id=productitem${d.service_id}></div>
                             </td>
                             <td class="text-center">
                                 <input type="number" id="quantity" name="quantity[]" 
@@ -454,6 +458,7 @@
                         </tr>`;
 
                         $("table #inner ").append(markup);
+                        $("#productitem"+d.service_id).html(d.serviceDtl);
                         net_total();
                         net_total_vat();
 
