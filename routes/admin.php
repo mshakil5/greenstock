@@ -224,6 +224,7 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     // service order
     Route::get('service-sales', [ServiceSalesController::class, 'salesService'])->name('admin.salesService');
     Route::get('service-request', [ServiceSalesController::class, 'salesServiceRequest'])->name('admin.salesServiceRequest');
+    Route::get('processing-service-request/{id}', [ServiceSalesController::class, 'processingServiceRequest'])->name('admin.processingService');
     Route::post('service-request', [ServiceSalesController::class, 'salesServiceRequestStore'])->name('salesServiceRequestStore');
     Route::get('get-service-request', [ServiceSalesController::class, 'getServiceRequest'])->name('admin.getServiceRequest');
     

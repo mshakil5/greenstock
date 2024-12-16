@@ -22,6 +22,13 @@ class ServiceSalesController extends Controller
         return view('admin.salesService.request');
     }
 
+    public function processingServiceRequest($id)
+    {
+        
+        $serviceRequest = ServiceRequest::where('id', $id)->first();
+        return view('admin.salesService.processing', compact('serviceRequest'));
+    }
+
     public function getservice(Request $request)
     {
         $serviceDtl = Service::where('id', '=', $request->service)->first();
