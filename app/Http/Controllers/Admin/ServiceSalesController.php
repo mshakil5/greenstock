@@ -43,22 +43,37 @@ class ServiceSalesController extends Controller
 
             foreach ($serviceProducts as $rate){
                 // <!-- Single Property Start -->
-                $prop.= '<div class="form-row dynamic-row">
-                            <div class="form-group col-md-3">
+                $prop.= '<tr>
+                            <td class="text-center">
                                 <input type="text" class="form-control" name="productname[]" value="'.$rate->product->productname.'"><input type="hidden" class="form-control" name="product_id[]" value="'.$rate->product_id.'"<input type="hidden" class="form-control" name="servicedtlid[]" value="'.$rate->id.'">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <input type="number" class="form-control" name="quantity[]" value="'.$rate->quantity.'">
-                            </div>
-                            <div class="form-group col-md-1">
-                                <button type="button" class="btn btn-danger remove-row"><i class="fas fa-minus"></i></button>
-                            </div>
-                        </div>';
+                            </td>
+                            <td class="text-center">
+                                 <input type="number" class="form-control" name="quantity[]" value="'.$rate->quantity.'">
+                            </td>
+                            <td class="text-center">
+                                <div style="
+                                    color: white; 
+                                    user-select: none; 
+                                    padding: 5px; 
+                                    background: red; 
+                                    width: 45px; 
+                                    display: flex; 
+                                    align-items: center; 
+                                    margin-right: 5px; 
+                                    justify-content: center; 
+                                    border-radius: 4px;
+                                    left: 4px;
+                                    top: 81px;" 
+                                    onclick="removeRow(event)">
+                                    X
+                                </div>
+                            </td>
+                        </tr>';
             }
 
 
 
-            return response()->json(['status'=> 300,'name'=>$serviceDtl->name,'product_id'=>$serviceDtl->id, 'price'=>$serviceDtl->price, 'serviceDtl'=>$prop]);
+            return response()->json(['status'=> 300,'name'=>$serviceDtl->name,'service_id'=>$serviceDtl->id, 'price'=>$serviceDtl->price, 'serviceDtl'=>$prop]);
             
         }
 

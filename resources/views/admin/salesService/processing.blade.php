@@ -159,18 +159,14 @@
 
             <div class="box box-default box-solid">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Product List</h3>
+                    <h3 class="box-title">Service Product List</h3>
                 </div>
 
                 <table class="table table-hover" id="productTable">
                     <thead>
                         <tr>
-                            <th class="text-center">New</th>
                             <th class="text-center">Product Name</th>
                             <th class="text-center">Qty</th>
-                            <th class="text-center">Unit Purchase Price</th>
-                            <th class="text-center">Unit Selling Price</th>
-                            <th class="text-center">Total Price</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
@@ -386,6 +382,7 @@
             event.preventDefault();
             var service = $(this).val();
 
+
             var service_id = $("input[name='service_id[]']")
                 .map(function() {
                     return $(this).val();
@@ -394,6 +391,7 @@
             service_id.push(service);
             seen = service_id.filter((s => v => s.has(v) || !s.add(v))(new Set));
 
+            console.log("servie: " + service, service_id);
             if (Array.isArray(seen) && seen.length) {
                 $(".ermsg").html("<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Duplicate service found..!</b></div>");
                 return;
@@ -412,7 +410,7 @@
 
                     } else if (d.status == 300) {
 
-                        console.log(d);
+                        // console.log(d);
 
                         var markup = `
                         <tr>
@@ -423,7 +421,6 @@
                                     value="${d.service_id}" class="form-control ckservice_id" readonly>
                             </td>
                             <td class="text-center">
-                                <div id=productitem${d.service_id}></div>
                             </td>
                             <td class="text-center">
                                 <input type="number" id="quantity" name="quantity[]" 
@@ -458,7 +455,7 @@
                         </tr>`;
 
                         $("table #inner ").append(markup);
-                        $("#productitem"+d.service_id).html(d.serviceDtl);
+                        $("table #productinner").append(d.serviceDtl);
                         net_total();
                         net_total_vat();
 
