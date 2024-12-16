@@ -191,9 +191,9 @@
         <div class="container-fluid">
             <div class="offset-md-3 col-md-9">
                 <div class="pull-right hidden-xs">
-                    <b>Version:</b> 1.1.0
+                    
                 </div>
-                <strong>Copyright &copy; </strong>Next Link Ltd All rights reserved.
+                <strong>Copyright &copy; </strong>Green Technology, All rights reserved.
             </div>
         </div>
     </footer>

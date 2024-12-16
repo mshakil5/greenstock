@@ -274,14 +274,15 @@
                                 <button class="btn btn-success btn-md btn-submit" id="quotationBtn" type="submit">
                                     <i class="fa fa-plus-circle"></i> Quotation
                                 </button>
-                                <button class="btn btn-success btn-md btn-submit" id="deliveryBtn" type="submit">
+                                {{-- <button class="btn btn-success btn-md btn-submit" id="deliveryBtn" type="submit">
                                     <i class="fa fa-plus-circle"></i> Delivery Note
-                                </button>
-                            </div>
-                            <div class="button-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
+                                </button> --}}
                                 <button class="btn btn-success btn-md btn-submit" id="salesBtn" type="submit">
                                     <i class="fa fa-plus-circle"></i> Sales
                                 </button>
+                            </div>
+                            <div class="button-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
+                                
                             </div>
                         </div>
                     </div>
@@ -526,25 +527,25 @@
                             <td class="text-center">
                                 <input type="text" id="name" name="name[]" 
                                     value="${d.productname}" class="form-control" readonly>
-                                <input type="hidden" id="product_id" name="product_id[]" 
+                                <input type="hidden" id="product_id" name="approduct_id[]" 
                                     value="${d.product_id}" class="form-control ckproduct_id" readonly>
                             </td>
                             <td class="text-center">
-                                <input type="number" id="quantity" name="quantity[]" 
-                                    value="1" min="1" class="form-control quantity">
+                                <input type="number" id="quantity" name="apquantity[]" 
+                                    value="1" min="1" class="form-control apquantity">
                             </td>
                             <td class="text-center">
-                                <input type="number" id="unit_price" name="unit_price[]" 
-                                    value="${d.price}" class="form-control unit-price">
+                                <input type="number" id="unit_price" name="apunit_price[]" 
+                                    value="${d.price}" class="form-control apunit-price">
                             </td>
                             <td class="text-center">
                                 <input type="text" id="total_amount" name="total_amount[]" 
-                                    value="" class="form-control total" >
+                                    value="" class="form-control aptotal" >
                             </td>
                             
                             <td class="text-center">
                                 <input type="text" id="selling_price" name="selling_price[]" 
-                                    value="" class="form-control sellingtotal" >
+                                    value="" class="form-control apsellingtotal" >
                             </td>
 
                             <td class="text-center">
@@ -877,9 +878,8 @@
         });
         // discount calculation end
 
-        $("#paid_amount").on('keyup change input', function() {
-            // calculateDue();
-        });
+    
+        
         // due calculation
         $("#paid_amount").on('keyup change input', function() {
 

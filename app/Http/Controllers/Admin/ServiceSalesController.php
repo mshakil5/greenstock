@@ -45,10 +45,10 @@ class ServiceSalesController extends Controller
                 // <!-- Single Property Start -->
                 $prop.= '<tr>
                             <td class="text-center">
-                                <input type="text" class="form-control" name="productname[]" value="'.$rate->product->productname.'"><input type="hidden" class="form-control" name="product_id[]" value="'.$rate->product_id.'"<input type="hidden" class="form-control" name="servicedtlid[]" value="'.$rate->id.'">
+                                <input type="text" class="form-control" name="spproductname[]" value="'.$rate->product->productname.'"><input type="hidden" class="form-control" name="spproduct_id[]" value="'.$rate->product_id.'"<input type="hidden" class="form-control" name="servicedtlid[]" value="'.$rate->id.'">
                             </td>
                             <td class="text-center">
-                                 <input type="number" class="form-control" name="quantity[]" value="'.$rate->quantity.'">
+                                 <input type="number" class="form-control" name="spquantity[]" value="'.$rate->quantity.'">
                             </td>
                             <td class="text-center">
                                 <div style="

@@ -225,7 +225,7 @@
 
 
     @if(Auth::user()->type == '1' && in_array('16', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('16', json_decode(Auth::user()->role->permission)))
-    <li class="{{ (request()->is('admin/branch')) ? 'active' : '' }}">
+    <li class="{{ (request()->is('admin/branch')) ? 'active' : '' }} d-none">
         <a href="{{ route('view_branch')}}">
             <i class="fa fa-users"></i>
             <span>Branch</span>
@@ -236,7 +236,7 @@
 
 
     @if((Auth::user()->type == '1' || Auth::user()->type == '0') && in_array('24', json_decode(Auth::user()->role->permission)))
-    <li class="{{ (request()->is('admin/chart-of-account')) ? 'active' : '' }}">
+    <li class="{{ (request()->is('admin/chart-of-account')) ? 'active' : '' }} d-none">
         <a href="{{ route('admin.addchartofaccount')}}">
             <i class="fa fa-users"></i>
             <span>Chart Of Accounts</span>
@@ -247,7 +247,7 @@
 
 
     @if((Auth::user()->type == '1' || Auth::user()->type == '0') && in_array('25', json_decode(Auth::user()->role->permission)))
-    <li class="{{ (request()->is('admin/income')) ? 'active' : '' }}">
+    <li class="{{ (request()->is('admin/income')) ? 'active' : '' }} d-none">
         <a href="{{ route('admin.income')}}">
             <i class="fa fa-users"></i>
             <span>Income</span>
@@ -258,7 +258,7 @@
 
 
     @if((Auth::user()->type == '1' || Auth::user()->type == '0') && in_array('26', json_decode(Auth::user()->role->permission)))
-    <li class="{{ (request()->is('admin/expense')) ? 'active' : '' }}">
+    <li class="{{ (request()->is('admin/expense')) ? 'active' : '' }} d-none">
         <a href="{{ route('admin.expense')}}">
             <i class="fa fa-users"></i>
             <span>Expense</span>
@@ -269,7 +269,7 @@
 
 
     @if((Auth::user()->type == '1' || Auth::user()->type == '0') && in_array('27', json_decode(Auth::user()->role->permission)))
-    <li class="{{ (request()->is('admin/asset')) ? 'active' : '' }}">
+    <li class="{{ (request()->is('admin/asset')) ? 'active' : '' }} d-none">
         <a href="{{ route('admin.asset')}}">
             <i class="fa fa-users"></i>
             <span>Assets</span>
@@ -280,7 +280,7 @@
 
 
     @if((Auth::user()->type == '1' || Auth::user()->type == '0') && in_array('28', json_decode(Auth::user()->role->permission)))
-    <li class="{{ (request()->is('admin/liabilities')) ? 'active' : '' }}">
+    <li class="{{ (request()->is('admin/liabilities')) ? 'active' : '' }} d-none">
         <a href="{{ route('admin.liabilities')}}">
             <i class="fa fa-users"></i>
             <span>Liabilities</span>
@@ -291,7 +291,7 @@
 
 
     @if((Auth::user()->type == '1' || Auth::user()->type == '0') && in_array('29', json_decode(Auth::user()->role->permission)))
-    <li class="{{ (request()->is('admin/equity')) ? 'active' : '' }}">
+    <li class="{{ (request()->is('admin/equity')) ? 'active' : '' }} d-none">
         <a href="{{ route('admin.equity')}}">
             <i class="fa fa-users"></i>
             <span>Equity</span>
@@ -302,7 +302,7 @@
 
 
     @if((Auth::user()->type == '1' || Auth::user()->type == '0') && in_array('30', json_decode(Auth::user()->role->permission)))
-    <li class="{{ (request()->is('admin/ledger*')) ? 'active' : '' }}">
+    <li class="{{ (request()->is('admin/ledger*')) ? 'active' : '' }} d-none">
         <a href="{{ route('admin.ledger')}}">
             <i class="fa fa-users"></i>
             <span>Ledger</span>
@@ -326,7 +326,7 @@
     @endif
 
     @if(Auth::user()->type == '1' && in_array('32', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('32', json_decode(Auth::user()->role->permission)))
-    <li class="treeview {{ (request()->is('admin/cash-flow') || request()->is('admin/income-statement') || request()->is('admin/balance-sheet')) ? 'active' : '' }}">
+    <li class="treeview {{ (request()->is('admin/cash-flow') || request()->is('admin/income-statement') || request()->is('admin/balance-sheet')) ? 'active' : '' }} d-none">
         <a href="#">
             <i class="fa fa-user"></i> <span>Financial Statement</span><span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i></span>
@@ -340,7 +340,7 @@
     @endif
 
     @if(Auth::user()->type == '1' && in_array('33', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('33', json_decode(Auth::user()->role->permission)))
-    <li class="{{ request()->routeIs('admin.equityholders', 'admin.shareholders-ledger') ? 'active' : '' }}">
+    <li class="{{ request()->routeIs('admin.equityholders', 'admin.shareholders-ledger') ? 'active' : '' }} d-none">
         <a href="{{ route('admin.equityholders')}}">
             <i class="fa fa-users"></i>
             <span>Share Holders</span>
@@ -405,14 +405,14 @@
         </a>
         <ul class="treeview-menu">
             @if((Auth::user()->type == '1' || Auth::user()->type == '0') && in_array('22', json_decode(Auth::user()->role->permission)))
-            <li class="{{ request()->is('admin/payment-method') ? 'active' : '' }}">
+            <li class="{{ request()->is('admin/payment-method') ? 'active' : '' }} d-none">
                 <a href="{{ route('view_payment_method') }}">
                     <i class="fa fa-users"></i> Payment Method
                 </a>
             </li>
             @endif
             @if((Auth::user()->type == '1' || Auth::user()->type == '0') && in_array('34', json_decode(Auth::user()->role->permission)))
-            <li class="{{ request()->is('admin/switch-branch') ? 'active' : '' }}">
+            <li class="{{ request()->is('admin/switch-branch') ? 'active' : '' }} d-none">
                 <a href="{{ route('switch_branch') }}">
                     <i class="fa fa-users"></i> Switch Branch
                 </a>
