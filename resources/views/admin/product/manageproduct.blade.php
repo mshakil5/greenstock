@@ -54,8 +54,6 @@
                             <th>Code/Category</th>
                             <th>Brand</th>
                             <th>Sell price</th>
-                            <th>Model</th>
-                            <th>Location</th>
                             <th><i class=""></i> Action</th>
                         @endslot
                     @endcomponent
@@ -279,8 +277,8 @@
                     {data: 'productname', name: 'productname'},
                     {data: 'part_no', name: 'part_no'},
                     { 
-                        data: 'category_name', 
-                        name: 'category.name',
+                        data: 'product_type', 
+                        name: 'product_type',
                         render: function(data, type, row) {
                             return data ? data : 'No Category';
                         }
@@ -293,8 +291,6 @@
                         }
                     },
                     {data: 'selling_price', name: 'selling_price'},
-                    {data: 'model', name: 'model'},
-                    {data: 'location', name: 'location'},
                     {data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
             });

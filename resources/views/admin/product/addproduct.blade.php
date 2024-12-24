@@ -184,6 +184,16 @@
                                     </tr>
 
                                     <tr style="">
+                                        <td><label class="control-label">Product Type</label></td>
+                                        <td>
+                                            <select name="ptype" id="ptype" class="form-control">
+                                                <option value="1">Main Product</option>
+                                                <option value="2">Service Product</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+
+                                    <tr style="">
                                         <td><label class="control-label">Specification</label></td>
                                         <td>
                                             <select name="substitute[]" id="substitute" class="form-control select2" multiple>

@@ -28,6 +28,8 @@ class ProductController extends Controller
   public function storeProduct(Request $request)
   {
 
+    // dd($request->all());
+
     $validator = Validator::make($request->all(), [
             'product' => 'required',
             'pbrandselect' => 'required',
@@ -42,10 +44,10 @@ class ProductController extends Controller
                 ->where('branch_id', Auth::user()->branch_id)
                 ->first();
 
-        if ($check) {
-            Session::put('warning', 'The part number "' . $request->part_no . '" already exists in your branch. Please use a different part number for this branch.');
-            return back();
-        }
+        // if ($check) {
+        //     Session::put('warning', 'The part number "' . $request->part_no . '" already exists in your branch. Please use a different part number for this branch.');
+        //     return back();
+        // }
 
     $image = $request->image;
 
@@ -65,6 +67,7 @@ class ProductController extends Controller
     $product->selling_price = $request->sell_price;
     $product->selling_price_with_vat = $request->sell_price + $request->sell_price * ($request->vat_percent/100);
     $product->description = $request->productdesc;
+    $product->ptype = $request->ptype ? $request->ptype : 1;
     $product->created_by = Auth::user()->id;
     
     if ($image) {
@@ -86,11 +89,11 @@ class ProductController extends Controller
           }
         }
 
-        if ($request->replacement) {
+        if ($request->substitute) {
 
-            $allreplacementid = explode(',',$request->replacement);
+            // $allreplacementid = explode(',',$request->substitute);
 
-            foreach($allreplacementid as $key => $value)
+            foreach($request->substitute as $key => $value)
             {
                 $replace = new Replacement();
                 $replace->product_id = $product->id;
@@ -131,8 +134,8 @@ class ProductController extends Controller
           });
       }
       return Datatables::of($products)
-            ->addColumn('category_name', function ($product) {
-                return $product->category_id ? $product->category->name : 'No Category';
+            ->addColumn('product_type', function ($product) {
+                return $product->ptype == 1 ? 'Product' : 'Service';
             })
             ->addColumn('brand_name', function ($product) {
                 return $product->brand_id ? $product->brand->name : 'No Brand';
@@ -173,9 +176,7 @@ class ProductController extends Controller
         $validator = Validator::make($request->all(), [
             'id' => 'required|string',
             'productname' => 'required',
-            'category_id' => 'required|integer',
             'brand_id' => 'required|integer',
-            'part_no' => 'nullable|string',
         ]);
     
         if ($validator->fails()) {
@@ -191,12 +192,12 @@ class ProductController extends Controller
             ->where('id', '!=', $request->id)
             ->first();
     
-        if ($check) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'The part number "' . $request->part_no . '" already exists in your branch. Please use a different part number.'
-            ], 409);
-        }
+        // if ($check) {
+        //     return response()->json([
+        //         'status' => 'error',
+        //         'message' => 'The part number "' . $request->part_no . '" already exists in your branch. Please use a different part number.'
+        //     ], 409);
+        // }
 
         $product = Product::find($request->id);
         $product->productname = $request->productname;
@@ -213,6 +214,7 @@ class ProductController extends Controller
         $product->selling_price = $request->selling_price;
         $product->selling_price_with_vat = $request->selling_price + $request->selling_price * ($request->vat_percent / 100);
         $product->description = $request->description;
+        $product->ptype = $request->ptype ? $request->ptype : 1;
 
         if ($product->save()) {
             if ($request->input('alternative')) {
@@ -230,14 +232,14 @@ class ProductController extends Controller
                 }
             }
 
-            if ($request->replacement) {
+            if ($request->substitute) {
 
                 $rplmnt = Replacement::where('product_id', $request->id)->get(['id']);
                 Replacement::destroy($rplmnt->toArray());
 
-                $allreplacementid = explode(',', $request->replacement);
+                // $allreplacementid = explode(',', $request->replacement);
 
-                foreach ($allreplacementid as $key => $value) {
+                foreach ($request->substitute as $key => $value) {
                     $replace = new Replacement();
                     $replace->product_id = $product->id;
                     $replace->replacementid = $value;

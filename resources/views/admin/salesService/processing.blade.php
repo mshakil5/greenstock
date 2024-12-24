@@ -279,14 +279,14 @@
                                 </label>
 
                                 <div class="button-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
-                                    <button class="btn btn-success btn-md btn-submit" id="quotationBtn" type="submit">
+                                    {{-- <button class="btn btn-success btn-md btn-submit" id="quotationBtn" type="submit">
                                         <i class="fa fa-plus-circle"></i> Quotation
-                                    </button>
+                                    </button> --}}
                                     {{-- <button class="btn btn-success btn-md btn-submit" id="deliveryBtn" type="submit">
                                         <i class="fa fa-plus-circle"></i> Delivery Note
                                     </button> --}}
                                     <button class="btn btn-success btn-md btn-submit" id="salesBtn" type="submit">
-                                        <i class="fa fa-plus-circle"></i> Sales
+                                        <i class="fa fa-plus-circle"></i> Submit
                                     </button>
                                 </div>
                                 <div class="button-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
