@@ -43,6 +43,7 @@ echo Session::put('message', '');
                                 <th>Customer Address</th>
                                 <th>Assign Staff</th>
                                 <th>Company Name</th>
+                                <th>Status</th>
                                 <th><i class=""></i> Action</th>
                             </tr>
                         </thead>
@@ -59,7 +60,12 @@ echo Session::put('message', '');
                                 <td>{{$item->address}}</td>
                                 <td>{{$item->user->name}}</td>
                                 <td>{{$item->company->name}}</td>
-                                <td></td>
+                                
+                                <td>{{$item->status}}</td>
+
+                                <td>
+                                    <div class="table-actions"><a href="{{route('admin.processingService', $item->id)}}" class="btn btn-sm btn-primary"><span title="Return"><i class="fa fa-pencil"></i>Edit</span></a></div>
+                                </td>
                             </tr>
                             @endforeach
                     

@@ -100,7 +100,6 @@
                 <table class="table table-hover" id="protable">
                     <thead>
                         <tr>
-                            <th class="text-center">Part No</th>
                             <th class="text-center">Product Name</th>
                             <th class="text-center">Qty</th>
                             <th class="text-center">Unit Price</th>
@@ -183,18 +182,18 @@
 
                     <div class="form-group row">
                         <div class="col-sm-12">
-                            <input class="form-check-input" type="checkbox" value="1" id="partnoshow" checked>
+                            {{-- <input class="form-check-input" type="checkbox" value="1" id="partnoshow" checked>
                             <label class="form-check-label" for="partnoshow">
                                 Show Part Number in PDF.
-                            </label>
-                            <div class="button-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
+                            </label> --}}
+                            {{-- <div class="button-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
                                 <button class="btn btn-success btn-md btn-submit" id="quotationBtn" type="submit">
                                     <i class="fa fa-plus-circle"></i> Quotation
                                 </button>
                                 <button class="btn btn-success btn-md btn-submit" id="deliveryBtn" type="submit">
                                     <i class="fa fa-plus-circle"></i> Delivery Note
                                 </button>
-                            </div>
+                            </div> --}}
                             <div class="button-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
                                 <button class="btn btn-success btn-md btn-submit" id="salesBtn" type="submit">
                                     <i class="fa fa-plus-circle"></i> Sales
@@ -445,10 +444,6 @@
 
                         var markup = `
                         <tr>
-                            <td class="text-center">
-                                <input type="text" id="pert_no" name="pert_no[]" 
-                                    value="${d.part_no}" class="form-control" readonly>
-                            </td>
                             <td class="text-center">
                                 <input type="text" id="productname" name="productname[]" 
                                     value="${d.productname}" class="form-control" readonly>
