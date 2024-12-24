@@ -64,7 +64,7 @@ echo Session::put('message', '');
                                 <td>{{$item->status}}</td>
 
                                 <td>
-                                    <div class="table-actions"><a href="{{route('admin.processingService', $item->id)}}" class="btn btn-sm btn-primary"><span title="Return"><i class="fa fa-pencil"></i>Edit</span></a></div>
+                                    <div class="table-actions"><a href="{{route('admin.processingService', $item->id)}}" class="btn btn-sm btn-primary"><span title="View"><i class="fa fa-eye"></i>View</span></a></div>
                                 </td>
                             </tr>
                             @endforeach

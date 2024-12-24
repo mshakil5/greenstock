@@ -48,7 +48,7 @@ class CustomerController extends Controller
         $customer->email = $request->email;
         $customer->phone = $request->phone;
         $customer->address = $request->address;
-        $customer->type = $request->type ? $request->type : '1';
+        $customer->type = $request->type ? $request->type : '0';
         $customer->save();
 
         return response()->json([

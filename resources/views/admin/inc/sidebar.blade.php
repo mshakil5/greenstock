@@ -26,9 +26,9 @@
                 <li class="{{ (request()->is('admin/manage-product') || request()->routeIs('admin.editproduct')) ? 'active' : '' }}"><a href="{{ route('admin.manage_product')}}"><i class="fa fa-leaf"></i> Manage product</a> </li>
             @endif
             @if((Auth::user()->type == '1' || Auth::user()->type == '0') && in_array('37', json_decode(Auth::user()->role->permission)))
-                <li class="{{ (request()->is('admin/product-category')) ? 'active' : '' }}"><a href="{{ route('view_product_category')}}"><i class="fa fa-credit-card"></i>Code</a></li>
+                {{-- <li class="{{ (request()->is('admin/product-category')) ? 'active' : '' }}"><a href="{{ route('view_product_category')}}"><i class="fa fa-credit-card"></i>Code</a></li> --}}
                 <li class="{{ (request()->is('admin/product-brand')) ? 'active' : '' }}"><a href="{{ route('view_product_brand')}}"><i class="fa fa-credit-card"></i>Brand</a></li>
-                <li class="{{ (request()->is('admin/product-group')) ? 'active' : '' }}"><a href="{{ route('view_product_group')}}"><i class="fa fa-credit-card"></i>Group</a> </li>
+                <li class="{{ (request()->is('admin/product-group')) ? 'active' : '' }}"><a href="{{ route('view_product_group')}}"><i class="fa fa-credit-card"></i>Specification</a> </li>
             
                 {{-- <li><a href="{{ route('view_product_size')}}"><i class="fa fa-credit-card"></i>Sizes</a>
                 </li> --}}
@@ -127,12 +127,12 @@
                 </a>
             </li>
             @endif
-            @if(Auth::user()->type == '1' && in_array('11', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('11', json_decode(Auth::user()->role->permission)))
+            {{-- @if(Auth::user()->type == '1' && in_array('11', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('11', json_decode(Auth::user()->role->permission)))
             <li class="{{ (request()->is('admin/all-delivery-note') || request()->routeIs('admin.deliverynote.edit')) ? 'active' : '' }}">
                 <a href="{{ route('admin.alldeliverynote')}}"><i class="fa fa-adjust"></i> Delivery Notes
                 </a>
             </li>
-            @endif
+            @endif --}}
             @if((Auth::user()->type == '1' || Auth::user()->type == '0') && in_array('13', json_decode(Auth::user()->role->permission)))
             <li class="{{ (request()->is('admin/all-sales-return')) ? 'active' : '' }}">
                 <a href="{{ route('admin.allreturninvoices')}}"><i class="fa fa-adjust"></i> Returned Products
@@ -143,7 +143,7 @@
     </li>
 
 
-    <li class="treeview {{ (request()->is('admin/service-sales') || request()->is('admin/service-sales') || request()->is('admin/service-sales')) ? 'active' : '' }}{{ (request()->is('admin/service-request')) ? 'active' : '' }}">
+    <li class="treeview {{ (request()->is('admin/service-sales') || request()->is('admin/service-sales') || request()->is('admin/service-sales')) ? 'active' : '' }}{{ (request()->is('admin/service-request')) ? 'active' : '' }}{{ (request()->is('admin/get-service-request')) ? 'active' : '' }}{{ (request()->is('admin/processing-service-request/*')) ? 'active' : '' }}">
         <a href="#">
             <i class="fa fa-user"></i> <span>Service Sales</span><span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i></span>
@@ -157,19 +157,19 @@
                 </a>
             </li>
 
-            <li class="{{ (request()->is('admin/get-service-request')) ? 'active' : '' }}">
+            <li class="{{ (request()->is('admin/get-service-request')) ? 'active' : '' }}{{ (request()->is('admin/processing-service-request/*')) ? 'active' : '' }}">
                 <a href="{{ route('admin.getServiceRequest')}}"><i class="fa fa-adjust"></i>Manage Service Request
                 </a>
             </li>
 
             @endif
 
-            @if(Auth::user()->type == '1' && in_array('3', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('3', json_decode(Auth::user()->role->permission)))
+            {{-- @if(Auth::user()->type == '1' && in_array('3', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('3', json_decode(Auth::user()->role->permission)))
             <li class="{{ (request()->is('admin/service-sales')) ? 'active' : '' }}">
                 <a href="{{ route('admin.salesService')}}"><i class="fa fa-adjust"></i>Create Service Sales
                 </a>
             </li>
-            @endif
+            @endif --}}
 
 
             {{-- @if(Auth::user()->type == '1' && in_array('4', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('4', json_decode(Auth::user()->role->permission)))

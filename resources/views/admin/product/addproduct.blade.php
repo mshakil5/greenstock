@@ -164,9 +164,9 @@
                                         </td>
                                     </tr>
 
-                                    <tr>
+                                    <tr class="d-none">
                                         <td><label class="control-label">Vat(%)</label></td>
-                                        <td><input name="vat_percent" id="vat_percent" type="number" class="form-control" maxlength="50px" placeholder="" value="5" />
+                                        <td><input name="vat_percent" id="vat_percent" type="number" class="form-control" maxlength="50px" placeholder="" value="" />
                                             @if ($errors->has('vat_percent'))
                                             <span class="text-danger">{{ $errors->first('vat_percent') }}</span>
                                             @endif

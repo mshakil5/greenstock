@@ -166,7 +166,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group row">
+                    {{-- <div class="form-group row">
                         <label for="due_amount" class="col-sm-6 col-form-label">Due Amount</label>
                         <div class="col-sm-6">
                             <input type="number" class="form-control" id="due_amount" name="due_amount" min="0" readonly>
@@ -178,7 +178,7 @@
                         <div class="col-sm-6">
                             <input type="number" class="form-control" id="return_amount" name="return_amount" min="0" readonly>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="form-group row">
                         <div class="col-sm-12">
@@ -223,16 +223,7 @@
                 <form class="form-custom" id="customer-form" method="POST" action="{{ route('admin.saveCustomer') }}">
                     @csrf
                     <div class="col-sm-12">
-                        <div class="form-group col-sm-6">
-                            <div class="row">
-                                <div class="col-sm-4 text-left">
-                                    <label for="member_id">Member ID:</label>
-                                </div>
-                                <div class="col-sm-8">
-                                    <input type="text" class="form-control" id="member_id" name="member_id" placeholder="" style="width: 100%;" />
-                                </div>
-                            </div>
-                        </div>
+                        
 
                         <div class="form-group col-sm-6">
                             <div class="row">
@@ -267,16 +258,6 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-sm-6">
-                            <div class="row">
-                                <div class="col-sm-4 text-left">
-                                    <label for="vat_number">Vat Number:</label>
-                                </div>
-                                <div class="col-sm-8">
-                                    <input type="text" name="vat_number" class="form-control" id="vat_number" placeholder="" style="width: 100%;">
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="form-group col-sm-6">
                             <div class="row">
@@ -289,30 +270,6 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-sm-6">
-                            <div class="row">
-                                <div class="col-sm-4 text-left">
-                                    <label for="vehicleno">Vehicle No:</label>
-                                </div>
-                                <div class="col-sm-8">
-                                    <input type="text" name="vehicleno" class="form-control" id="vehicleno" placeholder="" style="width: 100%;">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group col-sm-6">
-                            <div class="row">
-                                <div class="col-sm-4 text-left">
-                                    <label for="type">Type:</label>
-                                </div>
-                                <div class="col-sm-8">
-                                    <select class="form-control" name="type" style="width: 100%;">
-                                        <option value="0">Customer</option>
-                                        <option value="1">Distributor</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="modal-footer">

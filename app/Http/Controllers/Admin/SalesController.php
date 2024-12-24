@@ -144,8 +144,6 @@ class SalesController extends Controller
             'address' => 'nullable|string',
             'vehicleno' => 'nullable|string',
             'vat_number' => 'nullable|string',
-            'type' => 'required|in:0,1',
-            'member_id' => 'nullable|string|unique:customers',
         ]);
 
         $customer = new Customer();
@@ -154,10 +152,7 @@ class SalesController extends Controller
         $customer->email = $request->email;
         $customer->phone = $request->phone;
         $customer->address = $request->address;
-        $customer->vehicleno = $request->vehicleno;
-        $customer->vat_number = $request->vat_number;
-        $customer->member_id = $request->member_id;
-        $customer->type = $request->type;
+        $customer->type = $request->type ?: 0;
         $customer->save();
 
         return response()->json([
