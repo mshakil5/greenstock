@@ -14,6 +14,8 @@ use App\Models\Transaction;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Carbon;
 use App\Models\SalesReturn;
+use App\Models\ServiceAdditionalProduct;
+use App\Models\ServiceRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -889,6 +891,7 @@ class SalesController extends Controller
     {
         $productIDs = $request->input('product_id');
 
+        $data = $request->all();
 
         $validator = Validator::make($request->all(), [
             'service_id' => 'required',
@@ -900,23 +903,27 @@ class SalesController extends Controller
             return response()->json(['status' => 400, 'message' => $errorMessage]);
         }
 
+        $serviceRequest = ServiceRequest::where('id', $request->serviceRequestID)->first();
+
         $order = new Order();
-        $order->invoiceno = $request->invoiceno;
-        $order->orderdate = $request->date;
+        $order->invoiceno = $serviceRequest->invoice_no;
+        $order->bill_no = $serviceRequest->bill_no;
+        $order->orderdate = date('Y-m-d');
         $order->salestype = $request->salestype;
-        $order->customer_id = $request->customer_id;
+        $order->ordertype = 'Service';
+        $order->service_request_id = $request->serviceRequestID;
         $order->branch_id = Auth::user()->branch_id;
         $order->ref = $request->ref; 
         $order->qn_no = $request->order_id ?: "0";
         $order->dn_no = $request->delivery_note_id ?: "0";
-        $order->vatpercentage = $request->vat_percent;
-        $order->vatamount = $request->total_vat_amount;
-        $order->discount_amount = $request->discount;
+        $order->vatpercentage = $request->vat_percent ?: "0";
+        $order->vatamount = $request->total_vat_amount ?: "0";
+        $order->discount_amount = $request->discount ?: "0";
         $order->grand_total = $request->grand_total; 
         $order->net_total = $request->net_amount;
-        $order->customer_paid = $request->paid_amount;
-        $order->due = $request->due_amount;
-        $order->partnoshow = $request->partnoshow;
+        $order->customer_paid = $request->paid_amount ?: "0";
+        $order->due = $request->due_amount ?: "0";
+        $order->reduceqty = $request->reduceQty;
         $order->sales_status = "1";
         $order->return_amount = $request->return_amount;
         $order->created_by = Auth::user()->id;
@@ -925,7 +932,7 @@ class SalesController extends Controller
         if ($order->save()) {
 
             $transaction = new Transaction();
-            $transaction->date = $request->date;
+            $transaction->date = date('Y-m-d');
             $transaction->table_type = 'Income';
             $transaction->description = 'Sales';
             $transaction->amount = $request->grand_total;
@@ -947,38 +954,23 @@ class SalesController extends Controller
             $transaction->tran_id = 'SL' . date('Ymd') . str_pad($transaction->id, 4, '0', STR_PAD_LEFT);
             $transaction->save();
 
-            foreach ($request->input('product_id') as $key => $value) {
+            foreach ($request->input('service_id') as $key => $value) {
                 $orderDtl = new OrderDetail();
                 $orderDtl->invoiceno = $order->invoiceno;
                 $orderDtl->order_id = $order->id;
-                $orderDtl->product_id = $request->get('product_id')[$key];
+                $orderDtl->service_id = $request->get('service_id')[$key];
                 $orderDtl->quantity = $request->get('quantity')[$key];
                 $orderDtl->sellingprice = $request->get('unit_price')[$key];
                 $orderDtl->total_amount = $request->get('quantity')[$key] * $request->get('unit_price')[$key];
                 $orderDtl->created_by = Auth::user()->id;
                 $orderDtl->save();
+            }
 
-                $purchaseHistory = PurchaseHistory::where('product_id', $orderDtl->product_id)
-                    ->where('branch_id', Auth::user()->branch_id)
-                    ->where('available_stock', '>', 0)
-                    ->orderBy('id', 'asc')
-                    ->first();
-
-                if ($purchaseHistory) {
-                    $orderDtl->purchase_history_id = $purchaseHistory->id;
-                    $orderDtl->save();
-
-                    $purchaseHistory->sold += $orderDtl->quantity;
-                    $purchaseHistory->available_stock -= $orderDtl->quantity;
-                    $purchaseHistory->updated_by = Auth::user()->id;
-                    $purchaseHistory->save();
-                }
-
-                $stockid = Stock::where('product_id', '=', $request->get('product_id')[$key])
+            foreach ($request->input('spproduct_id') as $key => $value) {
+                $stockid = Stock::where('product_id', '=', $request->get('spproduct_id')[$key])
                     ->where('branch_id', '=', Auth::user()->branch_id)
                     ->first();
-
-                if ($request->delivery_note_id == "") {
+                if ($request->reduceQty == 1) {
                     if (isset($stockid->id)) {
                         $dstock = Stock::find($stockid->id);
                         $dstock->quantity -= $request->get('quantity')[$key];
@@ -991,37 +983,28 @@ class SalesController extends Controller
                         $newstock->created_by = Auth::user()->id;
                         $newstock->save();
                     }
-                } else {
-                    $oldDNqty = OrderDetail::where('order_id', $request->delivery_note_id)
-                        ->where('product_id', $request->get('product_id')[$key])
-                        ->first();
-
-                    if (isset($oldDNqty)) {
-                        $amend_stock = $oldDNqty->quantity - $request->get('quantity')[$key];
-                        $dstock = Stock::find($stockid->id);
-                        $dstock->quantity += $amend_stock;
-                        $dstock->save();
-                    } else {
-                        if (isset($stockid->id)) {
-                            $dstock = Stock::find($stockid->id);
-                            $dstock ->quantity -= $request->get('quantity')[$key];
-                            $dstock->save();
-                        } else {
-                            $newstock = new Stock();
-                            $newstock->branch_id = Auth::user()->branch_id;
-                            $newstock->product_id = $request->get('product_id')[$key];
-                            $newstock->quantity = 0 - $request->get('quantity')[$key];
-                            $newstock->created_by = Auth::user()->id;
-                            $newstock->save();
-                        }
-                    }
                 }
             }
 
+
+            foreach ($request->input('approduct_id') as $key => $value) {
+                $additem = new ServiceAdditionalProduct();
+                $additem->order_id = $order->id;
+                $additem->service_request_id = $request->serviceRequestID;
+                $additem->product_id = $request->get('approduct_id')[$key];
+                $additem->quantity = $request->get('apquantity')[$key];
+                $additem->purchase_price_per_unit = $request->get('apunit_price')[$key];
+                $additem->selling_price_per_unit = $request->get('apselling_price_unit')[$key];
+                $additem->total_purchase_price = $request->get('apquantity')[$key] * $request->get('apunit_price')[$key];
+                $additem->total_selling_price = $request->get('apquantity')[$key] * $request->get('apselling_price_unit')[$key];
+                $additem->save();
+            }
+
+
             $message = "<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Thank you for this service order.</b></div>";
-            return response()->json(['status' => 300, 'message' => $message, 'id' => $order->id]);
+            return response()->json(['status' => 300, 'message' => $message, 'id' => $order->id, 'data' => $data]);
         }
 
-        return response()->json(['status' => 303, 'message' => 'Failed to save the order.']);
+        // return response()->json(['status' => 303, 'message' => 'Failed to save the order.']);
     }
 }

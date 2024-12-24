@@ -406,7 +406,7 @@
 
         var grand_total = itemTotalAmount;
         var total_vat = (itemTotalAmount * vat_percent) / 100;
-        var net_amount = grand_total + total_vat - discount;
+        var net_amount = grand_total + itemTotalAmount + total_vat - discount;
         $('#grand_total').val(grand_total.toFixed(2));
         $('#total_vat_amount').val(total_vat.toFixed(2));
         $('#additional_sales').val(addtionalitemSellingAmount.toFixed(2));
@@ -573,7 +573,7 @@
                             
                             <td class="text-center">
                                 <input type="number" id="selling_price" name="apselling_price_unit[]" 
-                                    value="" class="form-control apsellingprice" >
+                                    value="" class="form-control apsellingprice" required>
                             </td>
 
                             <td class="text-center">
