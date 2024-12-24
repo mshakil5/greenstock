@@ -46,16 +46,11 @@ echo Session::put('info', '');
                     @slot('head')
                         <th>ID</th>
                         <th>Name</th>
-                        <th>Type</th>
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Address</th>
-                        <th>Vehicle no</th>
-                        <th>Vat Number</th>
-                        <th>Limitation</th>
-                        <th>Membership ID</th>
                         <th>Status</th>
-                        <th><i class=""></i> Action</th>
+                        <th>Action</th>
                     @endslot
                 @endcomponent
             @endslot
@@ -76,12 +71,6 @@ echo Session::put('info', '');
                 <div class="modal-body">
                     {{csrf_field()}}
 
-                    <div class="form-group">
-                        <label for="member_id" class="col-sm-3 control-label">Member ID</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="member_id" name="member_id"/>
-                        </div>
-                    </div>
                     <div class="form-group">
                         <label for="name" class="col-sm-3 control-label">Name*</label>
                         <div class="col-sm-9">
@@ -110,38 +99,6 @@ echo Session::put('info', '');
                         </div>
                     </div>
                     
-                    
-                    <div class="form-group">
-                        <label for="name" class="col-sm-3 control-label">Vehicle No</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="vehicleno" class="form-control" id="vehicleno" placeholder="">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="vat_number" class="col-sm-3 control-label">Vat Number</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="vat_number" class="form-control" id="vat_number" placeholder="">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="limitation" class="col-sm-3 control-label">Credit Limitation</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="limitation" class="form-control" id="limitation" >
-                        </div>
-                    </div>
-
-                    
-                    <div class="form-group">
-                        <label for="type" class="col-sm-3 control-label">Type</label>
-                        <div class="col-sm-9">
-                            <select class="form-control" name="type">
-                                <option value="0">Customer</option>
-                                <option value="1">Distributor</option>
-                            </select>
-                        </div>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-sm btn-primary submit-btn save-btn"> Save</button>
@@ -201,18 +158,9 @@ echo Session::put('info', '');
         columns: [
             {data: 'id', name: 'id'},
             {data: 'name', name: 'name'},
-            {
-                data: 'type', name: 'type', render: function (data, type, row, meta) {
-                    return (row.type) ? "Distributor" : "Customer";
-                }
-            },
             {data: 'email', name: 'email'},
             {data: 'phone', name: 'phone'},
             {data: 'address', name: 'address'},
-            {data: 'vehicleno', name: 'vehicleno'},
-            {data: 'vat_number', name: 'vat_number'},
-            {data: 'limitation', name: 'limitation'},
-            {data: 'member_id', name: 'member_id'},
             {
                 data: 'status', name: 'status', render: function (data, type, row, meta) {
                     let status = null;

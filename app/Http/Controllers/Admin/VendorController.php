@@ -27,13 +27,11 @@ class VendorController extends Controller
     public function save_vendor(Request $request)
     {
         $request->validate([
-            'code' => 'nullable|unique:vendors,code',
             'name' => 'required',
             'email' => 'required',
             'phone' => 'nullable|max:14',
         ]);
         $data = new Vendor;
-        $data['code'] = $request->code;
         $data['branch_id'] = Auth::user()->branch_id;
         $data['name'] = $request->name;
         $data['email'] = $request->email;
@@ -41,7 +39,6 @@ class VendorController extends Controller
         $data['vat_reg'] = $request->vat_reg;
         $data['address'] = $request->address;
         $data['companyinfo'] = $request->company;
-        $data['contractdate'] = date('Y-m-d', strtotime($request->contract));
         $data->save();
 
         Session::put('success', 'Vendor Information Has Been Saved Successfully !');
@@ -52,20 +49,17 @@ class VendorController extends Controller
     {
 
         $request->validate([
-            'vendorcode' => 'nullable|unique:vendors,code,'.$request->vendorid,
             'vendorname' => 'required',
             'vendoremail' => 'required',
             'vendorphone' => 'nullable|max:14',
         ]);
         $data = Vendor::find($request->vendorid);
-        $data['code'] = $request->vendorcode;
         $data['name'] = $request->vendorname;
         $data['email'] = $request->vendoremail;
         $data['phone'] = $request->vendorphone;
         $data['vat_reg'] = $request->vendorvatreg;
         $data['address'] = $request->vendoraddress;
         $data['companyinfo'] = $request->vendorcinfo;
-        $data['contractdate'] = date('Y-m-d', strtotime($request->contract));
         $data->save();
 
         Session::put('success', 'Vendor Information Has Been Updated Successfully !');

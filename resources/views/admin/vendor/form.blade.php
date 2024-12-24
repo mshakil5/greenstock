@@ -40,11 +40,9 @@
                         <table  class="table table-hover table-responsive " width="100%" id="supplierTBL">
                             <thead>
                                 <tr>
-                                    <th>Code</th>
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Phone</th>
-                                    <th>Vat reg</th>
                                     <th>Address</th>
                                     <th>Company</th>
                                     <th><i class=""></i> Action</th>
@@ -54,11 +52,9 @@
 
                                 @foreach (\App\Models\Vendor::where('branch_id', auth()->user()->branch_id)->get() as $data)
                                     <tr>
-                                        <td>{{ $data->code}}</td>
                                         <td>{{ $data->name}}</td>
                                         <td>{{ $data->email}}</td>
                                         <td>{{ $data->phone}}</td>
-                                        <td>{{ $data->vat_reg}}</td>
                                         <td>{{ $data->address}}</td>
                                         <td>{{ $data->companyinfo}}</td>
                                         <td>
@@ -85,29 +81,13 @@
         <div class="col-md-4">
             @component('components.widget')
                 @slot('title')
-                    Vendor/Supplier Information
-                @endslot
-                @slot('description')
-                    Please Provide vendor full information<br>
-                    Note: Vendors are also known as Suppliers
+                    Information
                 @endslot
                 @slot('body')
                     <hr/>
                     <div class="col-sm-12" id="createDiv">
                         <form class="form-horizontal" action="{{ route('admin.savevendor')}}" method="POST">
                             {{csrf_field()}}
-                            <div class="form-group">
-                                <label for="inputEmail3" class="col-sm-3 control-label">Code</label>
-                                <div class="col-sm-9">
-                                    <input type="text" name="code" class="form-control" id="inputEmail3"
-                                           placeholder="">
-                                </div>
-                                @if ($errors->has('code'))
-                                    <span class="invalid-feedback text-danger" role="alert">
-                                    <strong>{{ $errors->first('code') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
                             <div class="form-group">
                                 <label for="inputEmail3" class="col-sm-3 control-label">Name<span
                                             class="text-danger">*</span></label>
@@ -147,18 +127,6 @@
                                 @endif
                             </div>
                             <div class="form-group">
-                                <label for="vat_reg" class="col-sm-3 control-label">Vat Reg#</label>
-                                <div class="col-sm-9">
-                                    <input type="text" name="vat_reg" class="form-control" id="vat_reg"
-                                           placeholder="">
-                                </div>
-                                @if ($errors->has('vat_reg'))
-                                    <span class="invalid-feedback text-danger" role="alert">
-                                    <strong>{{ $errors->first('vat_reg') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                            <div class="form-group">
                                 <label for="inputPassword3" class="col-sm-3 control-label">Address</label>
                                 <div class="col-sm-9">
                                     <textarea class="form-control" rows="3" placeholder="" name="address"></textarea>
@@ -171,32 +139,13 @@
                             </div>
                             
                             <div class="form-group">
-                                <label for="inputPassword3" class="col-sm-3 control-label">Company Information</label>
+                                <label for="" class="col-sm-3 control-label">Company Information</label>
                                 <div class="col-sm-9">
                                     <textarea class="form-control" rows="3" placeholder="" name="company"></textarea>
                                 </div>
                                 @if ($errors->has('company'))
                                     <span class="invalid-feedback text-danger" role="alert">
                                     <strong>{{ $errors->first('company') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                            <div class="form-group">
-                                <label for="inputPassword3" class="col-sm-3 control-label">Contract Date</label>
-                                <div class="col-sm-9">
-                                    <div class="input-group date" data-provide="datepicker"
-                                         data-date-format="dd-mm-yyyy">
-                                        <input name="contract" type="text" class="form-control date2"
-                                               name="contractdate"
-                                               placeholder="dd-mm-yyyy" value="<?= date('d-m-Y')?>">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-calendar" aria-hidden="true"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                @if ($errors->has('contract'))
-                                    <span class="invalid-feedback text-danger" role="alert">
-                                    <strong>{{ $errors->first('contract') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -209,10 +158,10 @@
                     <div class="col-sm-12" id="editDiv">
                         <form class="form-horizontal" action="{{ route('admin.updatevendor')}}" method="POST">
                             {{csrf_field()}}
-                            <div class="form-group">
-                                <label for="vendorcode" class="col-sm-3 control-label">Code</label>
+                            <div class="form-group d-none">
+                                <label for="" class="col-sm-3 control-label">Code</label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="vendorcode" class="form-control" id="vendorcode" required>
+                                    {{-- <input type="text" name="vendorcode" class="form-control" id="vendorcode" required> --}}
                                     <input type="hidden" name="vendorid" class="form-control" id="vendorid">
                                 </div>
                                 @if ($errors->has('code'))
@@ -256,17 +205,6 @@
                                 @endif
                             </div>
                             <div class="form-group">
-                                <label for="vendorvatreg" class="col-sm-3 control-label">Vat Reg#</label>
-                                <div class="col-sm-9">
-                                    <input type="text" name="vendorvatreg" class="form-control" id="vendorvatreg">
-                                </div>
-                                @if ($errors->has('vendorvatreg'))
-                                    <span class="invalid-feedback text-danger" role="alert">
-                                    <strong>{{ $errors->first('vendorvatreg') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                            <div class="form-group">
                                 <label for="vendoraddress" class="col-sm-3 control-label">Address</label>
                                 <div class="col-sm-9">
                                     <textarea class="form-control" rows="3" name="vendoraddress" id="vendoraddress"></textarea>
@@ -286,22 +224,6 @@
                                 @if ($errors->has('vendorcinfo'))
                                     <span class="invalid-feedback text-danger" role="alert">
                                     <strong>{{ $errors->first('vendorcinfo') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                            <div class="form-group">
-                                <label for="inputPassword3" class="col-sm-3 control-label">Contract Date</label>
-                                <div class="col-sm-9">
-                                    <div class="input-group date" data-provide="datepicker" data-date-format="dd-mm-yyyy">
-                                        <input name="contract" type="text" class="form-control date2" name="contractdate" placeholder="dd-mm-yyyy" value="<?= date('d-m-Y')?>">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-calendar" aria-hidden="true"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                @if ($errors->has('contract'))
-                                    <span class="invalid-feedback text-danger" role="alert">
-                                    <strong>{{ $errors->first('contract') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -359,7 +281,6 @@
             $("#editDiv").show();
             $("#createDiv").hide();
             vendorid = $(this).attr('vid');
-            vendorcode = $(this).attr('code');
             vendorname = $(this).attr('name');
             vendoremail = $(this).attr('email');
             vendorphone = $(this).attr('phone');
@@ -367,7 +288,6 @@
             vendoraddress = $(this).attr('address');
             vendorcinfo = $(this).attr('cinfo');
             $('#vendorid').val(vendorid);
-            $('#vendorcode').val(vendorcode);
             $('#vendorname').val(vendorname);
             $('#vendoremail').val(vendoremail);
             $('#vendorphone').val(vendorphone);

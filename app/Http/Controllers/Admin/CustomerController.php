@@ -48,11 +48,7 @@ class CustomerController extends Controller
         $customer->email = $request->email;
         $customer->phone = $request->phone;
         $customer->address = $request->address;
-        $customer->vehicleno = $request->vehicleno;
-        $customer->limitation = $request->limitation;
-        $customer->vat_number = $request->vat_number;
-        $customer->member_id = $request->member_id;
-        $customer->type = $request->type;
+        $customer->type = $request->type ? $request->type : '1';
         $customer->save();
 
         return response()->json([
@@ -84,11 +80,6 @@ class CustomerController extends Controller
         $customer->email = $request->email;
         $customer->phone = $request->phone;
         $customer->address = $request->address;
-        $customer->vehicleno = $request->vehicleno;
-        $customer->limitation = $request->limitation;
-        $customer->vat_number = $request->vat_number;
-        $customer->member_id = $request->member_id;
-        $customer->type = $request->type;
         $customer->save();
         return response()->json([
             'status' => 200,

@@ -111,7 +111,7 @@
         <ul class="treeview-menu">
             @if(Auth::user()->type == '1' && in_array('3', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('3', json_decode(Auth::user()->role->permission)))
             <li class="{{ (request()->is('admin/sales')) ? 'active' : '' }}">
-                <a href="{{ route('admin.sales')}}"><i class="fa fa-adjust"></i>Create Sales
+                <a href="{{ route('admin.sales')}}"><i class="fa fa-adjust"></i>Product Sales
                 </a>
             </li>
             @endif
@@ -143,7 +143,7 @@
     </li>
 
 
-    <li class="treeview {{ (request()->is('admin/service-sales') || request()->is('admin/service-sales') || request()->is('admin/service-sales')) ? 'active' : '' }}">
+    <li class="treeview {{ (request()->is('admin/service-sales') || request()->is('admin/service-sales') || request()->is('admin/service-sales')) ? 'active' : '' }}{{ (request()->is('admin/service-request')) ? 'active' : '' }}">
         <a href="#">
             <i class="fa fa-user"></i> <span>Service Sales</span><span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i></span>
