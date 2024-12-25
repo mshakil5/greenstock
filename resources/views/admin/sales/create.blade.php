@@ -609,15 +609,15 @@
                                     value="${d.service_id}" class="form-control ckservice_id" readonly>
                             </td>
                             <td class="text-center">
-                                <input type="number" id="quantity" name="quantity[]" 
+                                <input type="number" id="quantity" name="service_quantity[]" 
                                     value="1" min="1" class="form-control quantity">
                             </td>
                             <td class="text-center">
-                                <input type="number" id="unit_price" name="unit_price[]" 
+                                <input type="number" id="unit_price" name="service_unit_price[]" 
                                     value="${d.price}" class="form-control unit-price">
                             </td>
                             <td class="text-center">
-                                <input type="text" id="total_amount" name="total_amount[]" 
+                                <input type="text" id="total_amount" name="service_total_amount[]" 
                                     value="${d.price}" class="form-control servicetotal" readonly>
                             </td>
                             <td class="text-center">
