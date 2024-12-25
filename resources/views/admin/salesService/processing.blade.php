@@ -132,6 +132,7 @@
 
                 </div>
 
+
                 <div class="box box-default box-solid">
                     <div class="box-header with-border">
                         <h3 class="box-title">Service Package List</h3>
@@ -154,8 +155,6 @@
 
 
                 </div>
-
-
                 <div class="box box-default box-solid">
                     <div class="box-header with-border">
                         <h3 class="box-title">Service Product List</h3>

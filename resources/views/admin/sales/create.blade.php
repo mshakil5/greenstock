@@ -1,11 +1,15 @@
 @extends('admin.layouts.master')
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}" />
+<!-- Summernote CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-lite.min.css" rel="stylesheet">
+<!-- Summernote JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-lite.min.js"></script>
 
 <div class="row ">
     <div class="container-fluid">
 
-        <div class="col-md-9">
+        <div class="col-md-12">
             <div class="box box-default box-solid">
                 <div class="box-header with-border">
                     <h3 class="box-title">Sales</h3>
@@ -41,7 +45,7 @@
 
                             <div class="form-group col-md-3">
                                 <label for="invoiceno">Invoice No *</label>
-                                <input type="number" class="form-control" id="invoiceno" name="invoiceno">
+                                <input type="text" class="form-control" id="invoiceno" name="invoiceno" value="{{ $invoiceNo }}" readonly>
                             </div>
 
                             <div class="form-group col-md-3">
@@ -58,7 +62,7 @@
                                 <select name="customer_id" id="customer_id" class="form-control select2">
                                     <option value="">Select</option>
                                     @foreach (\App\Models\Customer::where('branch_id', Auth::user()->branch_id)->where('status','1')->get() as $customer)
-                                    <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                                    <option value="{{ $customer->id }}">{{ $customer->name }}-{{ $customer->phone }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -80,10 +84,21 @@
                                 </select>
                             </div>
 
-                            <div class="form-group col-md-4">
+                            {{-- <div class="form-group col-md-4">
                                 <label for="ref">Ref</label>
                                 <input type="text" class="form-control" id="ref" name="ref">
+                            </div> --}}
+
+                            <div class="form-group col-md-6">
+                                <label for="service">Select Package</label>
+                                <select name="service" id="service" class="form-control select2">
+                                    <option value="">Select</option>
+                                    @foreach (\App\Models\Service::select('id','name','code')->get() as $service)
+                                    <option value="{{ $service->id }}">{{ $service->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
+
                         </div>
 
                     </form>
@@ -101,6 +116,10 @@
                     <thead>
                         <tr>
                             <th class="text-center">Product Name</th>
+                            <th class="text-center">Type</th>
+                            <th class="text-center">Capacity</th>
+                            <th class="text-center">Origin</th>
+                            <th class="text-center">Power</th>
                             <th class="text-center">Qty</th>
                             <th class="text-center">Unit Price</th>
                             <th class="text-center">Total Price</th>
@@ -111,13 +130,88 @@
                     <tbody id="inner">
                     </tbody>
                 </table>
+            </div>
+
+
+
+        </div>
+
+        <div class="col-md-8">
+            
+            <div class="box box-default box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Service Package List</h3>
+                </div>
+
+                <table class="table table-hover" id="servicetable">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Service Name</th>
+                            <th class="text-center">Qty</th>
+                            <th class="text-center">Unit Price</th>
+                            <th class="text-center">Total Price</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="serviceinner">
+                    </tbody>
+                </table>
 
 
             </div>
 
-        </div>
 
-        <div class="col-md-3">
+            <div class="box box-default box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Service Product List</h3>
+                </div>
+
+                <table class="table table-hover" id="serviceproductTable">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Product Name</th>
+                            <th class="text-center">Qty</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="productinner">
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="box box-default box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Billing Description</h3>
+                </div>
+
+                <div class="box-body ir-table">
+                    <div class="form-row">
+
+                        <div class="form-group col-md-12">
+                            <label for="subject">Subject</label>
+                            <input type="text" class="form-control" id="subject" name="subject">
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label for="bill_body">Body</label>
+                            <textarea name="bill_body" id="bill_body" cols="30" rows="5" class="form-control"></textarea>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+                
+            </div>
+
+
+
+        </div>
+        <div class="col-md-4">
             <div class="box box-widget widget-user-2">
                 <div class="widget-user-header">
                     <h3 class="widget-user-username"></h3>
@@ -285,6 +379,25 @@
 @endsection
 
 @section('script')
+<script>
+    $(document).ready(function() {
+        $('#bill_body').summernote({
+            height: 100, // Set the height of the editor
+            placeholder: 'Write something here...',
+            toolbar: [
+                // Customize your toolbar
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+    });
+</script>
 
 <script>
     $(document).ready(function() {
@@ -292,33 +405,7 @@
     });
 </script>
 
-<script>
-    $(document).ready(function() {
-        $('#partnoshow').on('change', function() {
-            var partnoshowsts = $(this).prop('checked');
-            var partnoshow = partnoshowsts ? 1 : 0;
-            $('#partnoshow').val(partnoshow);
-        });
-    });
-</script>
 
-<!-- <script>
-    $(document).ready(function() {
-        function calculateReturnAmount() {
-
-            let paidAmount = parseFloat($('#paid_amount').val()) || 0;
-            let netAmount = parseFloat($('#net_amount').val()) || 0;
-
-            let returnAmount = (paidAmount > netAmount) ? -(paidAmount - netAmount) : 0;
-
-            $('#return_amount').val(returnAmount);
-        }
-
-        $('#paid_amount').on('input', calculateReturnAmount);
-
-        calculateReturnAmount();
-    });
-</script> -->
 
 <script>
     function removeRow(event) {
@@ -407,6 +494,20 @@
                                 <input type="hidden" id="product_id" name="product_id[]" 
                                     value="${d.product_id}" class="form-control ckproduct_id" readonly>
                             </td>
+
+                            <td class="text-center">
+                                <input type="text" id="type" name="type[]" class="form-control type">
+                            </td>
+                            <td class="text-center">
+                                <input type="text" id="capacity" name="capacity[]" class="form-control capacity">
+                            </td>
+                            <td class="text-center">
+                                <input type="text" id="origin" name="origin[]" class="form-control origin">
+                            </td>
+                            <td class="text-center">
+                                <input type="text" id="power" name="power[]" class="form-control power">
+                            </td>
+
                             <td class="text-center">
                                 <input type="number" id="quantity" name="quantity[]" 
                                     value="1" min="1" class="form-control quantity">
@@ -451,6 +552,99 @@
             });
 
         });
+
+
+        var serviceurlbr = "{{URL::to('/admin/getservice')}}";
+        $("#service").change(function() {
+            event.preventDefault();
+            var service = $(this).val();
+
+
+            var service_id = $("input[name='service_id[]']")
+                .map(function() {
+                    return $(this).val();
+                }).get();
+
+            service_id.push(service);
+            seen = service_id.filter((s => v => s.has(v) || !s.add(v))(new Set));
+
+            console.log("servie: " + service, service_id);
+            if (Array.isArray(seen) && seen.length) {
+                $(".ermsg").html("<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Duplicate service found..!</b></div>");
+                return;
+            }
+
+
+            $.ajax({
+                url: serviceurlbr,
+                method: "POST",
+                data: {
+                    service: service
+                },
+
+                success: function(d) {
+                    if (d.status == 303) {
+
+                    } else if (d.status == 300) {
+
+                        // console.log(d);
+
+                        var markup = `
+                        <tr>
+                            <td class="text-center">
+                                <input type="text" id="servicename" name="servicename[]" 
+                                    value="${d.name}" class="form-control" readonly>
+                                <input type="hidden" id="service_id" name="service_id[]" 
+                                    value="${d.service_id}" class="form-control ckservice_id" readonly>
+                            </td>
+                            <td class="text-center">
+                                <input type="number" id="quantity" name="quantity[]" 
+                                    value="1" min="1" class="form-control quantity">
+                            </td>
+                            <td class="text-center">
+                                <input type="number" id="unit_price" name="unit_price[]" 
+                                    value="${d.price}" class="form-control unit-price">
+                            </td>
+                            <td class="text-center">
+                                <input type="text" id="total_amount" name="total_amount[]" 
+                                    value="${d.price}" class="form-control servicetotal" readonly>
+                            </td>
+                            <td class="text-center">
+                                <div style="
+                                    color: white; 
+                                    user-select: none; 
+                                    padding: 5px; 
+                                    background: red; 
+                                    width: 45px; 
+                                    display: flex; 
+                                    align-items: center; 
+                                    margin-right: 5px; 
+                                    justify-content: center; 
+                                    border-radius: 4px;
+                                    left: 4px;
+                                    top: 81px;" 
+                                    onclick="removeRow(event)">
+                                    X
+                                </div>
+                            </td>
+                        </tr>`;
+
+                        $("table #serviceinner ").append(markup);
+                        $("table #productinner").append(d.serviceDtl);
+                        // calculation();
+
+                    }
+                },
+                error: function(d) {
+                    console.log(d);
+                }
+            });
+
+        });
+
+
+
+
 
         // unit price calculation
 

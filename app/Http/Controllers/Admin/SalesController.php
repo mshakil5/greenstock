@@ -21,9 +21,33 @@ use Illuminate\Support\Facades\Validator;
 
 class SalesController extends Controller
 {
+    public function generateInvoiceNumber()
+    {
+        // Get the current year and month
+        $year = Carbon::now()->year;
+        $month = str_pad(Carbon::now()->month, 2, '0', STR_PAD_LEFT);
+
+        // Define the prefix
+        $prefix = "GT/{$year}_{$month}_";
+
+        // Get the last invoice number for the current year and month
+        $lastInvoice = DB::table('orders')
+            ->where('invoiceno', 'LIKE', "{$prefix}%")
+            ->orderBy('invoiceno', 'desc')
+            ->first();
+
+        // Extract the last number and increment it
+        $lastNumber = $lastInvoice ? (int)substr($lastInvoice->invoiceno, -5) : 0;
+        $newNumber = str_pad($lastNumber + 1, 5, '0', STR_PAD_LEFT);
+
+        // Combine prefix with the new number
+        return $prefix . $newNumber;
+    }
+
     public function sales()
     {
-        return view('admin.sales.create');
+        $invoiceNo = $this->generateInvoiceNumber();
+        return view('admin.sales.create', compact('invoiceNo'));
     }
 
     public function getAllQuoation()
