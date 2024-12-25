@@ -9,32 +9,32 @@
 <div class="row ">
     <div class="container-fluid">
 
-        <div class="col-md-12">
-            <div class="box box-default box-solid">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Sales</h3>
-                </div>
-                <div class="ermsg"></div>
-                <div>
-                    @if (Session::has('success'))
-                    <div class="alert alert-success">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
-                        <p>{{ Session::get('success') }}</p>
-                    </div>
-                    {{ Session::forget('success') }}
-                    @endif
-                    @if (Session::has('warning'))
-                    <div class="alert alert-warning">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
-                        <p>{{ Session::get('warning') }}</p>
-                    </div>
-                    {{ Session::forget('warning') }}
-                    @endif
-                </div>
+        <form id="salesForm">
 
-                <div class="box-body ir-table">
+            <div class="col-md-12">
+                <div class="box box-default box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Sales</h3>
+                    </div>
+                    <div class="ermsg responsemsg"></div>
+                    <div>
+                        @if (Session::has('success'))
+                        <div class="alert alert-success">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+                            <p>{{ Session::get('success') }}</p>
+                        </div>
+                        {{ Session::forget('success') }}
+                        @endif
+                        @if (Session::has('warning'))
+                        <div class="alert alert-warning">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+                            <p>{{ Session::get('warning') }}</p>
+                        </div>
+                        {{ Session::forget('warning') }}
+                        @endif
+                    </div>
 
-                    <form>
+                    <div class="box-body ir-table">
 
                         <div class="form-row">
 
@@ -101,206 +101,203 @@
 
                         </div>
 
-                    </form>
-                </div>
-
-
-            </div>
-
-            <div class="box box-default box-solid">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Product List</h3>
-                </div>
-
-                <table class="table table-hover" id="protable">
-                    <thead>
-                        <tr>
-                            <th class="text-center">Product Name</th>
-                            <th class="text-center">Type</th>
-                            <th class="text-center">Capacity</th>
-                            <th class="text-center">Origin</th>
-                            <th class="text-center">Power</th>
-                            <th class="text-center">Qty</th>
-                            <th class="text-center">Unit Price</th>
-                            <th class="text-center">Total Price</th>
-                            <th class="text-center">Action</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="inner">
-                    </tbody>
-                </table>
-            </div>
-
-
-
-        </div>
-
-        <div class="col-md-8">
-            
-            <div class="box box-default box-solid">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Service Package List</h3>
-                </div>
-
-                <table class="table table-hover" id="servicetable">
-                    <thead>
-                        <tr>
-                            <th class="text-center">Service Name</th>
-                            <th class="text-center">Qty</th>
-                            <th class="text-center">Unit Price</th>
-                            <th class="text-center">Total Price</th>
-                            <th class="text-center">Action</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="serviceinner">
-                    </tbody>
-                </table>
-
-
-            </div>
-
-
-            <div class="box box-default box-solid">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Service Product List</h3>
-                </div>
-
-                <table class="table table-hover" id="serviceproductTable">
-                    <thead>
-                        <tr>
-                            <th class="text-center">Product Name</th>
-                            <th class="text-center">Qty</th>
-                            <th class="text-center">Action</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="productinner">
-                    </tbody>
-                </table>
-            </div>
-
-
-            <div class="box box-default box-solid">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Billing Description</h3>
-                </div>
-
-                <div class="box-body ir-table">
-                    <div class="form-row">
-
-                        <div class="form-group col-md-12">
-                            <label for="subject">Subject</label>
-                            <input type="text" class="form-control" id="subject" name="subject">
-                        </div>
-
-                        <div class="form-group col-md-12">
-                            <label for="bill_body">Body</label>
-                            <textarea name="bill_body" id="bill_body" cols="30" rows="5" class="form-control"></textarea>
-                        </div>
-
-
                     </div>
 
+
                 </div>
 
+                <div class="box box-default box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Product List</h3>
+                    </div>
+
+                    <table class="table table-hover" id="protable">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Product Name</th>
+                                <th class="text-center">Type</th>
+                                <th class="text-center">Capacity</th>
+                                <th class="text-center">Origin</th>
+                                <th class="text-center">Power</th>
+                                <th class="text-center">Qty</th>
+                                <th class="text-center">Unit Price</th>
+                                <th class="text-center">Total Price</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="inner">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-md-8">
                 
-            </div>
+                <div class="box box-default box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Service Package List</h3>
+                    </div>
+
+                    <table class="table table-hover" id="servicetable">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Service Name</th>
+                                <th class="text-center">Qty</th>
+                                <th class="text-center">Unit Price</th>
+                                <th class="text-center">Total Price</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="serviceinner">
+                        </tbody>
+                    </table>
 
 
-
-        </div>
-        <div class="col-md-4">
-            <div class="box box-widget widget-user-2">
-                <div class="widget-user-header">
-                    <h3 class="widget-user-username"></h3>
                 </div>
-                <div class="box-body">
 
-                    <div class="form-group row">
-                        <label for="grand_total" class="col-sm-6 col-form-label">Item Total Amount</label>
-                        <div class="col-sm-6">
-                            <input type="number" class="form-control" id="grand_total" name="grand_total" readonly>
-                        </div>
+
+                <div class="box box-default box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Service Product List</h3>
                     </div>
 
-                    <div class="form-group row">
-                        <label for="discount" class="col-sm-6 col-form-label">Discount</label>
-                        <div class="col-sm-6">
-                            <input type="number" class="form-control" id="discount" name="discount">
-                        </div>
+                    <table class="table table-hover" id="serviceproductTable">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Product Name</th>
+                                <th class="text-center">Qty</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="productinner">
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <div class="box box-default box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Billing Description</h3>
                     </div>
 
-                    <div class="form-group row">
-                        <label for="vat_percent" class="col-sm-6 col-form-label">Vat Percent</label>
-                        <div class="col-sm-6">
-                            <input type="number" class="form-control" id="vat_percent" name="vat_percent" min="0">
+                    <div class="box-body ir-table">
+                        <div class="form-row">
+
+                            <div class="form-group col-md-12">
+                                <label for="subject">Subject</label>
+                                <input type="text" class="form-control" id="subject" name="subject">
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="bill_body">Body</label>
+                                <textarea name="bill_body" id="bill_body" cols="30" rows="5" class="form-control"></textarea>
+                            </div>
+
+
                         </div>
+
                     </div>
 
-                    <div class="form-group row">
-                        <label for="total_vat_amount" class="col-sm-6 col-form-label">Vat Amount</label>
-                        <div class="col-sm-6">
-                            <input type="number" class="form-control" id="total_vat_amount" name="total_vat_amount" readonly>
-                        </div>
+                    
+                </div>
+
+
+
+            </div>
+            <div class="col-md-4">
+                <div class="box box-widget widget-user-2">
+                    <div class="widget-user-header">
+                        <h3 class="widget-user-username"></h3>
                     </div>
+                    <div class="box-body">
 
-                    <div class="form-group row">
-                        <label for="net_amount" class="col-sm-6 col-form-label">Net Amount</label>
-                        <div class="col-sm-6">
-                            <input type="number" class="form-control" id="net_amount" name="net_amount" readonly>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="paid_amount" class="col-sm-6 col-form-label">Received Amount</label>
-                        <div class="col-sm-6">
-                            <input type="number" class="form-control" id="paid_amount" name="paid_amount">
-                        </div>
-                    </div>
-
-                    {{-- <div class="form-group row">
-                        <label for="due_amount" class="col-sm-6 col-form-label">Due Amount</label>
-                        <div class="col-sm-6">
-                            <input type="number" class="form-control" id="due_amount" name="due_amount" min="0" readonly>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label for="due_amount" class="col-sm-6 col-form-label">Return Amount</label>
-                        <div class="col-sm-6">
-                            <input type="number" class="form-control" id="return_amount" name="return_amount" min="0" readonly>
-                        </div>
-                    </div> --}}
-
-                    <div class="form-group row">
-                        <div class="col-sm-12">
-                            {{-- <input class="form-check-input" type="checkbox" value="1" id="partnoshow" checked>
-                            <label class="form-check-label" for="partnoshow">
-                                Show Part Number in PDF.
-                            </label> --}}
-                            {{-- <div class="button-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
-                                <button class="btn btn-success btn-md btn-submit" id="quotationBtn" type="submit">
-                                    <i class="fa fa-plus-circle"></i> Quotation
-                                </button>
-                                <button class="btn btn-success btn-md btn-submit" id="deliveryBtn" type="submit">
-                                    <i class="fa fa-plus-circle"></i> Delivery Note
-                                </button>
-                            </div> --}}
-                            <div class="button-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
-                                <button class="btn btn-success btn-md btn-submit" id="salesBtn" type="submit">
-                                    <i class="fa fa-plus-circle"></i> Sales
-                                </button>
+                        <div class="form-group row">
+                            <label for="grand_total" class="col-sm-6 col-form-label">Item Total Amount</label>
+                            <div class="col-sm-6">
+                                <input type="number" class="form-control" id="grand_total" name="grand_total" readonly>
                             </div>
                         </div>
+
+                        <div class="form-group row">
+                            <label for="discount" class="col-sm-6 col-form-label">Discount</label>
+                            <div class="col-sm-6">
+                                <input type="number" class="form-control" id="discount" name="discount">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="vat_percent" class="col-sm-6 col-form-label">Vat Percent</label>
+                            <div class="col-sm-6">
+                                <input type="number" class="form-control" id="vat_percent" name="vat_percent" min="0">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="total_vat_amount" class="col-sm-6 col-form-label">Vat Amount</label>
+                            <div class="col-sm-6">
+                                <input type="number" class="form-control" id="total_vat_amount" name="total_vat_amount" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="net_amount" class="col-sm-6 col-form-label">Net Amount</label>
+                            <div class="col-sm-6">
+                                <input type="number" class="form-control" id="net_amount" name="net_amount" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="paid_amount" class="col-sm-6 col-form-label">Received Amount</label>
+                            <div class="col-sm-6">
+                                <input type="number" class="form-control" id="paid_amount" name="paid_amount">
+                            </div>
+                        </div>
+
+                        {{-- <div class="form-group row">
+                            <label for="due_amount" class="col-sm-6 col-form-label">Due Amount</label>
+                            <div class="col-sm-6">
+                                <input type="number" class="form-control" id="due_amount" name="due_amount" min="0" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="due_amount" class="col-sm-6 col-form-label">Return Amount</label>
+                            <div class="col-sm-6">
+                                <input type="number" class="form-control" id="return_amount" name="return_amount" min="0" readonly>
+                            </div>
+                        </div> --}}
+
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                {{-- <input class="form-check-input" type="checkbox" value="1" id="partnoshow" checked>
+                                <label class="form-check-label" for="partnoshow">
+                                    Show Part Number in PDF.
+                                </label> --}}
+                                {{-- <div class="button-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
+                                    <button class="btn btn-success btn-md btn-submit" id="quotationBtn" type="submit">
+                                        <i class="fa fa-plus-circle"></i> Quotation
+                                    </button>
+                                    <button class="btn btn-success btn-md btn-submit" id="deliveryBtn" type="submit">
+                                        <i class="fa fa-plus-circle"></i> Delivery Note
+                                    </button>
+                                </div> --}}
+                                <div class="button-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
+                                    <button class="btn btn-success btn-md btn-submit" id="salesBtn" type="submit">
+                                        <i class="fa fa-plus-circle"></i> Sales
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                 </div>
 
             </div>
-
-        </div>
+        </form>
 
     </div>
 </div>
@@ -410,38 +407,53 @@
 <script>
     function removeRow(event) {
         event.target.parentElement.parentElement.remove();
-        net_total();
-        net_total_vat();
-    }
-
-    function net_total() {
-        var grand_total = 0;
-        var total_with_vat = 0;
-        var discount = parseFloat($('#discount').val()) || 0;
-        $('.total').each(function() {
-            grand_total += ($(this).val() - 0);
-        })
-
-        $('.totalwithvat').each(function() {
-            total_with_vat += ($(this).val() - 0);
-        })
-        $('#grand_total').val(grand_total.toFixed(2));
-        $('#net_amount').val(total_with_vat.toFixed(2));
-        $('#due_amount').val(total_with_vat.toFixed(2));
-    }
-
-    function net_total_vat() {
-        var vat_total = 0;
-
-        $('.totalvat').each(function() {
-            vat_total += ($(this).val() - 0);
-        })
-
-        $('#total_vat_amount').val(vat_total.toFixed(2));
+        calculation();
     }
 </script>
 
 <script>
+
+
+    function calculation() {
+        
+        var serviceItemTotalAmount = 0;
+        var mainProductTotalAmount = 0;
+        var discount = parseFloat($('#discount').val()) || 0;
+        var vat_percent = parseFloat($('#vat_percent').val()) || 0;
+        // var total_vat_amount = parseFloat($('#total_vat_amount').val()) || 0;
+
+        $('#servicetable tbody tr').each(function() {
+            var quantity = parseFloat($(this).find('input.quantity').val()) || 0;
+            var unit_price = parseFloat($(this).find('input.unit-price').val()) || 0;
+            var totalPrice = (quantity * unit_price).toFixed(2);
+            $(this).find('input.servicetotal').val(totalPrice);
+            var rateunittotal = parseFloat($(this).find('input.servicetotal').val()) || 0;
+            serviceItemTotalAmount += parseFloat(rateunittotal) || 0;
+        });
+
+        $('#protable tbody tr').each(function() {
+            var apquantity = parseFloat($(this).find('input.quantity').val()) || 0;
+            var apunit_price = parseFloat($(this).find('input.unit-price').val()) || 0;
+            var apsellingprice = parseFloat($(this).find('input.total').val()) || 0;
+            var addtotalPrice = (apquantity * apunit_price).toFixed(2);
+            $(this).find('input.total').val(addtotalPrice);
+            var mainProductTotalPrice = parseFloat($(this).find('input.total').val()) || 0;
+            mainProductTotalAmount += parseFloat(mainProductTotalPrice) || 0;
+            // console.log("amount:" + mainProductTotalAmount);
+        });
+
+        var grand_total = serviceItemTotalAmount + mainProductTotalAmount;
+        var total_vat = (serviceItemTotalAmount * vat_percent) / 100;
+        var net_amount = mainProductTotalAmount + serviceItemTotalAmount + total_vat - discount;
+        $('#grand_total').val(grand_total.toFixed(2));
+        $('#total_vat_amount').val(total_vat.toFixed(2));
+        $('#mainProduct').val(mainProductTotalAmount.toFixed(2));
+        $('#net_amount').val(net_amount.toFixed(2));
+
+    }
+
+
+
     $(document).ready(function() {
 
 
@@ -514,11 +526,11 @@
                             </td>
                             <td class="text-center">
                                 <input type="number" id="unit_price" name="unit_price[]" 
-                                    value="" class="form-control unit-price">
+                                    value="${d.sellingprice}" class="form-control unit-price">
                             </td>
                             <td class="text-center">
                                 <input type="text" id="total_amount" name="total_amount[]" 
-                                    value="" class="form-control total" readonly>
+                                    value="${d.sellingprice}" class="form-control total" readonly>
                             </td>
                             <td class="text-center">
                                 <div style="
@@ -541,8 +553,7 @@
                         </tr>`;
 
                         $("table #inner ").append(markup);
-                        net_total();
-                        net_total_vat();
+                        calculation();
 
                     }
                 },
@@ -568,7 +579,7 @@
             service_id.push(service);
             seen = service_id.filter((s => v => s.has(v) || !s.add(v))(new Set));
 
-            console.log("servie: " + service, service_id);
+            // console.log("servie: " + service, service_id);
             if (Array.isArray(seen) && seen.length) {
                 $(".ermsg").html("<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Duplicate service found..!</b></div>");
                 return;
@@ -631,7 +642,7 @@
 
                         $("table #serviceinner ").append(markup);
                         $("table #productinner").append(d.serviceDtl);
-                        // calculation();
+                        calculation();
 
                     }
                 },
@@ -644,81 +655,32 @@
 
 
 
-
-
-        // unit price calculation
-
-        $("body").delegate(".unit-price, .quantity", "keyup change", function(event) {
-            event.preventDefault();
-            var row = $(this).closest('tr');
-            var price = row.find('.unit-price').val();
-            var qty = row.find('.quantity').val();
-
-            if (isNaN(qty)) {
-                qty = 1;
-            }
-            if (qty < 1) {
-                qty = 1;
-            }
-
-            var total = price * qty;
-            row.find('.total').val(total.toFixed(2));
-
-            // Calculate total amounts
-            var grand_total = 0;
-            $('.total').each(function() {
-                grand_total += ($(this).val() - 0);
-            });
-
-            // Get the VAT percent from the input field
-            var vat_percent = parseFloat($("#vat_percent").val()) || 0;
-            var total_vat = (grand_total * vat_percent) / 100;
-
-            // Update total fields
-            $('#total_vat_amount').val(total_vat.toFixed(2));
-            $('#grand_total').val(grand_total.toFixed(2));
-            $('#net_amount').val((grand_total + total_vat - (parseFloat($('#discount').val()) || 0)).toFixed(2));
-
-            // Update due amount if necessary
-            var paid_amount = parseFloat($("#paid_amount").val()) || 0;
-            $('#due_amount').val((grand_total + total_vat - paid_amount - (parseFloat($('#discount').val()) || 0)).toFixed(2));
-
-            let return_amount = (paid_amount > net_amount) ? -(paid_amount - net_amount) : 0;
-            $('#return_amount').val(return_amount.toFixed(2)); 
+        $(document).on('input', '#protable input.quantity, #protable input.unit-price, #protable input.total', function() {
+            calculation();
         });
+
+
+        $(document).on('input', '#servicetable input.quantity, #servicetable input.unit-price, #servicetable input.servicetotal', function() {
+            calculation();
+        });
+
 
         // Listen for changes in the VAT percentage input
         $("#vat_percent").on('keyup change input', function() {
-            // Get the current grand total
-            var grand_total = parseFloat($("#grand_total").val()) || 0;
-
-            // Get the current VAT percentage
-            var vat_percent = parseFloat($(this).val()) || 0;
-
-            // Calculate the total VAT
-            var total_vat = (grand_total * vat_percent) / 100;
-
-            // Update the total VAT amount field
-            $('#total_vat_amount').val(total_vat.toFixed(2));
-
-            // Calculate the net amount
-            // var net_amount = grand_total + total_vat;
-            $('#net_amount').val((grand_total + total_vat - (parseFloat($('#discount').val()) || 0)).toFixed(2));
-
-            // Update the net amount field
-            // $('#net_amount').val(net_amount.toFixed(2));
-
-            // Update the due amount if necessary
-            var paid_amount = parseFloat($("#paid_amount").val()) || 0;
-            // $('#due_amount').val((net_amount - paid_amount).toFixed(2));
-            $('#due_amount').val((grand_total + total_vat - paid_amount - (parseFloat($('#discount').val()) || 0)).toFixed(2));
-
-            let return_amount = (paid_amount > net_amount) ? -(paid_amount - net_amount) : 0;
-            $('#return_amount').val(return_amount.toFixed(2)); 
+            calculation();
         });
 
+        // Listen for changes in the VAT percentage input
+        $("#discount").on('keyup change input', function() {
+            calculation();
+        });
+
+
+
+
+
+
         // submit to sales 
-        var salesStoreurl = "{{URL::to('/admin/sales-store')}}";
 
         $("body").delegate("#salesBtn", "click", function(event) {
             event.preventDefault();
@@ -727,274 +689,102 @@
             $(this).prepend('<i class="fa fa-spinner fa-spin"></i>');
             $(this).attr("disabled", 'disabled');
 
-            var data = {
-                invoiceno: $("#invoiceno").val(),
-                date: $("#date").val(),
-                customer_id: $("#customer_id").val(),
-                ref: $("#ref").val(),
-                salestype: $("#salestype").val(),
-                grand_total: $("#grand_total").val(),
-                discount: $("#discount").val(),
-                vat_percent: $("#vat_percent").val(),
-                total_vat_amount: $("#total_vat_amount").val(),
-                net_amount: $("#net_amount").val(),
-                paid_amount: $("#paid_amount").val(),
-                due_amount: $("#due_amount").val(),
-                partnoshow: $("#partnoshow").val(),
-                return_amount: $("#return_amount").val(),
-                product_id: $("input[name='product_id[]']").map(function() {
-                    return $(this).val();
-                }).get(),
-                quantity: $("input[name='quantity[]']").map(function() {
-                    return $(this).val();
-                }).get(),
-                unit_price: $("input[name='unit_price[]']").map(function() {
-                    return $(this).val();
-                }).get()
-            };
-
-            console.log(data);
-
+            var formData = new FormData($('#salesForm')[0]);
 
             $.ajax({
-                url: salesStoreurl,
-                method: "POST",
-                data: data,
+                url: '{{ route("admin.sales.store") }}',
+                method: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                cache: false,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
 
-                success: function(d) {
-                    $("#loader").removeClass('fa fa-spinner fa-spin');
-                    $(".btn-submit").removeAttr("disabled", true);
-                    if (d.status == 303) {
-                        $(".ermsg").html(d.message);
-                        pagetop();
-                    } else if (d.status == 300) {
-                        $(".ermsg").html(d.message);
-                        pagetop();
-                        window.setTimeout(function() {
-                            location.reload()
-                        }, 2000)
+                    console.log(response);
 
+                    if (status == 400) {
+                        $(".responsemsg").html(response.message);
+                    } else {
+                        // console.log(response);
+                        $(".responsemsg").html(response.message);
+                        // window.setTimeout(function(){location.reload()},2000)
                     }
+
+                    
                 },
                 error: function(xhr, status, error) {
-                    $("#loader").removeClass('fa fa-spinner fa-spin');
-                    $(".btn-submit").removeAttr("disabled", true);
-                    console.error(xhr.responseText);
+                    console.log(xhr.responseJSON.message);
+                    // console.error(xhr.responseText);
+                },
+                complete: function() {
+                    $('#loader').hide();
+                    $('#addBtn').attr('disabled', false);
                 }
             });
+
+            // var data = {
+            //     invoiceno: $("#invoiceno").val(),
+            //     date: $("#date").val(),
+            //     customer_id: $("#customer_id").val(),
+            //     ref: $("#ref").val(),
+            //     salestype: $("#salestype").val(),
+            //     grand_total: $("#grand_total").val(),
+            //     discount: $("#discount").val(),
+            //     vat_percent: $("#vat_percent").val(),
+            //     total_vat_amount: $("#total_vat_amount").val(),
+            //     net_amount: $("#net_amount").val(),
+            //     paid_amount: $("#paid_amount").val(),
+            //     due_amount: $("#due_amount").val(),
+            //     partnoshow: $("#partnoshow").val(),
+            //     return_amount: $("#return_amount").val(),
+            //     product_id: $("input[name='product_id[]']").map(function() {
+            //         return $(this).val();
+            //     }).get(),
+            //     quantity: $("input[name='quantity[]']").map(function() {
+            //         return $(this).val();
+            //     }).get(),
+            //     unit_price: $("input[name='unit_price[]']").map(function() {
+            //         return $(this).val();
+            //     }).get()
+            // };
+            // $.ajax({
+            //     url: salesStoreurl,
+            //     method: "POST",
+            //     data: data,
+
+            //     success: function(d) {
+            //         $("#loader").removeClass('fa fa-spinner fa-spin');
+            //         $(".btn-submit").removeAttr("disabled", true);
+            //         if (d.status == 303) {
+            //             $(".ermsg").html(d.message);
+            //             pagetop();
+            //         } else if (d.status == 300) {
+            //             $(".ermsg").html(d.message);
+            //             pagetop();
+            //             window.setTimeout(function() {
+            //                 location.reload()
+            //             }, 2000)
+
+            //         }
+            //     },
+            //     error: function(xhr, status, error) {
+            //         $("#loader").removeClass('fa fa-spinner fa-spin');
+            //         $(".btn-submit").removeAttr("disabled", true);
+            //         console.error(xhr.responseText);
+            //     }
+            // });
 
         });
         // submit to sales end
 
-        // submit to quotation 
-        var quotationStoreurl = "{{URL::to('/admin/quotation-store')}}";
-
-        $("body").delegate("#quotationBtn", "click", function(event) {
-            event.preventDefault();
-
-            $(this).find('.fa-spinner').remove();
-            $(this).prepend('<i class="fa fa-spinner fa-spin"></i>');
-            $(this).attr("disabled", 'disabled');
-
-            var data = {
-                invoiceno: $("#invoiceno").val(),
-                date: $("#date").val(),
-                customer_id: $("#customer_id").val(),
-                ref: $("#ref").val(),
-                salestype: $("#salestype").val(),
-                grand_total: $("#grand_total").val(),
-                discount: $("#discount").val(),
-                vat_percent: $("#vat_percent").val(),
-                total_vat_amount: $("#total_vat_amount").val(),
-                net_amount: $("#net_amount").val(),
-                paid_amount: $("#paid_amount").val(),
-                due_amount: $("#due_amount").val(),
-                partnoshow: $("#partnoshow").val(),
-                return_amount: $("#return_amount").val(),
-                product_id: $("input[name='product_id[]']").map(function() {
-                    return $(this).val();
-                }).get(),
-                quantity: $("input[name='quantity[]']").map(function() {
-                    return $(this).val();
-                }).get(),
-                unit_price: $("input[name='unit_price[]']").map(function() {
-                    return $(this).val();
-                }).get()
-            };
-
-            // console.log(data);
-
-
-            $.ajax({
-                url: quotationStoreurl,
-                method: "POST",
-                data: data,
-
-                success: function(d) {
-                    $("#loader").removeClass('fa fa-spinner fa-spin');
-                    $(".btn-submit").removeAttr("disabled", true);
-                    if (d.status == 303) {
-                        $(".ermsg").html(d.message);
-                        pagetop();
-                    } else if (d.status == 300) {
-                        $(".ermsg").html(d.message);
-                        pagetop();
-                        window.setTimeout(function() {
-                            location.reload()
-                        }, 2000)
-
-                    }
-                },
-                error: function(xhr, status, error) {
-                    $("#loader").removeClass('fa fa-spinner fa-spin');
-                    $(".btn-submit").removeAttr("disabled", true);
-                    console.error(xhr.responseText);
-                }
-            });
-
-        });
-        // submit to quotation end
-
-        // submit to delivery note 
-        var deliverynoteurl = "{{URL::to('/admin/delivery-note-store')}}";
-
-        $("body").delegate("#deliveryBtn", "click", function(event) {
-            event.preventDefault();
-
-            // $(".btn-submit").prepend('<i class="fa fa-spinner fa-spin" id="loader"></i>');
-            // $(".btn-submit").attr("disabled", 'disabled');
-            $(this).find('.fa-spinner').remove();
-            $(this).prepend('<i class="fa fa-spinner fa-spin"></i>');
-            $(this).attr("disabled", 'disabled');
-
-            var data = {
-                invoiceno: $("#invoiceno").val(),
-                date: $("#date").val(),
-                customer_id: $("#customer_id").val(),
-                ref: $("#ref").val(),
-                salestype: $("#salestype").val(),
-                grand_total: $("#grand_total").val(),
-                discount: $("#discount").val(),
-                vat_percent: $("#vat_percent").val(),
-                total_vat_amount: $("#total_vat_amount").val(),
-                net_amount: $("#net_amount").val(),
-                paid_amount: $("#paid_amount").val(),
-                due_amount: $("#due_amount").val(),
-                partnoshow: $("#partnoshow").val(),
-                return_amount: $("#return_amount").val(),
-                product_id: $("input[name='product_id[]']").map(function() {
-                    return $(this).val();
-                }).get(),
-                quantity: $("input[name='quantity[]']").map(function() {
-                    return $(this).val();
-                }).get(),
-                unit_price: $("input[name='unit_price[]']").map(function() {
-                    return $(this).val();
-                }).get()
-            };
-
-            // console.log(data);
-
-
-            $.ajax({
-                url: deliverynoteurl,
-                method: "POST",
-                data: data,
-
-                success: function(d) {
-                    $("#loader").removeClass('fa fa-spinner fa-spin');
-                    $(".btn-submit").removeAttr("disabled", true);
-                    if (d.status == 303) {
-                        $(".ermsg").html(d.message);
-                        pagetop();
-                    } else if (d.status == 300) {
-                        $(".ermsg").html(d.message);
-                        pagetop();
-                        window.setTimeout(function() {
-                            location.reload()
-                        }, 2000)
-
-                    }
-                },
-                error: function(xhr, status, error) {
-                    $("#loader").removeClass('fa fa-spinner fa-spin');
-                    $(".btn-submit").removeAttr("disabled", true);
-                    console.error(xhr.responseText);
-                }
-            });
-
-        });
-        //submit to delivery note  end
-
-        // discount calculation
-        $("#discount").on('keyup change input', function() {
-            var dInput = this.value;
-            var grand_total = parseFloat($("#grand_total").val());
-            var total_vat_amount = parseFloat($("#total_vat_amount").val());
-            var net_total = grand_total + total_vat_amount - (dInput || 0);
-
-            $('#net_amount').val(net_total.toFixed(2));
-
-            var paid_amount = parseFloat($("#paid_amount").val()) || 0;
-            // $('#due_amount').val((net_amount - paid_amount).toFixed(2));
-            $('#due_amount').val((grand_total + total_vat_amount - paid_amount - (parseFloat($('#discount').val()) || 0)).toFixed(2));
-
-            let return_amount = (paid_amount > net_total) ? -(paid_amount - net_total) : 0;
-            $('#return_amount').val(return_amount.toFixed(2)); 
-
-            // calculateDue();
-        });
-        // discount calculation end
-
-        $("#paid_amount").on('keyup change input', function() {
-            // calculateDue();
-        });
-        // due calculation
-        $("#paid_amount").on('keyup change input', function() {
-
-            let paidInput = parseFloat(this.value) || 0;
-
-            let net_amount = parseFloat($("#net_amount").val()) || 0;
-
-            let due_amount = net_amount - paidInput;
-
-            if (paidInput > net_amount) {
-                $('#due_amount').val('');
-            } else {
-                $('#due_amount').val(due_amount.toFixed(2));
-            }
-
-            let returnAmount = (paidInput > net_amount) ? -(paidInput - net_amount) : 0;
-
-            $('#return_amount').val(returnAmount.toFixed(2));
-        });
-            // due calculation end
-
-        function net_total() {
-            var grand_total = 0;
-            var total_with_vat = 0;
-            $('.total').each(function() {
-                grand_total += ($(this).val() - 0);
-            })
-
-            $('.totalwithvat').each(function() {
-                total_with_vat += ($(this).val() - 0);
-            })
-            $('#grand_total').val(grand_total.toFixed(2));
-            $('#net_amount').val(total_with_vat.toFixed(2));
-        }
-
-        function net_total_vat() {
-            var vat_total = 0;
-            $('.vatamount').each(function() {
-                vat_total += ($(this).val() - 0);
-            })
-            $('#net_vat_amount').val(vat_total.toFixed(2));
-        }
 
     });
 </script>
 
+ {{-- customer add  --}}
 <script>
     $(document).on('click', '.save-btn', function(event) {
         event.preventDefault();

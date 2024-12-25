@@ -189,35 +189,18 @@ class SalesController extends Controller
     {
         $productIDs = $request->input('product_id');
 
-        if (empty($productIDs)) {
-            $message = "<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill Product field.</b></div>";
-            return response()->json(['status' => 303, 'message' => $message]);
+        $data = $request->all();
+        return response()->json(['status' => 303, 'data' => $data]);
+
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required',
+            'salestype' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $errorMessage = "<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>" . implode("<br>", $validator->errors()->all()) . "</b></div>";
+            return response()->json(['status' => 400, 'message' => $errorMessage]);
         }
-
-        if (empty($request->date)) {
-            $message = "<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill Date field.</b></div>";
-            return response()->json(['status' => 303, 'message' => $message]);
-        }
-
-        if (empty($request->customer_id)) {
-            $message = "<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill Customer field.</b></div>";
-            return response()->json(['status' => 303, 'message' => $message]);
-        }
-
-        if (empty($request->invoiceno)) {
-            $message = "<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please fill Invoice No field.</b></div>";
-            return response()->json(['status' => 303, 'message' => $message]);
-        }
-
-        // if ($request->salestype == "Cash" && empty($request->customer_id) && $request->due_amount > 0) {
-        //     $message = "<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please pay the full amount.</b></div>";
-        //     return response()->json(['status' => 303, 'message' => $message]);
-        // }
-
-        // if ($request->salestype == "Credit" && empty($request->customer_id)) {
-        //     $message = "<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Please select a customer.</b></div>";
-        //     return response()->json(['status' => 303, 'message' => $message]);
-        // }
 
         $order = new Order();
         $order->invoiceno = $request->invoiceno;
@@ -241,107 +224,107 @@ class SalesController extends Controller
         $order->created_by = Auth::user()->id;
         $order->status = 0;
 
-        if ($order->save()) {
+        // if ($order->save()) {
 
-            $transaction = new Transaction();
-            $transaction->date = $request->date;
-            $transaction->table_type = 'Income';
-            $transaction->description = 'Sales';
-            $transaction->amount = $request->grand_total;
-            $transaction->vat_amount = $request->total_vat_amount;
-            $transaction->at_amount = $request->net_amount;
-            $transaction->transaction_type = 'Current';
-            if ($request->salestype == "Credit") {
-                $transaction->payment_type = "Account Receivable";
-            } else {
-                $transaction->payment_type = $request->salestype;
-            }
+        //     $transaction = new Transaction();
+        //     $transaction->date = $request->date;
+        //     $transaction->table_type = 'Income';
+        //     $transaction->description = 'Sales';
+        //     $transaction->amount = $request->grand_total;
+        //     $transaction->vat_amount = $request->total_vat_amount;
+        //     $transaction->at_amount = $request->net_amount;
+        //     $transaction->transaction_type = 'Current';
+        //     if ($request->salestype == "Credit") {
+        //         $transaction->payment_type = "Account Receivable";
+        //     } else {
+        //         $transaction->payment_type = $request->salestype;
+        //     }
 
-            // $transaction->supplier_id = $request->vendor_id;
-            $transaction->branch_id = Auth::user()->branch_id;
-            $transaction->created_by = Auth()->user()->id;
-            $transaction->created_ip = request()->ip();
-            $transaction->order_id = $order->id;
-            $transaction->save();
-            $transaction->tran_id = 'SL' . date('Ymd') . str_pad($transaction->id, 4, '0', STR_PAD_LEFT);
-            $transaction->save();
+        //     // $transaction->supplier_id = $request->vendor_id;
+        //     $transaction->branch_id = Auth::user()->branch_id;
+        //     $transaction->created_by = Auth()->user()->id;
+        //     $transaction->created_ip = request()->ip();
+        //     $transaction->order_id = $order->id;
+        //     $transaction->save();
+        //     $transaction->tran_id = 'SL' . date('Ymd') . str_pad($transaction->id, 4, '0', STR_PAD_LEFT);
+        //     $transaction->save();
 
-            foreach ($request->input('product_id') as $key => $value) {
-                $orderDtl = new OrderDetail();
-                $orderDtl->invoiceno = $order->invoiceno;
-                $orderDtl->order_id = $order->id;
-                $orderDtl->product_id = $request->get('product_id')[$key];
-                $orderDtl->quantity = $request->get('quantity')[$key];
-                $orderDtl->sellingprice = $request->get('unit_price')[$key];
-                $orderDtl->total_amount = $request->get('quantity')[$key] * $request->get('unit_price')[$key];
-                $orderDtl->created_by = Auth::user()->id;
-                $orderDtl->save();
+        //     foreach ($request->input('product_id') as $key => $value) {
+        //         $orderDtl = new OrderDetail();
+        //         $orderDtl->invoiceno = $order->invoiceno;
+        //         $orderDtl->order_id = $order->id;
+        //         $orderDtl->product_id = $request->get('product_id')[$key];
+        //         $orderDtl->quantity = $request->get('quantity')[$key];
+        //         $orderDtl->sellingprice = $request->get('unit_price')[$key];
+        //         $orderDtl->total_amount = $request->get('quantity')[$key] * $request->get('unit_price')[$key];
+        //         $orderDtl->created_by = Auth::user()->id;
+        //         $orderDtl->save();
 
-                $purchaseHistory = PurchaseHistory::where('product_id', $orderDtl->product_id)
-                    ->where('branch_id', Auth::user()->branch_id)
-                    ->where('available_stock', '>', 0)
-                    ->orderBy('id', 'asc')
-                    ->first();
+        //         $purchaseHistory = PurchaseHistory::where('product_id', $orderDtl->product_id)
+        //             ->where('branch_id', Auth::user()->branch_id)
+        //             ->where('available_stock', '>', 0)
+        //             ->orderBy('id', 'asc')
+        //             ->first();
 
-                if ($purchaseHistory) {
-                    $orderDtl->purchase_history_id = $purchaseHistory->id;
-                    $orderDtl->save();
+        //         if ($purchaseHistory) {
+        //             $orderDtl->purchase_history_id = $purchaseHistory->id;
+        //             $orderDtl->save();
 
-                    $purchaseHistory->sold += $orderDtl->quantity;
-                    $purchaseHistory->available_stock -= $orderDtl->quantity;
-                    $purchaseHistory->updated_by = Auth::user()->id;
-                    $purchaseHistory->save();
-                }
+        //             $purchaseHistory->sold += $orderDtl->quantity;
+        //             $purchaseHistory->available_stock -= $orderDtl->quantity;
+        //             $purchaseHistory->updated_by = Auth::user()->id;
+        //             $purchaseHistory->save();
+        //         }
 
-                $stockid = Stock::where('product_id', '=', $request->get('product_id')[$key])
-                    ->where('branch_id', '=', Auth::user()->branch_id)
-                    ->first();
+        //         $stockid = Stock::where('product_id', '=', $request->get('product_id')[$key])
+        //             ->where('branch_id', '=', Auth::user()->branch_id)
+        //             ->first();
 
-                if ($request->delivery_note_id == "") {
-                    if (isset($stockid->id)) {
-                        $dstock = Stock::find($stockid->id);
-                        $dstock->quantity -= $request->get('quantity')[$key];
-                        $dstock->save();
-                    } else {
-                        $newstock = new Stock();
-                        $newstock->branch_id = Auth::user()->branch_id;
-                        $newstock->product_id = $request->get('product_id')[$key];
-                        $newstock->quantity = 0 - $request->get('quantity')[$key];
-                        $newstock->created_by = Auth::user()->id;
-                        $newstock->save();
-                    }
-                } else {
-                    $oldDNqty = OrderDetail::where('order_id', $request->delivery_note_id)
-                        ->where('product_id', $request->get('product_id')[$key])
-                        ->first();
+        //         if ($request->delivery_note_id == "") {
+        //             if (isset($stockid->id)) {
+        //                 $dstock = Stock::find($stockid->id);
+        //                 $dstock->quantity -= $request->get('quantity')[$key];
+        //                 $dstock->save();
+        //             } else {
+        //                 $newstock = new Stock();
+        //                 $newstock->branch_id = Auth::user()->branch_id;
+        //                 $newstock->product_id = $request->get('product_id')[$key];
+        //                 $newstock->quantity = 0 - $request->get('quantity')[$key];
+        //                 $newstock->created_by = Auth::user()->id;
+        //                 $newstock->save();
+        //             }
+        //         } else {
+        //             $oldDNqty = OrderDetail::where('order_id', $request->delivery_note_id)
+        //                 ->where('product_id', $request->get('product_id')[$key])
+        //                 ->first();
 
-                    if (isset($oldDNqty)) {
-                        $amend_stock = $oldDNqty->quantity - $request->get('quantity')[$key];
-                        $dstock = Stock::find($stockid->id);
-                        $dstock->quantity += $amend_stock;
-                        $dstock->save();
-                    } else {
-                        if (isset($stockid->id)) {
-                            $dstock = Stock::find($stockid->id);
-                            $dstock ->quantity -= $request->get('quantity')[$key];
-                            $dstock->save();
-                        } else {
-                            $newstock = new Stock();
-                            $newstock->branch_id = Auth::user()->branch_id;
-                            $newstock->product_id = $request->get('product_id')[$key];
-                            $newstock->quantity = 0 - $request->get('quantity')[$key];
-                            $newstock->created_by = Auth::user()->id;
-                            $newstock->save();
-                        }
-                    }
-                }
-            }
+        //             if (isset($oldDNqty)) {
+        //                 $amend_stock = $oldDNqty->quantity - $request->get('quantity')[$key];
+        //                 $dstock = Stock::find($stockid->id);
+        //                 $dstock->quantity += $amend_stock;
+        //                 $dstock->save();
+        //             } else {
+        //                 if (isset($stockid->id)) {
+        //                     $dstock = Stock::find($stockid->id);
+        //                     $dstock ->quantity -= $request->get('quantity')[$key];
+        //                     $dstock->save();
+        //                 } else {
+        //                     $newstock = new Stock();
+        //                     $newstock->branch_id = Auth::user()->branch_id;
+        //                     $newstock->product_id = $request->get('product_id')[$key];
+        //                     $newstock->quantity = 0 - $request->get('quantity')[$key];
+        //                     $newstock->created_by = Auth::user()->id;
+        //                     $newstock->save();
+        //                 }
+        //             }
+        //         }
+        //     }
 
-            $message = "<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Thank you for this order.</b></div>";
-            return response()->json(['status' => 300, 'message' => $message, 'id' => $order->id]);
-        }
+        //     $message = "<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Thank you for this order.</b></div>";
+        //     return response()->json(['status' => 300, 'message' => $message, 'id' => $order->id]);
+        // }
 
-        return response()->json(['status' => 303, 'message' => 'Failed to save the order.']);
+        // return response()->json(['status' => 303, 'message' => 'Failed to save the order.']);
     }
 
     public function salesEdit($id)
