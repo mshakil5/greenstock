@@ -46,11 +46,11 @@ class InvoiceController extends Controller
         return Datatables::of($allInvoice)
             ->addIndexColumn()
             ->editColumn('customer_id', function ($invoice) {
-                return $invoice->customer->name;
+                return $invoice->customer->name ?? 'N/A';
             })
             ->addColumn('total', function ($invoice) {
-                $total = $invoice->net_total;
-                return $total;
+                $total = number_format($invoice->net_total, 2);
+                return $total ?? 'N/A';
             })
             ->addColumn('created_at', function ($invoice) {
                 return "<span data-title='" . Carbon::parse($invoice->created_at)->format('h:m A') . "'>" . Carbon::parse($invoice->created_at)->format('d M Y') . "</span>";

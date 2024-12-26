@@ -224,6 +224,7 @@ class SalesController extends Controller
         $order->customer_paid = $request->paid_amount;
         $order->due = $request->due_amount;
         $order->sales_status = "1";
+        $order->ordertype = "Product";
         $order->return_amount = $request->return_amount;
         $order->created_by = Auth::user()->id;
         $order->status = 0;

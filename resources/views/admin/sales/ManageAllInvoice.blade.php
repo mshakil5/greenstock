@@ -46,7 +46,8 @@ echo Session::put('message', '');
                     <th>Customer</th>
                     <th>Ref</th>
                     <th>Due</th>
-                    <th>Part No Status</th>
+                    <th>Discount</th>
+                    <th>Vat</th>
                     <th>Total</th>
                     <th><i class=""></i> Action</th>
                     @endslot
@@ -172,10 +173,17 @@ echo Session::put('message', '');
             ajax: {
                 url: '{{ route("invoice-filter") }}',
                 data: function(d) {
-                    // console.log(d);
+                    console.log(d);
                     // d.branch = $("#branchdropdown").val();
                     // d.status = $("#statusdropdown").val();
                     // d.date = $(".date input").val();
+                },
+                error: function(xhr, error, code) {
+                    console.log("AJAX Error");
+                    console.log("Status Code:", xhr.status); // HTTP status code
+                    console.log("Response Text:", xhr.responseText); // Full response
+                    console.log("Error Thrown:", error); // Error thrown
+                    console.log("Error Code:", code); // Error code
                 }
             },
             deferRender: true,
@@ -194,8 +202,8 @@ echo Session::put('message', '');
                     name: 'invoiceno'
                 },
                 {
-                    data: 'orderdate',
-                    name: 'orderdate'
+                    data: 'created_at',
+                    name: 'created_at'
                 },
                 {
                     data: 'customer_id',
@@ -210,21 +218,12 @@ echo Session::put('message', '');
                     name: 'due'
                 },
                 {
-                    data: 'partnoshow',
-                    name: 'partnoshow',
-                    render: function(data, type, row, meta) {
-
-                        let pub_partno = `<div class="form-check form-switch"><label class="form-check-label" for="partnosts"><input class="form-check-input" type="checkbox" id="partnosts" onclick='partno_status("unpublished-partno","${row.id}")'  checked></label></div>`;
-
-                        let unpub_partno = `<div class="form-check form-switch"><label class="form-check-label" for="partnosts"><input class="form-check-input" type="checkbox" id="partnosts" onclick='partno_status("published-partno","${row.id}")' ></label></div>`;
-
-                        if (row.partnoshow == 1)
-                            partnoshow = pub_partno;
-                        else {
-                            partnoshow = unpub_partno;
-                        }
-                        return partnoshow
-                    }
+                    data: 'discount_amount',
+                    name: 'discount_amount'
+                },
+                {
+                    data: 'vatamount',
+                    name: 'vatamount'
                 },
                 {
                     data: 'net_total',
