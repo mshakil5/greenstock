@@ -907,6 +907,12 @@ class SalesController extends Controller
         }
 
         $serviceRequest = ServiceRequest::where('id', $request->serviceRequestID)->first();
+        if (!$serviceRequest) {
+            return response()->json(['status' => 303, 'message' => 'Service Request not found.']);
+        }else{
+            $serviceRequest->status = 2;
+            $serviceRequest->save();
+        }   
 
         $order = new Order();
         $order->invoiceno = $serviceRequest->invoice_no;
@@ -937,7 +943,7 @@ class SalesController extends Controller
             $transaction = new Transaction();
             $transaction->date = date('Y-m-d');
             $transaction->table_type = 'Income';
-            $transaction->description = 'Sales';
+            $transaction->description = 'Service';
             $transaction->amount = $request->grand_total;
             $transaction->vat_amount = $request->total_vat_amount;
             $transaction->at_amount = $request->net_amount;
@@ -947,14 +953,12 @@ class SalesController extends Controller
             } else {
                 $transaction->payment_type = $request->salestype;
             }
-
-            // $transaction->supplier_id = $request->vendor_id;
             $transaction->branch_id = Auth::user()->branch_id;
             $transaction->created_by = Auth()->user()->id;
             $transaction->created_ip = request()->ip();
             $transaction->order_id = $order->id;
             $transaction->save();
-            $transaction->tran_id = 'SL' . date('Ymd') . str_pad($transaction->id, 4, '0', STR_PAD_LEFT);
+            $transaction->tran_id = 'GT' . date('Ymd') . str_pad($transaction->id, 4, '0', STR_PAD_LEFT);
             $transaction->save();
 
             foreach ($request->input('service_id') as $key => $value) {
@@ -976,13 +980,13 @@ class SalesController extends Controller
                 if ($request->reduceQty == 1) {
                     if (isset($stockid->id)) {
                         $dstock = Stock::find($stockid->id);
-                        $dstock->quantity -= $request->get('quantity')[$key];
+                        $dstock->quantity -= $request->get('spquantity')[$key];
                         $dstock->save();
                     } else {
                         $newstock = new Stock();
                         $newstock->branch_id = Auth::user()->branch_id;
-                        $newstock->product_id = $request->get('product_id')[$key];
-                        $newstock->quantity = 0 - $request->get('quantity')[$key];
+                        $newstock->product_id = $request->get('spproduct_id')[$key];
+                        $newstock->quantity = 0 - $request->get('spquantity')[$key];
                         $newstock->created_by = Auth::user()->id;
                         $newstock->save();
                     }

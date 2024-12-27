@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Carbon;
 
 class ServiceSalesController extends Controller
 {
@@ -166,8 +168,60 @@ class ServiceSalesController extends Controller
 
     }
 
-    public function getServiceRequest()
+    public function getServiceRequest(Request $request)
     {
+
+        if ($request->ajax()) {
+            $allInvoice = ServiceRequest::where('branch_id', auth()->user()->branch_id)->get();
+
+        return Datatables::of($allInvoice)
+            ->addIndexColumn()
+            ->editColumn('assign_staff', function ($invoice) {
+                return $invoice->user->name ?? 'N/A';
+            })
+            ->addColumn('company', function ($invoice) {
+                return $invoice->company->name ?? 'N/A';
+            })
+            ->addColumn('status', function ($invoice) {
+                if($invoice->status == 0){
+                    return 'Pending';
+                }elseif($invoice->status == 1){
+                    return 'Processing';
+                }elseif($invoice->status == 2){
+                    return 'Completed';
+                }elseif($invoice->status == 3){
+                    return 'Cancelled';
+                }
+            })
+            ->addColumn('created_at', function ($invoice) {
+                return "<span data-title='" . Carbon::parse($invoice->created_at)->format('h:m A') . "'>" . Carbon::parse($invoice->created_at)->format('d M Y') . "</span>";
+            })
+            ->addColumn('action', function ($invoice) {
+                $btn = '<div class="table-actions text-center">';
+
+                    $btn .= '<a href="#" class="btn btn-warning btn-xs ms-1" style="margin: 2px;">
+                        <i class="fa fa-pencil" aria-hidden="true"></i><span title="Edit">Edit</span>
+                    </a>';
+
+                    $btn .= '<a href="' . route('customer.invoice.print', $invoice->id) . '" class="btn btn-success btn-xs print-window" target="_blank">
+                        <span title="Print Invoice">Print</span>
+                    </a>';
+
+                    if($invoice->status == 1){
+                        $btn .= '<a href="' . route('admin.processingService', $invoice->id) . '" class="btn btn-primary btn-xs print-window" target="_blank">
+                            <span title="View">View</span>
+                        </a>';
+                    }
+
+                    
+
+                
+                $btn .= '</div>';
+                return $btn;
+            })
+            ->rawColumns(['created_at', 'action'])
+            ->make(true);
+        }
         
         $data = ServiceRequest::orderby('id', 'DESC')->get();
         return view('admin.salesService.allrequest',compact('data'));

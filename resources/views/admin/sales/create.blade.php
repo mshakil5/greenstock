@@ -193,7 +193,10 @@
 
                             <div class="form-group col-md-12">
                                 <label for="bill_body">Body</label>
-                                <textarea name="bill_body" id="bill_body" cols="30" rows="5" class="form-control"></textarea>
+                                <textarea name="bill_body" id="bill_body" cols="30" rows="5" class="form-control">
+                                    <p class="MsoNormal" style="margin-bottom: 0.0001pt;"><b>N.B:<o:p></o:p></b></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">1.&nbsp; This billing amount Excluded of VAT &amp; TAX.<b><o:p></o:p></b></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">2.&nbsp; Payment will be made in favor of&nbsp;<b>“Green Technology”.<o:p></o:p></b></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;"><b>&nbsp;</b></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;"><b><u>Warranty:</u></b><u><o:p></o:p></u></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">01.<u>&nbsp;Service Warranty -3 years.<o:p></o:p></u></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">02.<u>&nbsp;Compressor Warranty – 5 years.</u></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">03.&nbsp;<u>Spare Parts Warranty -2 year.</u></p>
+                                
+                                </textarea>
                             </div>
 
 
@@ -272,6 +275,7 @@
 
                         <div class="form-group row">
                             <div class="col-sm-12">
+                                <div class="responsemsg"></div>
                                 {{-- <input class="form-check-input" type="checkbox" value="1" id="partnoshow" checked>
                                 <label class="form-check-label" for="partnoshow">
                                     Show Part Number in PDF.
@@ -379,7 +383,7 @@
 <script>
     $(document).ready(function() {
         $('#bill_body').summernote({
-            height: 100, // Set the height of the editor
+            height: 200, // Set the height of the editor
             placeholder: 'Write something here...',
             toolbar: [
                 // Customize your toolbar
@@ -710,7 +714,7 @@
                     } else {
                         // console.log(response);
                         $(".responsemsg").html(response.message);
-                        // window.setTimeout(function(){location.reload()},2000)
+                        window.setTimeout(function(){location.reload()},2000)
                     }
 
                     

@@ -111,7 +111,6 @@ echo Session::put('info', '');
                     <th><i class="icon-sort"></i>Products</th>
                     {{-- <th><i class="icon-sort"></i>Branch</th> --}}
                     <th class="text-center"><i class="icon-sort"></i>Unit</th>
-                    <th class="text-center"><i class="icon-sort"></i>Location</th>
                     <th class="text-center"><i class="icon-sort"></i>Stock QTY</th>
                     <th class="text-center"><i class="icon-sort"></i>Sell price</th>
                     <th class="text-center">Action</th>
@@ -125,7 +124,6 @@ echo Session::put('info', '');
                             </td>
                             {{-- <td>{{ \App\Models\Branch::where('id',$stock->branch_id)->first()->name }}</td> --}}
                             <td class="text-center">{{ $stock->unit }}</td>
-                            <td class="text-center">{{ $stock->location }}</td>
                             <td class="text-center stockQuantity">{{ $stock->quantity }}</td>
                             <td class="text-center">{{ $stock->selling_price }}</td>
                             <td class="text-center">
@@ -134,14 +132,14 @@ echo Session::put('info', '');
                                             onclick="manageStockPurchaseDetails({{ $stock->id }})">
                                         <i class="fa fa-eye"></i> Details
                                     </button> --}}
-                                    @if((Auth::user()->type == '1' || Auth::user()->type == '0') && in_array('7', json_decode(Auth::user()->role->permission)))
+                                    {{-- @if((Auth::user()->type == '1' || Auth::user()->type == '0') && in_array('7', json_decode(Auth::user()->role->permission)))
                                         <button class="btn btn-primary btn-sm btn-transfer" data-toggle="modal"
                                                 data-target="#transferModal" pname="{{ $stock->productname }}" 
                                                 bid="{{ $stock->branch_id }}" pid="{{ $stock->product_id }}" 
                                                 tstock="{{ $stock->quantity }}" value="{{ $stock->id }}">
                                             <i class="fa fa-arrow-up"></i> Transfer
                                         </button>
-                                    @endif
+                                    @endif --}}
                             </td>
                         </tr>
                     @endforeach

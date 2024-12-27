@@ -63,6 +63,9 @@
                                     </a>
                                 </div>
 
+                                <div class="form-group col-md-12">
+                                </div>
+
                                 
                                 <div class="form-group col-md-3">
                                     <label for="">Customer Name</label>
@@ -90,8 +93,11 @@
                                     <p>{{$serviceRequest->warranty}}</p>
                                 </div>
 
+                                <div class="form-group col-md-12">
+                                </div>
+
                                 <div class="form-group col-md-3">
-                                    <label for="">Staff</label>
+                                    <label for="">Work assign to Staff</label>
                                     <p>{{$serviceRequest->user->name}}</p>
                                 </div>
 
@@ -255,14 +261,14 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="form-group row d-none">
                             <label for="due_amount" class="col-sm-6 col-form-label">Due Amount</label>
                             <div class="col-sm-6">
                                 <input type="number" class="form-control" id="due_amount" name="due_amount" min="0" readonly>
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        <div class="form-group row d-none">
                             <label for="due_amount" class="col-sm-6 col-form-label">Return Amount</label>
                             <div class="col-sm-6">
                                 <input type="number" class="form-control" id="return_amount" name="return_amount" min="0" readonly>
@@ -439,7 +445,7 @@
             service_id.push(service);
             seen = service_id.filter((s => v => s.has(v) || !s.add(v))(new Set));
 
-            console.log("servie: " + service, service_id);
+            
             if (Array.isArray(seen) && seen.length) {
                 $(".ermsg").html("<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Duplicate service found..!</b></div>");
                 return;
@@ -653,13 +659,13 @@
 
                     console.log(response);
 
-                    // if (status == 400) {
-                    //     $(".afterchallanmsg").html(response.message);
-                    // } else {
-                    //     console.log(response);
-                    //     $(".afterchallanmsg").html(response.message);
-                    //     window.setTimeout(function(){location.reload()},2000)
-                    // }
+                    if (status == 400) {
+                        $(".ermsg").html(response.message);
+                    } else {
+                        console.log(response);
+                        $(".ermsg").html(response.message);
+                        window.setTimeout(function(){location.reload()},2000)
+                    }
 
                     
                 },
@@ -672,58 +678,6 @@
                     $('#addBtn').attr('disabled', false);
                 }
             });
-
-            // var data = {
-            //     invoiceno: $("#invoiceno").val(),
-            //     date: $("#date").val(),
-            //     customer_id: $("#customer_id").val(),
-            //     ref: $("#ref").val(),
-            //     salestype: $("#salestype").val(),
-            //     grand_total: $("#grand_total").val(),
-            //     discount: $("#discount").val(),
-            //     vat_percent: $("#vat_percent").val(),
-            //     total_vat_amount: $("#total_vat_amount").val(),
-            //     net_amount: $("#net_amount").val(),
-            //     paid_amount: $("#paid_amount").val(),
-            //     due_amount: $("#due_amount").val(),
-            //     return_amount: $("#return_amount").val(),
-            //     service_id: $("input[name='service_id[]']").map(function() {
-            //         return $(this).val();
-            //     }).get(),
-            //     quantity: $("input[name='quantity[]']").map(function() {
-            //         return $(this).val();
-            //     }).get(),
-            //     unit_price: $("input[name='unit_price[]']").map(function() {
-            //         return $(this).val();
-            //     }).get()
-            // };
-
-            // $.ajax({
-            //     url: salesStoreurl,
-            //     method: "POST",
-            //     data: data,
-
-            //     success: function(d) {
-            //         $("#loader").removeClass('fa fa-spinner fa-spin');
-            //         $(".btn-submit").removeAttr("disabled", true);
-            //         if (d.status == 303) {
-            //             $(".ermsg").html(d.message);
-            //             pagetop();
-            //         } else if (d.status == 300) {
-            //             $(".ermsg").html(d.message);
-            //             pagetop();
-            //             window.setTimeout(function() {
-            //                 location.reload()
-            //             }, 2000)
-
-            //         }
-            //     },
-            //     error: function(xhr, status, error) {
-            //         $("#loader").removeClass('fa fa-spinner fa-spin');
-            //         $(".btn-submit").removeAttr("disabled", true);
-            //         console.error(xhr.responseText);
-            //     }
-            // });
 
         });
         // submit to sales end
