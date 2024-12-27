@@ -226,6 +226,8 @@ class SalesController extends Controller
         $order->sales_status = "1";
         $order->ordertype = "Product";
         $order->return_amount = $request->return_amount;
+        $order->subject = $request->subject;
+        $order->body = $request->bill_body;
         $order->created_by = Auth::user()->id;
         $order->status = 0;
 
@@ -292,9 +294,9 @@ class SalesController extends Controller
                 $orderDtl->invoiceno = $order->invoiceno;
                 $orderDtl->order_id = $order->id;
                 $orderDtl->service_id = $request->get('service_id')[$key];
-                $orderDtl->quantity = $request->get('quantity')[$key];
-                $orderDtl->sellingprice = $request->get('unit_price')[$key];
-                $orderDtl->total_amount = $request->get('quantity')[$key] * $request->get('unit_price')[$key];
+                $orderDtl->quantity = $request->get('service_quantity')[$key];
+                $orderDtl->sellingprice = $request->get('service_unit_price')[$key];
+                $orderDtl->total_amount = $request->get('service_quantity')[$key] * $request->get('service_unit_price')[$key];
                 $orderDtl->created_by = Auth::user()->id;
                 $orderDtl->save();
             }
@@ -306,13 +308,13 @@ class SalesController extends Controller
                 if ($request->reduceQty == 1) {
                     if (isset($stockid->id)) {
                         $dstock = Stock::find($stockid->id);
-                        $dstock->quantity -= $request->get('quantity')[$key];
+                        $dstock->quantity -= $request->get('spquantity')[$key];
                         $dstock->save();
                     } else {
                         $newstock = new Stock();
                         $newstock->branch_id = Auth::user()->branch_id;
-                        $newstock->product_id = $request->get('product_id')[$key];
-                        $newstock->quantity = 0 - $request->get('quantity')[$key];
+                        $newstock->product_id = $request->get('spproduct_id')[$key];
+                        $newstock->quantity = 0 - $request->get('spquantity')[$key];
                         $newstock->created_by = Auth::user()->id;
                         $newstock->save();
                     }

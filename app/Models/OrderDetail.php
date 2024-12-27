@@ -21,4 +21,8 @@ class OrderDetail extends Model
     public function product(){
         return $this->belongsTo('App\Models\Product');
     }
+
+    public function service(){
+        return $this->belongsTo('App\Models\Service');
+    }
 }
