@@ -709,7 +709,8 @@
 
                     console.log(response);
 
-                    if (status == 400) {
+                    if (response.status == 400) {
+                        $("#salesBtn").removeAttr("disabled")
                         $(".responsemsg").html(response.message);
                     } else {
                         // console.log(response);
