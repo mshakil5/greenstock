@@ -40,6 +40,7 @@ class InvoiceController extends Controller
     {
         
         $allInvoice = Order::with('customer','orderdetails')
+                    ->where('ordertype','Product')
                     ->where('sales_status','1')
                     ->where('branch_id', auth()->user()->branch_id)->get();
 
@@ -58,9 +59,9 @@ class InvoiceController extends Controller
             ->addColumn('action', function ($invoice) {
                 $btn = '<div class="table-actions text-right">';
 
-                    $btn = '<a href="' . route('admin.sales.return', $invoice->id) . '" class="btn btn-info btn-xs ms-1">
-                                <i class="fa fa-undo" aria-hidden="true"></i><span title="Return">Return</span>
-                            </a>';
+                    // $btn = '<a href="' . route('admin.sales.return', $invoice->id) . '" class="btn btn-info btn-xs ms-1">
+                    //             <i class="fa fa-undo" aria-hidden="true"></i><span title="Return">Return</span>
+                    //         </a>';
 
                     $btn .= '<a href="' . route('admin.sales.edit', $invoice->id) . '" class="btn btn-warning btn-xs ms-1">
                         <i class="fa fa-pencil" aria-hidden="true"></i><span title="Edit">Edit</span>
@@ -71,12 +72,7 @@ class InvoiceController extends Controller
                     </a>';
 
                 
-                    $btn .= '<a href="' . route('admin.download_invoice', $invoice->id) . '" class="btn btn-primary btn-xs">
-                        <span title="Download Invoice">
-                            <i class="fa fa-download" aria-hidden="true"></i> Download
-                        </span>
-                    </a>
-                    <button type="button" class="btn btn-primary btn-xs view-btn" data-toggle="modal" data-target="#product-details" value="' . $invoice->id . '">
+                    $btn .= '<button type="button" class="btn btn-primary btn-xs view-btn" data-toggle="modal" data-target="#product-details" value="' . $invoice->id . '">
                         <i class="fa fa-eye" aria-hidden="true"></i> View
                     </button>';
                 
