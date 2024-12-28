@@ -100,8 +100,11 @@
                 <table class="table table-hover" id="protable">
                     <thead>
                         <tr>
-                            <th class="text-center">Part No</th>
                             <th class="text-center">Product Name</th>
+                            <th class="text-center">Type</th>
+                            <th class="text-center">Capacity</th>
+                            <th class="text-center">Origin</th>
+                            <th class="text-center">Power</th>
                             <th class="text-center">Qty</th>
                             <th class="text-center">Unit Price</th>
                             <th class="text-center">Total Price</th>
@@ -113,13 +116,24 @@
                         @foreach ($order->orderdetails as $detail)
                         <tr>
                             <td class="text-center">
-                                <input type="text" id="pert_no" name="pert_no[]" value="{{ $detail->product->part_no }}" class="form-control" readonly>
+                                <input type="text" id="productname" name="productname[]" value="{{ $detail->product->productname ?? " " }}" class="form-control" readonly>
+                                <input type="hidden" id="product_id" name="product_id[]" value="{{ $detail->product_id }}" class="form-control ckproduct_id" readonly>
                                 <input type="hidden" id="orderdtl_id" name="orderdtl_id[]" value="{{ $detail->id }}" class="form-control" readonly>
                             </td>
+
                             <td class="text-center">
-                                <input type="text" id="productname" name="productname[]" value="{{ $detail->product->productname }}" class="form-control" readonly>
-                                <input type="hidden" id="product_id" name="product_id[]" value="{{ $detail->product_id }}" class="form-control ckproduct_id" readonly>
+                                <input type="text" id="type" name="type[]" class="form-control type">
                             </td>
+                            <td class="text-center">
+                                <input type="text" id="capacity" name="capacity[]" class="form-control capacity">
+                            </td>
+                            <td class="text-center">
+                                <input type="text" id="origin" name="origin[]" class="form-control origin">
+                            </td>
+                            <td class="text-center">
+                                <input type="text" id="power" name="power[]" class="form-control power">
+                            </td>
+
                             <td class="text-center">
                                 <input type="number" id="quantity" name="quantity[]" value="{{ $detail->quantity }}" min="1" class="form-control quantity">
                             </td>
@@ -456,26 +470,36 @@
                         var markup = `
                         <tr>
                             <td class="text-center">
-                                <input type="text" id="pert_no" name="pert_no[]" 
-                                    value="${d.part_no}" class="form-control" readonly>
-                            </td>
-                            <td class="text-center">
                                 <input type="text" id="productname" name="productname[]" 
                                     value="${d.productname}" class="form-control" readonly>
                                 <input type="hidden" id="product_id" name="product_id[]" 
                                     value="${d.product_id}" class="form-control ckproduct_id" readonly>
                             </td>
+
+                            <td class="text-center">
+                                <input type="text" id="type" name="type[]" class="form-control type">
+                            </td>
+                            <td class="text-center">
+                                <input type="text" id="capacity" name="capacity[]" class="form-control capacity">
+                            </td>
+                            <td class="text-center">
+                                <input type="text" id="origin" name="origin[]" class="form-control origin">
+                            </td>
+                            <td class="text-center">
+                                <input type="text" id="power" name="power[]" class="form-control power">
+                            </td>
+
                             <td class="text-center">
                                 <input type="number" id="quantity" name="quantity[]" 
                                     value="1" min="1" class="form-control quantity">
                             </td>
                             <td class="text-center">
                                 <input type="number" id="unit_price" name="unit_price[]" 
-                                    value="" class="form-control unit-price">
+                                    value="${d.sellingprice}" class="form-control unit-price">
                             </td>
                             <td class="text-center">
                                 <input type="text" id="total_amount" name="total_amount[]" 
-                                    value="" class="form-control total" readonly>
+                                    value="${d.sellingprice}" class="form-control total" readonly>
                             </td>
                             <td class="text-center">
                                 <div style="

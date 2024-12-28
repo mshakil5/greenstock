@@ -331,6 +331,7 @@ class SalesController extends Controller
     public function salesEdit($id)
     {
         $order  = Order::with('orderdetails','customer')->where('id', $id)->first();
+        dd("Working...");
         return view('admin.sales.edit', compact('order'));
     }
 
