@@ -86,8 +86,8 @@
         <p>{{ $order->invoiceno }}</p>
         <p>Date: {{ $order->orderdate }}</p>
         <p><strong>To:</strong><br>
-            {{ $order->name }}<br>
-            {{ $order->address }}</p>
+            {{ $order->customer->name ?? "" }}<br>
+            {{ $order->customer->address ?? ""  }}</p>
 
         <p><strong>Subject:</strong> {{ $order->subject }}</p>
         <p>Dear Sir,<br>
