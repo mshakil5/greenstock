@@ -41,7 +41,7 @@
         @media print {
             .footer {
                 position: fixed;
-                bottom: 25px;
+                bottom: 20px;
                 left: 10px;
                 text-align: left;
             }
