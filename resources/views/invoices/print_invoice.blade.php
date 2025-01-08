@@ -26,8 +26,8 @@
             margin: 5px 0;
         }
         .header {
-            margin-top: 40px;
-            padding-top: 80px;
+            margin-top: 30px;
+            padding-top: 50px;
             text-align: center;
         }
         .footer {
@@ -79,7 +79,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="header mt-5">
+        <div class="header mt-3">
             <h1>Invoice</h1>
         </div>
         
