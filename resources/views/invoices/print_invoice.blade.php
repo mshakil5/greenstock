@@ -32,7 +32,7 @@
         }
         .footer {
             position: fixed;
-            bottom: 25px; /* Adjust as needed */
+            bottom: 20px; /* Adjust as needed */
             left: 10px;   /* Adjust as needed */
             font-size: 12px; /* Optional: Adjust for better readability */
             text-align: left; /* Align text to the left */
