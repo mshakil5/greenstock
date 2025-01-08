@@ -106,7 +106,6 @@ class InvoiceController extends Controller
     {
         $order = Order::findOrFail($id);
 
-        dd($order);
         $customerdtl = Customer::where('id','=',$order->customer_id)->first();
         $pdf = PDF::loadView('invoices.print_invoice', compact('order','customerdtl'));
 
