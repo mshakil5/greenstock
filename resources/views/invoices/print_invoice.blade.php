@@ -132,7 +132,7 @@
             </tbody>
         </table>
 
-        <p><strong>In words:</strong> Taka One Lac Ninety Five Thousand Two Hundred Only.</p>
+        <p><strong>In words:</strong> Coming Soon...</p>
 
         <div class="note">
             {!! $order->body !!}
