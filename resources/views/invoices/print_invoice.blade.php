@@ -26,13 +26,13 @@
             margin: 5px 0;
         }
         .header {
-            margin-top: 30px;
-            padding-top: 50px;
+            margin-top: 20px;
+            padding-top: 40px;
             text-align: center;
         }
         .footer {
             position: fixed;
-            bottom: 40px; /* Adjust as needed */
+            bottom: 70px; /* Adjust as needed */
             left: 10px;   /* Adjust as needed */
             font-size: 12px; /* Optional: Adjust for better readability */
             text-align: left; /* Align text to the left */
@@ -41,7 +41,7 @@
         @media print {
             .footer {
                 position: fixed;
-                bottom: 40px;
+                bottom: 70px;
                 left: 10px;
                 text-align: left;
             }
