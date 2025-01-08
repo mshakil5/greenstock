@@ -86,10 +86,10 @@
         <p>{{ $order->invoiceno }}</p>
         <p>Date: {{ $order->orderdate }}</p>
         <p><strong>To:</strong><br>
-            {{ $customerdtl->name }}<br>
-            {{ $customerdtl->address }}</p>
+            {{ $order->name }}<br>
+            {{ $order->address }}</p>
 
-        <p><strong>Subject:</strong> {{ $customerdtl->subject }}</p>
+        <p><strong>Subject:</strong> {{ $order->subject }}</p>
         <p>Dear Sir,<br>
             Reference to above mention subject we are pleased to submit our quotation for your kind Consideration under as follows.</p>
 
