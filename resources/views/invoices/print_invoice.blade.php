@@ -14,7 +14,7 @@
             font-family: Arial, sans-serif;
             font-size: 12px;
             line-height: 1.4;
-            margin: 10px;
+            margin: 15px;
         }
         .container {
             width: 100%;
@@ -32,7 +32,7 @@
         }
         .footer {
             position: fixed;
-            bottom: 10px; /* Adjust as needed */
+            bottom: 30px; /* Adjust as needed */
             left: 10px;   /* Adjust as needed */
             font-size: 12px; /* Optional: Adjust for better readability */
             text-align: left; /* Align text to the left */
@@ -41,7 +41,7 @@
         @media print {
             .footer {
                 position: fixed;
-                bottom: 30px;
+                bottom: 25px;
                 left: 10px;
                 text-align: left;
             }
