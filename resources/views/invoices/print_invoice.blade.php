@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,7 +36,9 @@
             bottom: 70px; /* Adjust as needed */
             left: 10px;   /* Adjust as needed */
             font-size: 12px; /* Optional: Adjust for better readability */
-            text-align: left; /* Align text to the left */
+            display: flex;
+            justify-content: space-between;
+            width: 95%;
         }
 
         @media print {
@@ -43,7 +46,9 @@
                 position: fixed;
                 bottom: 70px;
                 left: 10px;
-                text-align: left;
+                display: flex;
+                justify-content: space-between;
+                width: 95%;
             }
         }
         table {
@@ -132,14 +137,13 @@
             </tbody>
         </table>
 
-        <p><strong>In words:</strong> Coming Soon...</p>
+        {{-- <p><strong>In words:</strong> {{ ucwords(\NumberFormatter::create('en', \NumberFormatter::SPELLOUT)->format($order->net_total)) }}</p> --}}
 
         <div class="note">
             {!! $order->body !!}
         </div>
 
-
-        <div class="footer">
+        <div class="footer" style="bottom: 120px;">
             <p>Customer’s Signature</p>
             <p><strong>“Green Technology”</strong></p>
         </div>
