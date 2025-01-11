@@ -20,9 +20,35 @@ class ServiceSalesController extends Controller
         return view('admin.salesService.create');
     }
 
+    public function generateInvoiceNumber()
+    {
+        // Get the current year and month
+        $year = Carbon::now()->format('y');
+        $month = str_pad(Carbon::now()->month, 2, '0', STR_PAD_LEFT);
+
+        // Define the prefix
+        $prefix = "GT/{$year}_{$month}_";
+
+        // Get the last invoice number for the current year and month
+        $lastInvoice = DB::table('orders')
+            ->where('invoiceno', 'LIKE', "{$prefix}%")
+            ->orderBy('invoiceno', 'desc')
+            ->first();
+
+        // Extract the last number and increment it
+        $lastNumber = $lastInvoice ? (int)substr($lastInvoice->invoiceno, -5) : 0;
+        $newNumber = str_pad($lastNumber + 1, 5, '0', STR_PAD_LEFT);
+
+        // Combine prefix with the new number
+        return $prefix . $newNumber;
+    }
+
     public function salesServiceRequest()
     {
-        return view('admin.salesService.request');
+        
+        $invoiceNo = $this->generateInvoiceNumber();
+        
+        return view('admin.salesService.request', compact('invoiceNo'));
     }
 
     public function processingServiceRequest($id)
@@ -123,8 +149,6 @@ class ServiceSalesController extends Controller
             return response()->json(['status' => 400, 'message' => $errorMessage]);
         }
 
-        $invoiceNo = $this->generateInvoiceNo();
-        
         $imagePath = null;
         if ($request->hasFile('document')) {
             $image = $request->file('document');
@@ -139,15 +163,14 @@ class ServiceSalesController extends Controller
                 $service->customer_name = $request->customer_name;
                 $service->company_id = $request->company_id;
                 $service->bill_no = $request->bill_no;
+                $service->invoice_no = $request->invoice_no;
                 $service->customer_phone = $request->customer_phone;
                 $service->address = $request->address;
                 $service->date = $request->date;
-                $service->payment_type = $request->salestype;
                 $service->user_id = $request->staff;
                 $service->warranty = $request->warranty;
                 $service->inputer = Auth::user()->id;
                 $service->branch_id = Auth::user()->branch_id;
-                $service->invoice_no = $invoiceNo;
                 $service->document = $imagePath;
                 $service->created_by= Auth::user()->id;
 

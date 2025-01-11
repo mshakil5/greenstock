@@ -24,7 +24,7 @@ class SalesController extends Controller
     public function generateInvoiceNumber()
     {
         // Get the current year and month
-        $year = Carbon::now()->year;
+        $year = Carbon::now()->format('y');
         $month = str_pad(Carbon::now()->month, 2, '0', STR_PAD_LEFT);
 
         // Define the prefix
@@ -193,7 +193,8 @@ class SalesController extends Controller
         // return response()->json(['status' => 303, 'data' => $data]);
 
         $validator = Validator::make($request->all(), [
-            'product_id*' => 'required',
+            'product_id' => 'required_without:service_id|array',
+            'service_id' => 'required_without:product_id|array',
             'customer_id' => 'required',
             'bill_body' => 'required',
             'grand_total' => 'required',
@@ -256,70 +257,81 @@ class SalesController extends Controller
             $transaction->tran_id = 'SL' . date('Ymd') . str_pad($transaction->id, 4, '0', STR_PAD_LEFT);
             $transaction->save();
 
-            foreach ($request->input('product_id') as $key => $value) {
-                $orderDtl = new OrderDetail();
-                $orderDtl->invoiceno = $order->invoiceno;
-                $orderDtl->order_id = $order->id;
-                $orderDtl->product_id = $request->get('product_id')[$key];
-                $orderDtl->quantity = $request->get('quantity')[$key];
-                $orderDtl->sellingprice = $request->get('unit_price')[$key];
-                $orderDtl->total_amount = $request->get('quantity')[$key] * $request->get('unit_price')[$key];
-                $orderDtl->type = $request->get('type')[$key];
-                $orderDtl->capacity = $request->get('capacity')[$key];
-                $orderDtl->origin = $request->get('origin')[$key];
-                $orderDtl->power = $request->get('power')[$key];
-                $orderDtl->created_by = Auth::user()->id;
-                $orderDtl->save();
-
-                $stockid = Stock::where('product_id', '=', $request->get('product_id')[$key])
-                    ->where('branch_id', '=', Auth::user()->branch_id)
-                    ->first();
-
-                    if (isset($stockid->id)) {
-                        $dstock = Stock::find($stockid->id);
-                        $dstock->quantity -= $request->get('quantity')[$key];
-                        $dstock->save();
-                    } else {
-                        $newstock = new Stock();
-                        $newstock->branch_id = Auth::user()->branch_id;
-                        $newstock->product_id = $request->get('product_id')[$key];
-                        $newstock->quantity = 0 - $request->get('quantity')[$key];
-                        $newstock->created_by = Auth::user()->id;
-                        $newstock->save();
-                    }
+            if ($request->input('product_id')) {
+                foreach ($request->input('product_id') as $key => $value) {
+                    $orderDtl = new OrderDetail();
+                    $orderDtl->invoiceno = $order->invoiceno;
+                    $orderDtl->order_id = $order->id;
+                    $orderDtl->product_id = $request->get('product_id')[$key];
+                    $orderDtl->quantity = $request->get('quantity')[$key];
+                    $orderDtl->sellingprice = $request->get('unit_price')[$key];
+                    $orderDtl->total_amount = $request->get('quantity')[$key] * $request->get('unit_price')[$key];
+                    $orderDtl->type = $request->get('type')[$key];
+                    $orderDtl->capacity = $request->get('capacity')[$key];
+                    $orderDtl->origin = $request->get('origin')[$key];
+                    $orderDtl->power = $request->get('power')[$key];
+                    $orderDtl->created_by = Auth::user()->id;
+                    $orderDtl->save();
+    
+                    $stockid = Stock::where('product_id', '=', $request->get('product_id')[$key])
+                        ->where('branch_id', '=', Auth::user()->branch_id)
+                        ->first();
+    
+                        if (isset($stockid->id)) {
+                            $dstock = Stock::find($stockid->id);
+                            $dstock->quantity -= $request->get('quantity')[$key];
+                            $dstock->save();
+                        } else {
+                            $newstock = new Stock();
+                            $newstock->branch_id = Auth::user()->branch_id;
+                            $newstock->product_id = $request->get('product_id')[$key];
+                            $newstock->quantity = 0 - $request->get('quantity')[$key];
+                            $newstock->created_by = Auth::user()->id;
+                            $newstock->save();
+                        }
+                }
+    
             }
 
-            foreach ($request->input('service_id') as $key => $value) {
-                $orderDtl = new OrderDetail();
-                $orderDtl->invoiceno = $order->invoiceno;
-                $orderDtl->order_id = $order->id;
-                $orderDtl->service_id = $request->get('service_id')[$key];
-                $orderDtl->quantity = $request->get('service_quantity')[$key];
-                $orderDtl->sellingprice = $request->get('service_unit_price')[$key];
-                $orderDtl->total_amount = $request->get('service_quantity')[$key] * $request->get('service_unit_price')[$key];
-                $orderDtl->created_by = Auth::user()->id;
-                $orderDtl->save();
-            }
 
-            foreach ($request->input('spproduct_id') as $key => $value) {
-                $stockid = Stock::where('product_id', '=', $request->get('spproduct_id')[$key])
-                    ->where('branch_id', '=', Auth::user()->branch_id)
-                    ->first();
-                if ($request->reduceQty == 1) {
-                    if (isset($stockid->id)) {
-                        $dstock = Stock::find($stockid->id);
-                        $dstock->quantity -= $request->get('spquantity')[$key];
-                        $dstock->save();
-                    } else {
-                        $newstock = new Stock();
-                        $newstock->branch_id = Auth::user()->branch_id;
-                        $newstock->product_id = $request->get('spproduct_id')[$key];
-                        $newstock->quantity = 0 - $request->get('spquantity')[$key];
-                        $newstock->created_by = Auth::user()->id;
-                        $newstock->save();
+            if ($request->input('service_id')) {
+                foreach ($request->input('service_id') as $key => $value) {
+                    $orderDtl = new OrderDetail();
+                    $orderDtl->invoiceno = $order->invoiceno;
+                    $orderDtl->order_id = $order->id;
+                    $orderDtl->service_id = $request->get('service_id')[$key];
+                    $orderDtl->quantity = $request->get('service_quantity')[$key];
+                    $orderDtl->sellingprice = $request->get('service_unit_price')[$key];
+                    $orderDtl->total_amount = $request->get('service_quantity')[$key] * $request->get('service_unit_price')[$key];
+                    $orderDtl->created_by = Auth::user()->id;
+                    $orderDtl->save();
+                }
+            }
+            
+            
+
+            if ($request->input('spproduct_id')) {
+                foreach ($request->input('spproduct_id') as $key => $value) {
+                    $stockid = Stock::where('product_id', '=', $request->get('spproduct_id')[$key])
+                        ->where('branch_id', '=', Auth::user()->branch_id)
+                        ->first();
+                    if ($request->reduceQty == 1) {
+                        if (isset($stockid->id)) {
+                            $dstock = Stock::find($stockid->id);
+                            $dstock->quantity -= $request->get('spquantity')[$key];
+                            $dstock->save();
+                        } else {
+                            $newstock = new Stock();
+                            $newstock->branch_id = Auth::user()->branch_id;
+                            $newstock->product_id = $request->get('spproduct_id')[$key];
+                            $newstock->quantity = 0 - $request->get('spquantity')[$key];
+                            $newstock->created_by = Auth::user()->id;
+                            $newstock->save();
+                        }
                     }
                 }
             }
+            
 
             $message = "<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Thank you for this order.</b></div>";
             return response()->json(['status' => 300, 'message' => $message, 'id' => $order->id]);

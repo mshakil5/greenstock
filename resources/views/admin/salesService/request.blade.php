@@ -5,7 +5,8 @@
 <div class="row ">
     <div class="container-fluid">
 
-        <div class="col-md-9">
+        <div class="col-md-1"></div>
+        <div class="col-md-10 mx-auto">
             <div class="box box-default box-solid">
                 <div class="box-header with-border">
                     <h3 class="box-title">Create new service request</h3>
@@ -45,16 +46,10 @@
                             </div>
 
                             <div class="form-group col-md-3">
-                                <label for="date">Payment Type *</label>
-                                <select name="salestype" id="salestype" class="form-control">
-                                    <option value="">Select</option>
-                                    <option value="Cash">Cash</option>
-                                    <option value="Bank">Bank</option>
-                                    <option value="Credit">Credit</option>
-                                </select>
+                                <label for="invoice_no">Our Invoice Number</label>
+                                <input type="text" class="form-control" value="{{$invoiceNo}}" id="invoice_no" name="invoice_no" readonly>
                             </div>
 
-                            
                             <div class="form-group col-md-4">
                                 <label for="warranty">Warranty Status</label>
                                 <select name="warranty" id="warranty" class="form-control">
@@ -75,8 +70,6 @@
                                     @endforeach
                                 </select>
                             </div>
-
-
 
                             <div class="form-group col-md-6">
                                 <label for="company_id">Company</label>
@@ -99,7 +92,7 @@
                             </div>
                             <div class="form-group col-md-12">
                                 <label for="address">Customer Address</label>
-                                <input type="text" class="form-control" id="address" name="address">
+                                <textarea class="form-control" id="address" name="address" rows="3"></textarea>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="document">Document</label>
@@ -120,11 +113,9 @@
 
                     </form>
                 </div>
-
-
             </div>
-
         </div>
+        <div class="col-md-1"></div>
         
     </div>
 </div>
