@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\Facades\DataTables;
+use App\Helpers\NumberToWords;
 
 class InvoiceController extends Controller
 {
@@ -105,12 +106,13 @@ class InvoiceController extends Controller
     public function customer_invoice_print($id)
     {
         $order = Order::findOrFail($id);
+        $amountInWords = NumberToWords::convert($order->net_total);
 
         $customerdtl = Customer::where('id','=',$order->customer_id)->first();
-        $pdf = PDF::loadView('invoices.print_invoice', compact('order','customerdtl'));
+        $pdf = PDF::loadView('invoices.print_invoice', compact('order','customerdtl','amountInWords'));
 
         $output = $pdf->output();
-        return view('invoices.print_invoice', compact('order','customerdtl'));
+        return view('invoices.print_invoice', compact('order','customerdtl','amountInWords'));
         
     }
 }

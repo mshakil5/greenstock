@@ -95,9 +95,12 @@
             {{ $order->customer->address ?? ""  }}</p>
 
         <p><strong>Subject:</strong> {{ $order->subject }}</p>
-        <p>Dear Sir,<br>
-            Reference to above mention subject we are pleased to submit our quotation for your kind Consideration under as follows.</p>
+        {{-- <p>Dear Sir,<br>
+            Reference to above mention subject we are pleased to submit our quotation for your kind Consideration under as follows.</p> --}}
 
+            
+
+        <br><br>
         <table>
             <thead>
                 <tr>
@@ -138,6 +141,8 @@
         </table>
 
         {{-- <p><strong>In words:</strong> {{ ucwords(\NumberFormatter::create('en', \NumberFormatter::SPELLOUT)->format($order->net_total)) }}</p> --}}
+
+        <p><strong>In words:</strong> {{$amountInWords}}</p>
 
         <div class="note">
             {!! $order->body !!}
