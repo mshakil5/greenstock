@@ -199,8 +199,6 @@ class SalesController extends Controller
             'bill_body' => 'required',
             'grand_total' => 'required',
             'net_amount' => 'required',
-            'salestype' => 'required',
-            // 'salestype' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -211,7 +209,6 @@ class SalesController extends Controller
         $order = new Order();
         $order->invoiceno = $request->invoiceno;
         $order->orderdate = $request->date;
-        $order->salestype = $request->salestype;
         $order->customer_id = $request->customer_id;
         $order->branch_id = Auth::user()->branch_id;
         $order->ref = $request->ref; 
@@ -227,6 +224,8 @@ class SalesController extends Controller
         $order->sales_status = "1";
         $order->ordertype = "Product";
         $order->return_amount = $request->return_amount;
+        $order->bank_amount = $request->bank_amount;
+        $order->cash_amount = $request->cash_amount;
         $order->subject = $request->subject;
         $order->body = $request->bill_body;
         $order->created_by = Auth::user()->id;
@@ -241,13 +240,8 @@ class SalesController extends Controller
             $transaction->amount = $request->grand_total;
             $transaction->vat_amount = $request->total_vat_amount;
             $transaction->at_amount = $request->net_amount;
-            $transaction->transaction_type = 'Current';
-            if ($request->salestype == "Credit") {
-                $transaction->payment_type = "Account Receivable";
-            } else {
-                $transaction->payment_type = $request->salestype;
-            }
-
+            $transaction->transaction_type = 'Credit';
+            $transaction->payment_type = "Account Receivable";
             $transaction->customer_id = $request->customer_id;
             $transaction->branch_id = Auth::user()->branch_id;
             $transaction->created_by = Auth()->user()->id;
@@ -256,6 +250,46 @@ class SalesController extends Controller
             $transaction->save();
             $transaction->tran_id = 'SL' . date('Ymd') . str_pad($transaction->id, 4, '0', STR_PAD_LEFT);
             $transaction->save();
+
+            if ($request->cash_amount > 0) {
+                $transaction = new Transaction();
+                $transaction->date = $request->date;
+                $transaction->table_type = 'Income';
+                $transaction->description = 'Sales';
+                $transaction->amount = $request->grand_total;
+                $transaction->vat_amount = $request->total_vat_amount;
+                $transaction->at_amount = $request->net_amount;
+                $transaction->transaction_type = 'Current';
+                $transaction->payment_type = "Cash";
+                $transaction->customer_id = $request->customer_id;
+                $transaction->branch_id = Auth::user()->branch_id;
+                $transaction->created_by = Auth()->user()->id;
+                $transaction->created_ip = request()->ip();
+                $transaction->order_id = $order->id;
+                $transaction->save();
+                $transaction->tran_id = 'SL' . date('Ymd') . str_pad($transaction->id, 4, '0', STR_PAD_LEFT);
+                $transaction->save();
+            }
+
+            if ($request->bank_amount > 0) {
+                $transaction = new Transaction();
+                $transaction->date = $request->date;
+                $transaction->table_type = 'Income';
+                $transaction->description = 'Sales';
+                $transaction->amount = $request->grand_total;
+                $transaction->vat_amount = $request->total_vat_amount;
+                $transaction->at_amount = $request->net_amount;
+                $transaction->transaction_type = 'Current';
+                $transaction->payment_type = "Bank";
+                $transaction->customer_id = $request->customer_id;
+                $transaction->branch_id = Auth::user()->branch_id;
+                $transaction->created_by = Auth()->user()->id;
+                $transaction->created_ip = request()->ip();
+                $transaction->order_id = $order->id;
+                $transaction->save();
+                $transaction->tran_id = 'SL' . date('Ymd') . str_pad($transaction->id, 4, '0', STR_PAD_LEFT);
+                $transaction->save();
+            }
 
             if ($request->input('product_id')) {
                 foreach ($request->input('product_id') as $key => $value) {
@@ -292,8 +326,6 @@ class SalesController extends Controller
                 }
     
             }
-
-
             if ($request->input('service_id')) {
                 foreach ($request->input('service_id') as $key => $value) {
                     $orderDtl = new OrderDetail();
@@ -307,9 +339,6 @@ class SalesController extends Controller
                     $orderDtl->save();
                 }
             }
-            
-            
-
             if ($request->input('spproduct_id')) {
                 foreach ($request->input('spproduct_id') as $key => $value) {
                     $stockid = Stock::where('product_id', '=', $request->get('spproduct_id')[$key])
@@ -332,7 +361,6 @@ class SalesController extends Controller
                 }
             }
             
-
             $message = "<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Thank you for this order.</b></div>";
             return response()->json(['status' => 300, 'message' => $message, 'id' => $order->id]);
         }

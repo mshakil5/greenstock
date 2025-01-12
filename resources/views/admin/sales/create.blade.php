@@ -48,16 +48,30 @@
                                 <input type="text" class="form-control" id="invoiceno" name="invoiceno" value="{{ $invoiceNo }}" readonly>
                             </div>
 
-                            <div class="form-group col-md-3">
-                                <label for="date">Payment Type *</label>
-                                <select name="salestype" id="salestype" class="form-control">
-                                    <option value="Cash">Cash</option>
-                                    <option value="Bank">Bank</option>
-                                    <option value="Credit">Credit</option>
+                        </div>
+
+                        <div class="form-row">
+                            {{-- <div class="form-group col-md-3">
+                                <label for="product">Product *</label>
+                                <select name="product" id="product" class="form-control select2">
+                                    <option value="">Select</option>
+                                    @foreach (\App\Models\Product::select('id','productname','part_no')->where('branch_id', Auth::user()->branch_id)->get() as $product)
+                                    <option value="{{ $product->id }}">{{ $product->productname }}-{{ $product->part_no }}</option>
+                                    @endforeach
                                 </select>
                             </div>
 
                             <div class="form-group col-md-3">
+                                <label for="service">Select Package</label>
+                                <select name="service" id="service" class="form-control select2">
+                                    <option value="">Select</option>
+                                    @foreach (\App\Models\Service::select('id','name','code')->get() as $service)
+                                    <option value="{{ $service->id }}">{{ $service->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div> --}}
+
+                            <div class="form-group col-md-6">
                                 <label for="customer_id">Customer *</label>
                                 <select name="customer_id" id="customer_id" class="form-control select2">
                                     <option value="">Select</option>
@@ -73,7 +87,11 @@
                                     <i class='fa fa-plus'></i> Add
                                 </a>
                             </div>
+                            
+                        </div>
+                        <div class="form-group col-md-12"></div>
 
+                        <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="product">Product *</label>
                                 <select name="product" id="product" class="form-control select2">
@@ -83,11 +101,6 @@
                                     @endforeach
                                 </select>
                             </div>
-
-                            {{-- <div class="form-group col-md-4">
-                                <label for="ref">Ref</label>
-                                <input type="text" class="form-control" id="ref" name="ref">
-                            </div> --}}
 
                             <div class="form-group col-md-6">
                                 <label for="service">Select Package</label>
@@ -99,6 +112,7 @@
                                 </select>
                             </div>
 
+                            
                         </div>
 
                     </div>
@@ -253,19 +267,33 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="cash_amount" class="col-sm-6 col-form-label">Cash Received Amount</label>
+                            <div class="col-sm-6">
+                                <input type="number" class="form-control" id="cash_amount" name="cash_amount">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="bank_amount" class="col-sm-6 col-form-label">Bank Received Amount</label>
+                            <div class="col-sm-6">
+                                <input type="number" class="form-control" id="bank_amount" name="bank_amount">
+                            </div>
+                        </div>
+
+                        <div class="form-group row d-none">
                             <label for="paid_amount" class="col-sm-6 col-form-label">Received Amount</label>
                             <div class="col-sm-6">
                                 <input type="number" class="form-control" id="paid_amount" name="paid_amount">
                             </div>
                         </div>
 
-                        {{-- <div class="form-group row">
+                        <div class="form-group row">
                             <label for="due_amount" class="col-sm-6 col-form-label">Due Amount</label>
                             <div class="col-sm-6">
                                 <input type="number" class="form-control" id="due_amount" name="due_amount" min="0" readonly>
                             </div>
                         </div>
-
+                        {{-- 
                         <div class="form-group row">
                             <label for="due_amount" class="col-sm-6 col-form-label">Return Amount</label>
                             <div class="col-sm-6">
@@ -426,6 +454,8 @@
         var vat_percent = parseFloat($('#vat_percent').val()) || 0;
         // var total_vat_amount = parseFloat($('#total_vat_amount').val()) || 0;
 
+        
+
         $('#servicetable tbody tr').each(function() {
             var quantity = parseFloat($(this).find('input.quantity').val()) || 0;
             var unit_price = parseFloat($(this).find('input.unit-price').val()) || 0;
@@ -453,6 +483,11 @@
         $('#total_vat_amount').val(total_vat.toFixed(2));
         $('#mainProduct').val(mainProductTotalAmount.toFixed(2));
         $('#net_amount').val(net_amount.toFixed(2));
+        var bank_amount = parseFloat($("#bank_amount").val()) || 0;
+        var cash_amount = parseFloat($("#cash_amount").val()) || 0;
+        var net_amount = parseFloat($("#net_amount").val()) || 0;
+        var due_amount = net_amount - (cash_amount + bank_amount);
+        $("#due_amount").val(due_amount.toFixed(2));
 
     }
 
@@ -665,6 +700,15 @@
 
 
         $(document).on('input', '#servicetable input.quantity, #servicetable input.unit-price, #servicetable input.servicetotal', function() {
+            calculation();
+        });
+
+        // cash_amount , bank_amount
+        $("#cash_amount").on('keyup change input', function() {
+            calculation();
+        });
+
+        $("#bank_amount").on('keyup change input', function() {
             calculation();
         });
 
