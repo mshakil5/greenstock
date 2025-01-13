@@ -55,13 +55,13 @@
                                 <select name="warranty" id="warranty" class="form-control">
                                     <option value="">Please Select</option>
                                     <option value="Full Warranty">Full Warranty</option>
-                                    <option value="Labor Only">Labor Only</option>
+                                    <option value="Service Only">Service Only</option>
                                     <option value="Parts Only">Parts Only</option>
                                     <option value="Out of Warranty">Out of Warranty</option>
                                 </select>
                             </div>
 
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
                                 <label for="staff">Assign to staff</label>
                                 <select name="staff" id="staff" class="form-control select2">
                                     <option value="">Select</option>
@@ -71,7 +71,7 @@
                                 </select>
                             </div>
 
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-4">
                                 <label for="company_id">Company</label>
                                 <select name="company_id" id="company_id" class="form-control select2">
                                     <option value="">Select</option>
@@ -79,6 +79,11 @@
                                     <option value="{{ $company->id }}">{{ $company->name }}</option>
                                     @endforeach
                                 </select>
+                            </div>
+
+                            <div class="form-group col-md-4">
+                                <label for="product_type">Product type</label>
+                                <input type="text" class="form-control" id="product_type" name="product_type" placeholder="Ac, Fridge, TV etc">
                             </div>
 
                             <div class="form-group col-md-6">
