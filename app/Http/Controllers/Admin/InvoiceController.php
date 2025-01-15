@@ -72,6 +72,10 @@ class InvoiceController extends Controller
                         <span title="Print Invoice">Print</span>
                     </a>';
 
+                    $btn .= '<a href="' . route('customer.invoice.bgprint', $invoice->id) . '" class="btn btn-success btn-xs print-window" target="_blank">
+                        <span title="Print Invoice">Print BG</span>
+                    </a>';
+
                 
                     $btn .= '<button type="button" class="btn btn-primary btn-xs view-btn" data-toggle="modal" data-target="#product-details" value="' . $invoice->id . '">
                         <i class="fa fa-eye" aria-hidden="true"></i> View
@@ -113,6 +117,19 @@ class InvoiceController extends Controller
 
         $output = $pdf->output();
         return view('invoices.print_invoice', compact('order','customerdtl','amountInWords'));
+        
+    }
+
+    public function customer_invoice_print_bg($id)
+    {
+        $order = Order::findOrFail($id);
+        $amountInWords = NumberToWords::convert($order->net_total);
+
+        $customerdtl = Customer::where('id','=',$order->customer_id)->first();
+        // $pdf = PDF::loadView('invoices.print_invoice_bg', compact('order','customerdtl','amountInWords'));
+
+        // $output = $pdf->output();
+        return view('invoices.print_invoice_bg', compact('order','customerdtl','amountInWords'));
         
     }
 }

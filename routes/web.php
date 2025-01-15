@@ -41,6 +41,7 @@ Route::get('/', [App\Http\Controllers\FrontendController::class, 'index'])->name
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('invoice/customer/{id}', [InvoiceController::class, 'customer_invoice_download'])->name('customer.invoice.download');
 Route::get('invoice/print/{id}', [InvoiceController::class, 'customer_invoice_print'])->name('customer.invoice.print');
+Route::get('invoice/bg-print/{id}', [InvoiceController::class, 'customer_invoice_print_bg'])->name('customer.invoice.bgprint');
 Route::get('getpayment-method', [PaymentMethodController::class, 'getpaymentmethod']);
 
 
