@@ -1,6 +1,10 @@
 @extends('admin.layouts.master')
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}" />
+<!-- Summernote CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-lite.min.css" rel="stylesheet">
+<!-- Summernote JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-lite.min.js"></script>
 
 <div class="row ">
     <div class="container-fluid">
@@ -38,6 +42,7 @@
                                     <label for="date">Date *</label>
                                     <p>{{$serviceRequest->date}}</p>
                                     <input type="hidden" name="serviceRequestID" value="{{$serviceRequest->id}}">
+                                    <input type="hidden" name="orderId" value="{{$serviceRequest->order->id}}">
                                 </div>
 
                                 <div class="form-group col-md-4">
@@ -214,6 +219,35 @@
                     </table>
                 </div>
 
+                <div class="box box-default box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Billing Description</h3>
+                    </div>
+
+                    <div class="box-body ir-table">
+                        <div class="form-row">
+
+                            <div class="form-group col-md-12">
+                                <label for="subject">Subject</label>
+                                <input type="text" class="form-control" id="subject" name="subject">
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="bill_body">Body</label>
+                                <textarea name="bill_body" id="bill_body" cols="30" rows="5" class="form-control">
+                                    <p class="MsoNormal" style="margin-bottom: 0.0001pt;"><b>N.B:<o:p></o:p></b></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">1.&nbsp; This billing amount Excluded of VAT &amp; TAX.<b><o:p></o:p></b></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">2.&nbsp; Payment will be made in favor of&nbsp;<b>“Green Technology”.<o:p></o:p></b></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;"><b>&nbsp;</b></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;"><b><u>Warranty:</u></b><u><o:p></o:p></u></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">01.<u>&nbsp;Service Warranty -3 years.<o:p></o:p></u></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">02.<u>&nbsp;Compressor Warranty – 5 years.</u></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">03.&nbsp;<u>Spare Parts Warranty -2 year.</u></p>
+                                
+                                </textarea>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                    
+                </div>
+
             </div>
 
             <div class="col-md-3">
@@ -258,6 +292,7 @@
                             </div>
                         </div>
 
+                        
                         <div class="form-group row">
                             <label for="net_amount" class="col-sm-6 col-form-label">Net Amount</label>
                             <div class="col-sm-6">
@@ -266,13 +301,27 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="cash_amount" class="col-sm-6 col-form-label">Cash Received Amount</label>
+                            <div class="col-sm-6">
+                                <input type="number" class="form-control" id="cash_amount" name="cash_amount">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="bank_amount" class="col-sm-6 col-form-label">Bank Received Amount</label>
+                            <div class="col-sm-6">
+                                <input type="number" class="form-control" id="bank_amount" name="bank_amount">
+                            </div>
+                        </div>
+
+                        <div class="form-group row d-none">
                             <label for="paid_amount" class="col-sm-6 col-form-label">Received Amount</label>
                             <div class="col-sm-6">
                                 <input type="number" class="form-control" id="paid_amount" name="paid_amount">
                             </div>
                         </div>
 
-                        <div class="form-group row d-none">
+                        <div class="form-group row">
                             <label for="due_amount" class="col-sm-6 col-form-label">Due Amount</label>
                             <div class="col-sm-6">
                                 <input type="number" class="form-control" id="due_amount" name="due_amount" min="0" readonly>
@@ -357,7 +406,25 @@
     });
 </script>
 
-
+<script>
+    $(document).ready(function() {
+        $('#bill_body').summernote({
+            height: 200, // Set the height of the editor
+            placeholder: 'Write something here...',
+            toolbar: [
+                // Customize your toolbar
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+    });
+</script>
 
 <!-- <script>
     $(document).ready(function() {
@@ -427,6 +494,11 @@
         $('#total_vat_amount').val(total_vat.toFixed(2));
         $('#additional_sales').val(addtionalitemSellingAmount.toFixed(2));
         $('#net_amount').val(net_amount.toFixed(2));
+        var bank_amount = parseFloat($("#bank_amount").val()) || 0;
+        var cash_amount = parseFloat($("#cash_amount").val()) || 0;
+        var net_amount = parseFloat($("#net_amount").val()) || 0;
+        var due_amount = net_amount - (cash_amount + bank_amount);
+        $("#due_amount").val(due_amount.toFixed(2));
 
     }
 
@@ -630,6 +702,15 @@
         });
 
         $(document).on('input', '#adProductTable input.apquantity, #adProductTable input.apunit-price, #adProductTable input.apsellingprice', function() {
+            calculation();
+        });
+
+        // cash_amount , bank_amount
+        $("#cash_amount").on('keyup change input', function() {
+            calculation();
+        });
+
+        $("#bank_amount").on('keyup change input', function() {
             calculation();
         });
 

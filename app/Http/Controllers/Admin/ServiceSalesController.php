@@ -55,7 +55,8 @@ class ServiceSalesController extends Controller
     public function processingServiceRequest($id)
     {
         
-        $serviceRequest = ServiceRequest::where('id', $id)->first();
+        $serviceRequest = ServiceRequest::with('order')->where('id', $id)->first();
+        
         return view('admin.salesService.processing', compact('serviceRequest'));
     }
 

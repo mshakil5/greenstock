@@ -18,4 +18,9 @@ class ServiceRequest extends Model
     {
         return $this->belongsTo('App\Models\Company');
     }
+
+    public function order()
+    {
+        return $this->hasOne('App\Models\Order');
+    }
 }
