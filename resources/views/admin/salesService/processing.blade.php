@@ -342,6 +342,8 @@
                                 <label class="form-check-label" for="reduceQty">
                                     Reduce from stock
                                 </label>
+                                
+                                <div class="ermsg"></div>
 
                                 <div class="button-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
                                     {{-- <button class="btn btn-success btn-md btn-submit" id="quotationBtn" type="submit">
