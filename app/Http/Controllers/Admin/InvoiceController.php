@@ -109,7 +109,7 @@ class InvoiceController extends Controller
     //downloads customer invoice
     public function customer_invoice_print($id)
     {
-        $order = Order::findOrFail($id);
+        $order = Order::with('serviceRequest')->findOrFail($id);
         $amountInWords = NumberToWords::convert($order->net_total);
 
         $customerdtl = Customer::where('id','=',$order->customer_id)->first();

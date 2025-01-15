@@ -25,4 +25,8 @@ class Order extends Model
     public function salesreturn(){
         return $this->hasMany('App\Models\SalesReturn');
     }
+
+    public function serviceRequest(){
+        return $this->belongsTo('App\Models\ServiceRequest');
+    }
 }

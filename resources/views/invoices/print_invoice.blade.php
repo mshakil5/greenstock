@@ -91,8 +91,14 @@
         <p>{{ $order->invoiceno }}</p>
         <p>Date: {{ $order->orderdate }}</p>
         <p><strong>To:</strong><br>
+            @if ($order->serviceRequest)
+            {{ $order->serviceRequest->customer_name ?? "" }}<br>
+            {{ $order->serviceRequest->customer_phone ?? "" }}<br>
+            {{ $order->serviceRequest->address ?? ""  }}</p>
+            @else
             {{ $order->customer->name ?? "" }}<br>
             {{ $order->customer->address ?? ""  }}</p>
+            @endif
 
         <p><strong>Subject:</strong> {{ $order->subject }}</p>
         {{-- <p>Dear Sir,<br>
