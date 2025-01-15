@@ -82,8 +82,8 @@
                             </div>
 
                             <div class="form-group col-md-4">
-                                <label for="product_type">Product type</label>
-                                <input type="text" class="form-control" id="product_type" name="product_type" placeholder="Ac, Fridge, TV etc">
+                                <label for="product_desc">Product type</label>
+                                <input type="text" class="form-control" id="product_desc" name="product_desc" placeholder="Ac, Fridge, TV etc">
                             </div>
 
                             <div class="form-group col-md-6">

@@ -41,19 +41,25 @@
                                 </div>
 
                                 <div class="form-group col-md-4">
-                                    <label for="invoiceno">Bill Number</label>
+                                    <label>Bill Number</label>
                                     <p>{{$serviceRequest->bill_no}}</p>
                                     
                                 </div>
 
                                 <div class="form-group col-md-4">
+                                    <label for="invoiceno">Our Invoice Number</label>
+                                    <p>{{$serviceRequest->invoice_no}}</p>
+                                    
+                                </div>
+
+                                {{-- <div class="form-group col-md-4">
                                     <label for="date">Payment Type *</label>
                                     <select name="salestype" id="salestype" class="form-control">
                                         <option value="Cash">Cash</option>
                                         <option value="Bank">Bank</option>
                                         <option value="Credit">Credit</option>
                                     </select>
-                                </div>
+                                </div> --}}
 
 
                                 <div class="form-group col-md-1">
@@ -104,6 +110,11 @@
                                 <div class="form-group col-md-4">
                                     <label for="">Company Name</label>
                                     <p>{{$serviceRequest->company->name}}</p>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label for="">Product Desc</label>
+                                    <p>{{$serviceRequest->product_desc}}</p>
                                 </div>
 
 
@@ -634,8 +645,7 @@
         });
 
         // submit to sales 
-        // var salesStoreurl = "{{URL::to('/admin/sales-store')}}";
-
+        
         $("body").delegate("#salesBtn", "click", function(event) {
             event.preventDefault();
 

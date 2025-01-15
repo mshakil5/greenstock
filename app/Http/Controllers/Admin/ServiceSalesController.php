@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use App\Models\Service;
 use App\Models\ServiceDetail;
 use App\Models\ServiceRequest;
@@ -166,6 +167,7 @@ class ServiceSalesController extends Controller
                 $service->invoice_no = $request->invoice_no;
                 $service->customer_phone = $request->customer_phone;
                 $service->address = $request->address;
+                $service->product_desc = $request->product_desc;
                 $service->date = $request->date;
                 $service->user_id = $request->staff;
                 $service->warranty = $request->warranty;
@@ -175,6 +177,12 @@ class ServiceSalesController extends Controller
                 $service->created_by= Auth::user()->id;
 
                 if ($service->save()) {
+
+                    $order = new Order();
+                    $order->bill_no = $request->bill_no;
+                    $order->invoiceno = $request->invoice_no;
+                    $order->service_request_id = $service->id;
+                    $order->save();
                     
                     $message ="<div class='alert alert-success' style='color:white'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Request assign Successfully.</b></div>";
                     return response()->json(['status'=> 300,'message'=>$message]);
