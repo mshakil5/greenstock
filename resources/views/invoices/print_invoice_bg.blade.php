@@ -122,10 +122,18 @@
                     <td>
                         @if ($orderdetail->product)
                             {{ $orderdetail->product->productname ?? " "}}<br>
+                            @if (isset($orderdetail->capacity))
                             Capacity: {{ $orderdetail->capacity }} <br>
+                            @endif
+                            @if ($orderdetail->type)
                             Type: {{ $orderdetail->type }} <br>
+                            @endif
+                            @if ($orderdetail->power)
                             Power: {{ $orderdetail->power }} <br>
+                            @endif
+                            @if ($orderdetail->origin)
                             Origin: {{ $orderdetail->origin }} <br>
+                            @endif
                             
                         @else
                             {{ $orderdetail->service->name ?? " "}}<br>
