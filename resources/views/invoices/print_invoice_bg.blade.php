@@ -4,64 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script>
         setTimeout(function () {
             window.print();
-        }, 400);
+        }, 800);
     </script>
     <style>
-        @page {
-            size: A4;
-            margin: 0;
-        }
-    
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: url('{{asset('bg_invoice.png')}}') no-repeat center center fixed;
-            background-size: cover;
-            background-position: center 3px; /* Adjust the vertical position of the background */
-        }
-    
-        .invoice-container {
-            width: 100%;
+        html, body {
             height: 100%;
-            padding: 20mm;
-            box-sizing: border-box;
+            margin: 0;
         }
-    
-        .header, .footer {
-            position: fixed;
+        body {
+            background-image: url('{{asset('bg_invoice.png')}}');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            margin: 0;
+        }
+        .container {
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.8);
+            max-width: 800px;
+            margin: auto;
+            padding: 10px;
         }
-    
+        h1, h2, h3, p {
+            margin: 5px 0;
+        }
         .header {
-            top: 0;
-            height: 50mm; /* Adjust if needed */
+            margin-top: 20px;
+            padding-top: 40px;
+            text-align: center;
         }
-    
         .footer {
-            bottom: 0;
-            height: 50mm; /* Adjust if needed to cover the gap */
+            position: fixed;
+            bottom: 70px; /* Adjust as needed */
+            left: 10px;   /* Adjust as needed */
+            font-size: 12px; /* Optional: Adjust for better readability */
+            display: flex;
+            justify-content: space-between;
+            width: 95%;
         }
-    
-        .content {
-            padding: 70mm 20mm 70mm; /* Adjust for header and footer */
+
+        @media print {
+            .footer {
+                position: fixed;
+                bottom: 70px;
+                left: 10px;
+                display: flex;
+                justify-content: space-between;
+                width: 95%;
+            }
         }
-    
-        .table th, .table td {
-            vertical-align: middle;
+        table {
+            width: 95%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table, th, td {
+            border: 1px solid #000;
+        }
+        th, td {
+            padding: 5px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .total-row {
+            font-weight: bold;
+        }
+        .note, .warranty {
+            margin-top: 10px;
+        }
+        @media print {
+            body {
+                margin: 0;
+            }
+            .container {
+                page-break-inside: avoid;
+            }
         }
     </style>
-    
 </head>
 <body>
-    
-
-    <div class="invoice-container">
-        
     <div class="container">
         <div class="header mt-3">
             <h1>Invoice</h1>
@@ -131,7 +156,6 @@
             <p>Customer’s Signature</p>
             <p><strong>“Green Technology”</strong></p>
         </div>
-    </div>
     </div>
 </body>
 </html>
