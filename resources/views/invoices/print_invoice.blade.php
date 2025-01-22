@@ -154,6 +154,14 @@
                     <td style="text-align:right">{{ number_format($order->discount_amount, 2) }}</td>
                 </tr>
                 @endif
+
+                @if ($order->adv_amount > 0)
+                <tr class="total-row">
+                    <td colspan="4" style="text-align: right;">Advance Received</td>
+                    <td style="text-align:right">{{ number_format($order->adv_amount, 2) }}</td>
+                </tr>
+                @endif
+
                 <tr class="total-row">
                     <td colspan="4" style="text-align: right;">Received Amount</td>
                     <td style="text-align:right">{{ number_format($order->bank_amount + $order->cash_amount, 2) }}</td>
