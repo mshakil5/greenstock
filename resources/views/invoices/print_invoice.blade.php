@@ -148,7 +148,7 @@
                     <td colspan="4" style="text-align: right;">Total</td>
                     <td style="text-align:right">{{ number_format($order->net_total, 2) }}</td>
                 </tr>
-                @if ($order->discount > 0)
+                @if ($order->discount_amount > 0)
                 <tr class="total-row">
                     <td colspan="4" style="text-align: right;">Discount</td>
                     <td style="text-align:right">{{ number_format($order->discount_amount, 2) }}</td>
