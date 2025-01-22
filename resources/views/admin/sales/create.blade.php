@@ -267,6 +267,15 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="adv_amount" class="col-sm-6 col-form-label">Advance Received</label>
+                            <div class="col-sm-6">
+                                <input type="number" class="form-control" id="adv_amount" name="adv_amount">
+                            </div>
+                        </div>
+
+
+
+                        <div class="form-group row">
                             <label for="cash_amount" class="col-sm-6 col-form-label">Cash Received Amount</label>
                             <div class="col-sm-6">
                                 <input type="number" class="form-control" id="cash_amount" name="cash_amount">
@@ -485,8 +494,9 @@
         $('#net_amount').val(net_amount.toFixed(2));
         var bank_amount = parseFloat($("#bank_amount").val()) || 0;
         var cash_amount = parseFloat($("#cash_amount").val()) || 0;
+        var adv_amount = parseFloat($("#adv_amount").val()) || 0;
         var net_amount = parseFloat($("#net_amount").val()) || 0;
-        var due_amount = net_amount - (cash_amount + bank_amount);
+        var due_amount = net_amount - (cash_amount + bank_amount + adv_amount);
         $("#due_amount").val(due_amount.toFixed(2));
 
     }
@@ -711,6 +721,11 @@
         $("#bank_amount").on('keyup change input', function() {
             calculation();
         });
+
+        $("#adv_amount").on('keyup change input', function() {
+            calculation();
+        });
+
 
 
         // Listen for changes in the VAT percentage input
