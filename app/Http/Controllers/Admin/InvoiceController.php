@@ -110,7 +110,7 @@ class InvoiceController extends Controller
     public function customer_invoice_print($id)
     {
         $order = Order::with('serviceRequest')->findOrFail($id);
-        $amountInWords = NumberToWords::convert($order->net_total);
+        $amountInWords = NumberToWords::convert($order->cash_amount + $order->bank_amount);
 
         $customerdtl = Customer::where('id','=',$order->customer_id)->first();
         $pdf = PDF::loadView('invoices.print_invoice', compact('order','customerdtl','amountInWords'));

@@ -104,9 +104,6 @@
         {{-- <p>Dear Sir,<br>
             Reference to above mention subject we are pleased to submit our quotation for your kind Consideration under as follows.</p> --}}
 
-            
-
-        <br><br>
         <table>
             <thead>
                 <tr>
@@ -151,12 +148,27 @@
                     <td colspan="4" style="text-align: right;">Total</td>
                     <td style="text-align:right">{{ number_format($order->net_total, 2) }}</td>
                 </tr>
+                @if ($order->discount > 0)
+                <tr class="total-row">
+                    <td colspan="4" style="text-align: right;">Discount</td>
+                    <td style="text-align:right">{{ number_format($order->discount_amount, 2) }}</td>
+                </tr>
+                @endif
+                <tr class="total-row">
+                    <td colspan="4" style="text-align: right;">Received Amount</td>
+                    <td style="text-align:right">{{ number_format($order->bank_amount + $order->cash_amount, 2) }}</td>
+                </tr>
+                <tr class="total-row">
+                    <td colspan="4" style="text-align: right;">Due Amount</td>
+                    <td style="text-align:right">{{ number_format($order->due, 2) }}</td>
+                </tr>
+                
             </tbody>
         </table>
 
         {{-- <p><strong>In words:</strong> {{ ucwords(\NumberFormatter::create('en', \NumberFormatter::SPELLOUT)->format($order->net_total)) }}</p> --}}
 
-        <p><strong>In words:</strong> {{$amountInWords}}</p>
+        <p><strong>Total Received In words:</strong> {{$amountInWords}}</p>
 
         <div class="note">
             {!! $order->body !!}
