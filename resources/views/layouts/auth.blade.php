@@ -54,7 +54,7 @@
                         </div>
                     </div>
                 </div>
-                <div>Copyright © <?php echo date("Y"); ?> Next Link. All Rights Reserved.</div>
+                <div>Copyright © <?php echo date("Y"); ?> Green technology. All Rights Reserved.</div>
             </div>
         </div>
     </div>

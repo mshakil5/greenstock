@@ -422,7 +422,7 @@
 
         <div class="row mx-auto"> 
             <div class="box">
-                <p class="box-title">Copyright © Next Link Limited. All rights reserved.</p>
+                <p class="box-title">Copyright © Green Technology. All rights reserved.</p>
             </div> 
         </div>
 
