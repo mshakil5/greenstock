@@ -20,6 +20,7 @@
             background-repeat: no-repeat;
             background-attachment: fixed;
             margin: 0;
+            font-size: 10px; /* Optional: Adjust for better readability */
         }
         .container {
             width: 100%;
@@ -147,7 +148,7 @@
 
                 
                 <tr class="total-row">
-                    <td colspan="4" style="text-align: right;">Total {{$order->adv_amount ?? "null"}}</td>
+                    <td colspan="4" style="text-align: right;">Total</td>
                     <td style="text-align:right">{{ number_format($order->grand_total, 2) }}</td>
                 </tr>
                 @if ($order->discount_amount > 0)
