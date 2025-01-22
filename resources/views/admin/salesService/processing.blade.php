@@ -733,6 +733,10 @@
             calculation();
         });
 
+        $("#adv_amount").on('keyup change input', function() {
+            calculation();
+        });
+
 
         // Listen for changes in the VAT percentage input
         $("#vat_percent").on('keyup change input', function() {
