@@ -293,10 +293,19 @@
                         </div>
 
                         
+
+                        
                         <div class="form-group row">
                             <label for="net_amount" class="col-sm-6 col-form-label">Net Amount</label>
                             <div class="col-sm-6">
                                 <input type="number" class="form-control" id="net_amount" name="net_amount" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="adv_amount" class="col-sm-6 col-form-label">Advance Received</label>
+                            <div class="col-sm-6">
+                                <input type="number" class="form-control" id="adv_amount" name="adv_amount">
                             </div>
                         </div>
 
@@ -474,6 +483,8 @@
             itemTotalAmount += parseFloat(rateunittotal) || 0;
         });
 
+        console.log("itemTotalAmount:" + itemTotalAmount);
+
         $('#adProductTable tbody tr').each(function() {
             var apquantity = parseFloat($(this).find('input.apquantity').val()) || 0;
             var apunit_price = parseFloat($(this).find('input.apunit-price').val()) || 0;
@@ -491,15 +502,16 @@
 
         var grand_total = itemTotalAmount;
         var total_vat = (itemTotalAmount * vat_percent) / 100;
-        var net_amount = grand_total + itemTotalAmount + total_vat - discount;
+        var net_amount = addtionalitemSellingAmount + itemTotalAmount + total_vat - discount;
         $('#grand_total').val(grand_total.toFixed(2));
         $('#total_vat_amount').val(total_vat.toFixed(2));
         $('#additional_sales').val(addtionalitemSellingAmount.toFixed(2));
         $('#net_amount').val(net_amount.toFixed(2));
         var bank_amount = parseFloat($("#bank_amount").val()) || 0;
         var cash_amount = parseFloat($("#cash_amount").val()) || 0;
+        var adv_amount = parseFloat($("#adv_amount").val()) || 0;
         var net_amount = parseFloat($("#net_amount").val()) || 0;
-        var due_amount = net_amount - (cash_amount + bank_amount);
+        var due_amount = net_amount - (cash_amount + bank_amount + adv_amount);
         $("#due_amount").val(due_amount.toFixed(2));
 
     }
@@ -706,6 +718,11 @@
         $(document).on('input', '#adProductTable input.apquantity, #adProductTable input.apunit-price, #adProductTable input.apsellingprice', function() {
             calculation();
         });
+
+        $(document).on('input', '#servicetable input.quantity, #servicetable input.unit-price, #servicetable input.servicetotal', function() {
+            calculation();
+        });
+
 
         // cash_amount , bank_amount
         $("#cash_amount").on('keyup change input', function() {

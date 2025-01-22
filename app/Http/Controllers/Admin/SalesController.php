@@ -975,6 +975,7 @@ class SalesController extends Controller
         $order->return_amount = $request->return_amount;
         $order->bank_amount = $request->bank_amount;
         $order->cash_amount = $request->cash_amount;
+        $order->adv_amount = $request->adv_amount;
         $order->subject = $request->subject;
         $order->body = $request->bill_body;
         $order->created_by = Auth::user()->id;
