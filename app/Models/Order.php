@@ -29,4 +29,12 @@ class Order extends Model
     public function serviceRequest(){
         return $this->belongsTo('App\Models\ServiceRequest');
     }
+
+    public function transaction(){
+        return $this->hasMany('App\Models\Transaction');
+    }
+
+    public function serviceAdditionalProduct(){
+        return $this->hasMany('App\Models\ServiceAdditionalProduct');
+    }
 }

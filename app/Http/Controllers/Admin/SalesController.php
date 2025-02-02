@@ -1109,4 +1109,14 @@ class SalesController extends Controller
 
         // return response()->json(['status' => 303, 'message' => 'Failed to save the order.']);
     }
+
+
+    // service sales edit
+    public function serviceSalesEdit($id)
+    {
+
+        $data  = ServiceRequest::with('order','order.orderdetails','order.transaction','order.serviceAdditionalProduct')->where('id', $id)->first();
+        dd($data);
+        return view('admin.salesService.edit', compact('data'));
+    }
 }

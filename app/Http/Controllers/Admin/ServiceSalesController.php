@@ -232,7 +232,7 @@ class ServiceSalesController extends Controller
             ->addColumn('action', function ($invoice) {
                 $btn = '<div class="table-actions text-center">';
 
-                    $btn .= '<a href="#" class="btn btn-warning btn-xs ms-1" style="margin: 2px;">
+                    $btn .= '<a href="' . route('admin.serviceSales.edit', $invoice->id) . '"  class="btn btn-warning btn-xs ms-1" style="margin: 2px;">
                         <i class="fa fa-pencil" aria-hidden="true"></i><span title="Edit">Edit</span>
                     </a>';
 
