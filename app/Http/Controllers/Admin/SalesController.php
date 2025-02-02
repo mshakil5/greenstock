@@ -952,6 +952,10 @@ class SalesController extends Controller
         if (!$serviceRequest) {
             return response()->json(['status' => 303, 'message' => 'Service Request not found.']);
         }else{
+            
+            $serviceRequest->product_model = $request->product_model;
+            $serviceRequest->product_serial = $request->product_serial;
+            $serviceRequest->product_capacity = $request->product_capacity;
             $serviceRequest->status = 2;
             $serviceRequest->save();
         }   
@@ -1003,6 +1007,7 @@ class SalesController extends Controller
 
 
             if ($request->cash_amount > 0) {
+                
                 $transaction = new Transaction();
                 $transaction->date = $request->date;
                 $transaction->table_type = 'Income';

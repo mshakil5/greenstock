@@ -48,15 +48,12 @@ class ServiceSalesController extends Controller
     {
         
         $invoiceNo = $this->generateInvoiceNumber();
-        
         return view('admin.salesService.request', compact('invoiceNo'));
     }
 
     public function processingServiceRequest($id)
     {
-        
         $serviceRequest = ServiceRequest::with('order')->where('id', $id)->first();
-        
         return view('admin.salesService.processing', compact('serviceRequest'));
     }
 
@@ -159,13 +156,14 @@ class ServiceSalesController extends Controller
             $imagePath = $randomName;
         }
 
+        $invoiceNo = $this->generateInvoiceNumber();
         try{
 
                 $service = new ServiceRequest();
                 $service->customer_name = $request->customer_name;
                 $service->company_id = $request->company_id;
                 $service->bill_no = $request->bill_no;
-                $service->invoice_no = $request->invoice_no;
+                $service->invoice_no = $invoiceNo;
                 $service->customer_phone = $request->customer_phone;
                 $service->address = $request->address;
                 $service->product_desc = $request->product_desc;

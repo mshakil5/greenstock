@@ -86,20 +86,7 @@
                                 <input type="text" class="form-control" id="product_desc" name="product_desc" placeholder="Ac, Fridge, TV etc">
                             </div>
 
-                            <div class="form-group col-md-4">
-                                <label for="product_model">Product Model</label>
-                                <input type="text" class="form-control" id="product_model" name="product_model">
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label for="product_serial">Product Serial</label>
-                                <input type="text" class="form-control" id="product_serial" name="product_serial">
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label for="product_capacity">Product Capacity</label>
-                                <input type="text" class="form-control" id="product_capacity" name="product_capacity">
-                            </div>
+                            
 
                             <div class="form-group col-md-6">
                                 <label for="customer_name">Customer Name</label>
@@ -207,6 +194,7 @@
             });
 
         });
+        
         // submit to quotation end
 
 
