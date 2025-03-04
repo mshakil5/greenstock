@@ -86,9 +86,9 @@ class Product extends Model
         return $this->hasMany('App\Models\AlternativeProduct');
     }
 
-    public function replacement()
+    public function serviceRequestProduct()
     {
-        return $this->hasMany('App\Models\Replacement');
+        return $this->hasMany('App\Models\ServiceRequestProduct');
     }
 
     public function stocktransfer()

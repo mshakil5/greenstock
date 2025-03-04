@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
 use App\Models\SalesReturn;
 use App\Models\ServiceAdditionalProduct;
 use App\Models\ServiceRequest;
+use App\Models\ServiceRequestProduct;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -931,7 +932,7 @@ class SalesController extends Controller
 
 
 
-    // service sales part start
+    // service sales part add start
     public function serviceSalesStore(Request $request)
     {
         $productIDs = $request->input('product_id');
@@ -956,7 +957,7 @@ class SalesController extends Controller
             $serviceRequest->product_model = $request->product_model;
             $serviceRequest->product_serial = $request->product_serial;
             $serviceRequest->product_capacity = $request->product_capacity;
-            $serviceRequest->status = 2;
+            // $serviceRequest->status = 2;
             $serviceRequest->save();
         }   
 
@@ -1080,6 +1081,13 @@ class SalesController extends Controller
                             $newstock->save();
                         }
                     }
+
+                    $packageProduct = new ServiceRequestProduct();
+                    $packageProduct->order_id = $order->id;
+                    $packageProduct->product_id = $request->get('spproduct_id')[$key];
+                    $packageProduct->service_request_id = $request->serviceRequestID;
+                    $packageProduct->quantity = $request->get('spquantity')[$key];
+                    $packageProduct->save();
                 }
             }
             
@@ -1115,8 +1123,247 @@ class SalesController extends Controller
     public function serviceSalesEdit($id)
     {
 
-        $data  = ServiceRequest::with('order','order.orderdetails','order.transaction','order.serviceAdditionalProduct')->where('id', $id)->first();
-        dd($data);
+        $data  = ServiceRequest::with('order','order.orderdetails','order.transaction','order.serviceAdditionalProduct', 'serviceRequestProduct', 'serviceRequestProduct.product')->where('id', $id)->first();
+        // dd($data);
         return view('admin.salesService.edit', compact('data'));
+    }
+
+    // service sales part start
+    public function serviceSalesUpdate(Request $request)
+    {
+        $productIDs = $request->input('product_id');
+
+        $data = $request->all();
+
+        $validator = Validator::make($request->all(), [
+            'approduct_id' => 'required_without:service_id|array',
+            'service_id' => 'required_without:approduct_id|array',
+        ]);
+
+        if ($validator->fails()) {
+            $errorMessage = "<div class='alert alert-warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>" . implode("<br>", $validator->errors()->all()) . "</b></div>";
+            return response()->json(['status' => 400, 'message' => $errorMessage]);
+        }
+
+        $serviceRequest = ServiceRequest::where('id', $request->serviceRequestID)->first();
+        if (!$serviceRequest) {
+            return response()->json(['status' => 303, 'message' => 'Service Request not found.']);
+        }else{
+            
+            $serviceRequest->product_model = $request->product_model;
+            $serviceRequest->product_serial = $request->product_serial;
+            $serviceRequest->product_capacity = $request->product_capacity;
+            // $serviceRequest->status = 2;
+            $serviceRequest->save();
+        }   
+
+        $order = Order::find($request->orderId);
+        $order->orderdate = date('Y-m-d');
+        $order->ordertype = 'Service';
+        $order->branch_id = Auth::user()->branch_id;
+        $order->ref = $request->ref; 
+        $order->qn_no = $request->order_id ?: "0";
+        $order->dn_no = $request->delivery_note_id ?: "0";
+        $order->vatpercentage = $request->vat_percent ?: "0";
+        $order->vatamount = $request->total_vat_amount ?: "0";
+        $order->discount_amount = $request->discount ?: "0";
+        $order->grand_total = $request->grand_total; 
+        $order->net_total = $request->net_amount;
+        $order->customer_paid = $request->paid_amount ?: "0";
+        $order->due = $request->due_amount ?: "0";
+        $order->reduceqty = $request->reduceQty;
+        $order->sales_status = "1";
+        $order->ordertype = "Product";
+        $order->return_amount = $request->return_amount;
+        $order->bank_amount = $request->bank_amount;
+        $order->cash_amount = $request->cash_amount;
+        $order->adv_amount = $request->adv_amount;
+        $order->subject = $request->subject;
+        $order->body = $request->bill_body;
+        $order->created_by = Auth::user()->id;
+        $order->status = 0;
+
+        if ($order->save()) {
+
+            $chkcrTran = Transaction::where('order_id', $order->id)->where('table_type', 'Income')->where('transaction_type', 'Credit')->first();
+            if (isset($chkcrTran)) {
+                $chkcrTran->amount = $request->grand_total;
+                $chkcrTran->vat_amount = $request->total_vat_amount;
+                $chkcrTran->at_amount = $request->net_amount;
+                $chkcrTran->save();
+            } else {
+                $transaction = new Transaction();
+                $transaction->date = date('Y-m-d');
+                $transaction->table_type = 'Income';
+                $transaction->description = 'Service';
+                $transaction->amount = $request->grand_total;
+                $transaction->vat_amount = $request->total_vat_amount;
+                $transaction->at_amount = $request->net_amount;
+                $transaction->transaction_type = 'Credit';
+                $transaction->payment_type = "Account Receivable";
+                $transaction->branch_id = Auth::user()->branch_id;
+                $transaction->created_by = Auth()->user()->id;
+                $transaction->created_ip = request()->ip();
+                $transaction->order_id = $order->id;
+                $transaction->save();
+                $transaction->tran_id = 'GT' . date('Ymd') . str_pad($transaction->id, 4, '0', STR_PAD_LEFT);
+                $transaction->save();
+            }
+
+
+            if ($request->cash_amount > 0) {
+
+                $chkCashTran = Transaction::where('order_id', $order->id)->where('table_type', 'Income')->where('payment_type', 'Cash')->first();
+
+                if (isset($chkCashTran)) {
+                    $chkCashTran->amount = $request->grand_total;
+                    $chkCashTran->vat_amount = $request->total_vat_amount;
+                    $chkCashTran->at_amount = $request->net_amount;
+                    $chkCashTran->save();
+                } else {
+                    $transaction = new Transaction();
+                    $transaction->date = $request->date;
+                    $transaction->table_type = 'Income';
+                    $transaction->description = 'Sales';
+                    $transaction->amount = $request->grand_total;
+                    $transaction->vat_amount = $request->total_vat_amount;
+                    $transaction->at_amount = $request->net_amount;
+                    $transaction->transaction_type = 'Current';
+                    $transaction->payment_type = "Cash";
+                    $transaction->customer_id = $request->customer_id;
+                    $transaction->branch_id = Auth::user()->branch_id;
+                    $transaction->created_by = Auth()->user()->id;
+                    $transaction->created_ip = request()->ip();
+                    $transaction->order_id = $order->id;
+                    $transaction->save();
+                    $transaction->tran_id = 'SL' . date('Ymd') . str_pad($transaction->id, 4, '0', STR_PAD_LEFT);
+                    $transaction->save();
+                }
+                
+                
+                
+            }
+
+            if ($request->bank_amount > 0) {
+
+
+                $chkBankTran = Transaction::where('order_id', $order->id)->where('table_type', 'Income')->where('payment_type', 'Bank')->first();
+
+                if (isset($chkBankTran)) {
+                    $chkBankTran->amount = $request->grand_total;
+                    $chkBankTran->vat_amount = $request->total_vat_amount;
+                    $chkBankTran->at_amount = $request->net_amount;
+                    $chkBankTran->save();
+                } else {
+                    $transaction = new Transaction();
+                    $transaction->date = $request->date;
+                    $transaction->table_type = 'Income';
+                    $transaction->description = 'Sales';
+                    $transaction->amount = $request->grand_total;
+                    $transaction->vat_amount = $request->total_vat_amount;
+                    $transaction->at_amount = $request->net_amount;
+                    $transaction->transaction_type = 'Current';
+                    $transaction->payment_type = "Bank";
+                    $transaction->customer_id = $request->customer_id;
+                    $transaction->branch_id = Auth::user()->branch_id;
+                    $transaction->created_by = Auth()->user()->id;
+                    $transaction->created_ip = request()->ip();
+                    $transaction->order_id = $order->id;
+                    $transaction->save();
+                    $transaction->tran_id = 'SL' . date('Ymd') . str_pad($transaction->id, 4, '0', STR_PAD_LEFT);
+                    $transaction->save();
+                }
+
+            }
+
+            if ($request->input('service_id')) {
+                foreach ($request->input('service_id') as $key => $value) {
+
+                    if ($request->get('order_detail_id')[$key]) {
+                        $orderDtl = OrderDetail::find($request->get('order_detail_id')[$key]);
+                        $orderDtl->invoiceno = $order->invoiceno;
+                        $orderDtl->order_id = $order->id;
+                        $orderDtl->service_id = $request->get('service_id')[$key];
+                        $orderDtl->quantity = $request->get('quantity')[$key];
+                        $orderDtl->sellingprice = $request->get('unit_price')[$key];
+                        $orderDtl->total_amount = $request->get('quantity')[$key] * $request->get('unit_price')[$key];
+                        $orderDtl->updated_by = Auth::user()->id;
+                        $orderDtl->save();
+                    } else {
+                        $orderDtl = new OrderDetail();
+                        $orderDtl->invoiceno = $order->invoiceno;
+                        $orderDtl->order_id = $order->id;
+                        $orderDtl->service_id = $request->get('service_id')[$key];
+                        $orderDtl->quantity = $request->get('quantity')[$key];
+                        $orderDtl->sellingprice = $request->get('unit_price')[$key];
+                        $orderDtl->total_amount = $request->get('quantity')[$key] * $request->get('unit_price')[$key];
+                        $orderDtl->created_by = Auth::user()->id;
+                        $orderDtl->save();
+                    }
+                    
+                    
+                }
+            }
+
+            if ($request->input('spproduct_id')) {
+                foreach ($request->input('spproduct_id') as $key => $value) {
+                    $stockid = Stock::where('product_id', '=', $request->get('spproduct_id')[$key])
+                        ->where('branch_id', '=', Auth::user()->branch_id)
+                        ->first();
+                    if ($request->reduceQty == 1) {
+                        if (isset($stockid->id)) {
+                            $dstock = Stock::find($stockid->id);
+                            $dstock->quantity -= $request->get('spquantity')[$key];
+                            $dstock->save();
+                        } else {
+                            $newstock = new Stock();
+                            $newstock->branch_id = Auth::user()->branch_id;
+                            $newstock->product_id = $request->get('spproduct_id')[$key];
+                            $newstock->quantity = 0 - $request->get('spquantity')[$key];
+                            $newstock->created_by = Auth::user()->id;
+                            $newstock->save();
+                        }
+                    }
+                    
+                    ServiceRequestProduct::where('order_id', $order->id)->delete();
+
+                    $packageProduct = new ServiceRequestProduct();
+                    $packageProduct->order_id = $order->id;
+                    $packageProduct->product_id = $request->get('spproduct_id')[$key];
+                    $packageProduct->service_request_id = $request->serviceRequestID;
+                    $packageProduct->quantity = $request->get('spquantity')[$key];
+                    $packageProduct->save();
+                }
+            }
+            
+
+
+            if ($request->input('approduct_id')) {
+
+                ServiceAdditionalProduct::where('order_id', $order->id)->delete();
+
+
+                foreach ($request->input('approduct_id') as $key => $value) {
+                    $additem = new ServiceAdditionalProduct();
+                    $additem->order_id = $order->id;
+                    $additem->service_request_id = $request->serviceRequestID;
+                    $additem->product_id = $request->get('approduct_id')[$key];
+                    $additem->quantity = $request->get('apquantity')[$key];
+                    $additem->purchase_price_per_unit = $request->get('apunit_price')[$key];
+                    $additem->selling_price_per_unit = $request->get('apselling_price_unit')[$key];
+                    $additem->total_purchase_price = $request->get('apquantity')[$key] * $request->get('apunit_price')[$key];
+                    $additem->total_selling_price = $request->get('apquantity')[$key] * $request->get('apselling_price_unit')[$key];
+                    $additem->save();
+                }
+    
+            }
+            
+            
+
+            $message = "<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Thank you for this service order.</b></div>";
+            return response()->json(['status' => 300, 'message' => $message, 'id' => $order->id, 'data' => $data]);
+        }
+
+        // return response()->json(['status' => 303, 'message' => 'Failed to save the order.']);
     }
 }

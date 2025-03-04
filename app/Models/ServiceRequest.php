@@ -23,4 +23,13 @@ class ServiceRequest extends Model
     {
         return $this->hasOne('App\Models\Order');
     }
+
+    public function serviceRequestProduct()
+    {
+        return $this->hasMany('App\Models\ServiceRequestProduct');
+    }
+
+
+
+
 }

@@ -202,6 +202,7 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::post('sales-store', [SalesController::class, 'salesStore'])->name('admin.sales.store');
     Route::post('service-sales-store', [SalesController::class, 'serviceSalesStore'])->name('admin.ServiceSales.store');
     Route::get('service-sales/{id}', [SalesController::class, 'serviceSalesEdit'])->name('admin.serviceSales.edit');
+    Route::post('service-sales-update', [SalesController::class, 'serviceSalesUpdate'])->name('admin.ServiceSales.update');
     Route::get('sales-edit/{id}', [SalesController::class, 'salesEdit'])->name('admin.sales.edit');
     Route::post('sales-update', [SalesController::class, 'salesUpdate'])->name('admin.sales.update');
 
