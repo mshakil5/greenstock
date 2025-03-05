@@ -1133,11 +1133,11 @@ class SalesController extends Controller
     {
         $productIDs = $request->input('product_id');
 
-        $data = $request->all();
+        $alldata = $request->all();
 
         $validator = Validator::make($request->all(), [
-            'approduct_id' => 'required_without:service_id|array',
             'service_id' => 'required_without:approduct_id|array',
+            'approduct_id' => 'required_without:service_id|array',
         ]);
 
         if ($validator->fails()) {
@@ -1209,8 +1209,6 @@ class SalesController extends Controller
                 $transaction->tran_id = 'GT' . date('Ymd') . str_pad($transaction->id, 4, '0', STR_PAD_LEFT);
                 $transaction->save();
             }
-
-
             if ($request->cash_amount > 0) {
 
                 $chkCashTran = Transaction::where('order_id', $order->id)->where('table_type', 'Income')->where('payment_type', 'Cash')->first();
@@ -1243,7 +1241,6 @@ class SalesController extends Controller
                 
                 
             }
-
             if ($request->bank_amount > 0) {
 
 
@@ -1276,6 +1273,14 @@ class SalesController extends Controller
 
             }
 
+            $existingOrderDetails = $order->orderDetails->pluck('id')->toArray();
+            $requestOrderDetails = $request->input('order_detail_id', []); 
+
+            $toDelete = array_diff($existingOrderDetails, $requestOrderDetails);
+            if (!empty($toDelete)) {
+                OrderDetail::whereIn('id', $toDelete)->delete();
+            }
+
             if ($request->input('service_id')) {
                 foreach ($request->input('service_id') as $key => $value) {
 
@@ -1300,6 +1305,10 @@ class SalesController extends Controller
                         $orderDtl->created_by = Auth::user()->id;
                         $orderDtl->save();
                     }
+
+
+
+                    
                     
                     
                 }
@@ -1361,7 +1370,8 @@ class SalesController extends Controller
             
 
             $message = "<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Thank you for this service order.</b></div>";
-            return response()->json(['status' => 300, 'message' => $message, 'id' => $order->id, 'data' => $data]);
+            
+            return response()->json(['status' => 300, 'message' => $message, 'id' => $order->id, 'data' => $alldata]);
         }
 
         // return response()->json(['status' => 303, 'message' => 'Failed to save the order.']);

@@ -907,6 +907,8 @@
 
             var formData = new FormData($('#serviceRequestForm')[0]);
 
+            console.log(formData);
+
             $.ajax({
                 url: '{{ route("admin.ServiceSales.update") }}',
                 method: 'POST',
@@ -919,13 +921,13 @@
                 },
                 success: function(response) {
 
-                    console.log(response);
-
                     if (status == 400) {
                         $(".ermsg").html(response.message);
                     } else {
                         $(".ermsg").html(response.message);
-                        window.location.href = "{{ route('admin.home') }}";
+                        setTimeout(function() {
+                            window.location.href = "{{ route('admin.home') }}";
+                        }, 2000);
                     }
 
                     
