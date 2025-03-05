@@ -147,7 +147,9 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     // service section
     Route::get('add-services', [ServiceController::class, 'addService'])->name('admin.addService');
     Route::post('add-services', [ServiceController::class, 'storeService'])->name('admin.storeService');
+    Route::post('update-services', [ServiceController::class, 'updateService'])->name('admin.updateService');
     Route::get('all-services', [ServiceController::class, 'allService'])->name('admin.manageService');
+    Route::get('services-edit/{id}', [ServiceController::class, 'serviceEdit'])->name('admin.serviceEdit');
 
     // stock
     Route::get('add-stock', [StockController::class, 'addstock'])->name('admin.addstock');

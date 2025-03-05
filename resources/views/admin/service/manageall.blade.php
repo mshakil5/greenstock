@@ -33,7 +33,11 @@
                                 
                             </td>
                             <td class="text-center">{{ $data->price }}</td>
-                            <td class="text-center"> </td>
+                            <td class="text-center"> 
+                                <a href="{{route('admin.serviceEdit', $data->id)}}"  class="btn btn-warning btn-xs ms-1" style="margin: 2px;">
+                                    <span title="Edit">Edit</span>
+                                </a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
