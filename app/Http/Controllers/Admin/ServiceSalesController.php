@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\CompanyProduct;
 use App\Models\Order;
 use App\Models\Service;
 use App\Models\ServiceDetail;
 use App\Models\ServiceRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -287,5 +289,46 @@ class ServiceSalesController extends Controller
     {
         $serviceRequest = ServiceRequest::where('id', $id)->first();
         return view('admin.salesService.orderproduct', compact('serviceRequest'));
+    }
+
+    public function orderNewProductStore(Request $request)
+    {
+        $request->validate([
+            'service_request_id' => 'required',
+            'name' => 'required',
+            'quantity' => 'required',
+            'date' => 'required',
+        ]);
+        $data = new CompanyProduct();
+        $data['service_request_id'] = $request->service_request_id;
+        $data['name'] = $request->name;
+        $data['quantity'] = $request->quantity;
+        $data['date'] = $request->date;
+        $data['status'] = $request->status;
+        $data['note'] = $request->note;
+        $data->save();
+
+        Session::put('success', 'Data Saved Successfully !');
+        return back();
+    }
+
+    public function orderNewProductUpdate(Request $request)
+    {
+
+        $request->validate([
+            'name' => 'required',
+            'quantity' => 'required',
+            'date' => 'required',
+        ]);
+        $data = CompanyProduct::find($request->requestid);
+        $data['name'] = $request->name;
+        $data['quantity'] = $request->quantity;
+        $data['date'] = $request->date;
+        $data['status'] = $request->status;
+        $data['note'] = $request->note;
+        $data->save();
+
+        Session::put('success', 'Vendor Information Has Been Updated Successfully !');
+        return back();
     }
 }

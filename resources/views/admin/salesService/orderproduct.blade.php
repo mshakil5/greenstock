@@ -30,7 +30,7 @@
                 <div class="col-md-12">
                     @component('components.widget')
                         @slot('title')
-                            Supplier Details
+                            New Order Product for Order Number: {{$serviceRequest->invoice_no}}
                         @endslot
                         @slot('description')
                             
@@ -40,25 +40,50 @@
                         <table  class="table table-hover table-responsive " width="100%" id="supplierTBL">
                             <thead>
                                 <tr>
+                                    <th>Date</th>
                                     <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Address</th>
-                                    <th>Company</th>
+                                    <th>Quantity</th>
+                                    <th>Note</th>
+                                    <th>Status</th>
                                     <th><i class=""></i> Action</th>
                                 </tr>
                             </thead>
                             <tbody>
 
-                                @foreach (\App\Models\Vendor::where('branch_id', auth()->user()->branch_id)->get() as $data)
+                                @foreach (\App\Models\CompanyProduct::where('service_request_id', $serviceRequest->id)->get() as $data)
                                     <tr>
+                                        <td>{{ $data->date}}</td>
                                         <td>{{ $data->name}}</td>
-                                        <td>{{ $data->email}}</td>
-                                        <td>{{ $data->phone}}</td>
-                                        <td>{{ $data->address}}</td>
-                                        <td>{{ $data->companyinfo}}</td>
+                                        <td>{{ $data->quantity}}</td>
+                                        <td>{{ $data->note}}</td>
                                         <td>
-                                            <span class="btn btn-success btn-sm editThis" id="editThis" vid="{{$data->id}}" code="{{$data->code}}" name="{{$data->name}}" email="{{$data->email}}" phone="{{$data->phone}}" vatreg="{{$data->vat_reg}}" address="{{$data->address}}" cinfo="{{$data->companyinfo}}"> <i class='fa fa-pencil'></i> Edit </span>
+                                            <span class="badge badge-info">
+                                                @switch($data->status)
+                                                    @case(1)
+                                                        Ordered
+                                                        @break
+                                                    @case(2)
+                                                        Processing
+                                                        @break
+                                                    @case(3)
+                                                        On the way
+                                                        @break
+                                                    @case(4)
+                                                        Received
+                                                        @break
+                                                    @case(5)
+                                                        Return
+                                                        @break
+                                                    @case(6)
+                                                        Cancel
+                                                        @break
+                                                    @default
+                                                        Unknown
+                                                @endswitch
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="btn btn-success btn-sm editThis" id="editThis" vid="{{$data->id}}" code="{{$data->id}}" name="{{$data->name}}" quantity="{{$data->quantity}}" date="{{$data->date}}" note="{{$data->note}}" status="{{$data->status}}" > <i class='fa fa-pencil'></i> Edit </span>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -86,14 +111,13 @@
                 @slot('body')
                     <hr/>
                     <div class="col-sm-12" id="createDiv">
-                        <form class="form-horizontal" action="{{ route('admin.savevendor')}}" method="POST">
+                        <form class="form-horizontal" action="{{ route('admin.orderNewProductStore')}}" method="POST">
                             {{csrf_field()}}
                             <div class="form-group">
-                                <label for="inputEmail3" class="col-sm-3 control-label">Name<span
-                                            class="text-danger">*</span></label>
+                                <input type="hidden" name="service_request_id" value="{{$serviceRequest->id}}">
+                                <label class="col-sm-3 control-label">Product Name<span class="text-danger">*</span></label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="name" class="form-control" id="inputEmail3"
-                                           placeholder="" required>
+                                    <input type="text" name="name" class="form-control" required>
                                 </div>
                                 @if ($errors->has('name'))
                                     <span class="invalid-feedback text-danger" role="alert">
@@ -102,50 +126,55 @@
                                 @endif
                             </div>
                             <div class="form-group">
-                                <label for="inputPassword3" class="col-sm-3 control-label">Email<span
+                                <label class="col-sm-3 control-label">Date<span
                                 class="text-danger">*</span></label>
                                 <div class="col-sm-9">
-                                    <input type="email" name="email" class="form-control" id="inputPassword3"
-                                           placeholder="" required>
+                                    <input type="date" name="date" class="form-control" required>
                                 </div>
-                                @if ($errors->has('email'))
+                                @if ($errors->has('date'))
                                     <span class="invalid-feedback text-danger" role="alert">
-                                    <strong>{{ $errors->first('email') }}</strong>
+                                    <strong>{{ $errors->first('date') }}</strong>
                                     </span>
                                 @endif
                             </div>
                             <div class="form-group">
-                                <label for="inputPassword3" class="col-sm-3 control-label">Phone</label>
+                                <label class="col-sm-3 control-label">Quantity</label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="phone" class="form-control" id="inputPassword3"
-                                           placeholder="">
+                                    <input type="number" name="quantity" class="form-control" required>
                                 </div>
-                                @if ($errors->has('phone'))
+                                @if ($errors->has('quantity'))
                                     <span class="invalid-feedback text-danger" role="alert">
-                                    <strong>{{ $errors->first('phone') }}</strong>
+                                    <strong>{{ $errors->first('quantity') }}</strong>
                                     </span>
                                 @endif
                             </div>
                             <div class="form-group">
-                                <label for="inputPassword3" class="col-sm-3 control-label">Address</label>
+                                <label  class="col-sm-3 control-label">Status</label>
                                 <div class="col-sm-9">
-                                    <textarea class="form-control" rows="3" placeholder="" name="address"></textarea>
+                                    <select name="status" class="form-control" required>
+                                        <option value="1">Ordered</option>
+                                        <option value="2">Processing</option>
+                                        <option value="3">On the way</option>
+                                        <option value="4">Received</option>
+                                        <option value="5">Return</option>
+                                        <option value="6">Cancel</option>
+                                    </select>
                                 </div>
-                                @if ($errors->has('address'))
+                                @if ($errors->has('status'))
                                     <span class="invalid-feedback text-danger" role="alert">
-                                    <strong>{{ $errors->first('address') }}</strong>
+                                    <strong>{{ $errors->first('status') }}</strong>
                                     </span>
                                 @endif
                             </div>
                             
                             <div class="form-group">
-                                <label for="" class="col-sm-3 control-label">Company Information</label>
+                                <label for="" class="col-sm-3 control-label">Company Information and Note</label>
                                 <div class="col-sm-9">
-                                    <textarea class="form-control" rows="3" placeholder="" name="company"></textarea>
+                                    <textarea class="form-control" rows="3" placeholder="" name="note"></textarea>
                                 </div>
-                                @if ($errors->has('company'))
+                                @if ($errors->has('note'))
                                     <span class="invalid-feedback text-danger" role="alert">
-                                    <strong>{{ $errors->first('company') }}</strong>
+                                    <strong>{{ $errors->first('note') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -156,13 +185,12 @@
                     </div>
 
                     <div class="col-sm-12" id="editDiv">
-                        <form class="form-horizontal" action="{{ route('admin.updatevendor')}}" method="POST">
+                        <form class="form-horizontal" action="{{ route('admin.orderNewProductUpdate')}}" method="POST" id="editForm">
                             {{csrf_field()}}
                             <div class="form-group d-none">
                                 <label for="" class="col-sm-3 control-label">Code</label>
                                 <div class="col-sm-9">
-                                    {{-- <input type="text" name="vendorcode" class="form-control" id="vendorcode" required> --}}
-                                    <input type="hidden" name="vendorid" class="form-control" id="vendorid">
+                                    <input type="hidden" name="requestid" class="form-control" id="requestid">
                                 </div>
                                 @if ($errors->has('code'))
                                     <span class="invalid-feedback text-danger" role="alert">
@@ -171,9 +199,9 @@
                                 @endif
                             </div>
                             <div class="form-group">
-                                <label for="vendorname" class="col-sm-3 control-label">Name<span class="text-danger">*</span></label>
+                                <label class="col-sm-3 control-label">Product Name<span class="text-danger">*</span></label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="vendorname" class="form-control" id="vendorname" required>
+                                    <input type="text" name="name" id="name" class="form-control" required>
                                 </div>
                                 @if ($errors->has('name'))
                                     <span class="invalid-feedback text-danger" role="alert">
@@ -182,48 +210,55 @@
                                 @endif
                             </div>
                             <div class="form-group">
-                                <label for="vendoremail" class="col-sm-3 control-label">Email<span
+                                <label class="col-sm-3 control-label">Date<span
                                 class="text-danger">*</span></label>
                                 <div class="col-sm-9">
-                                    <input type="email" name="vendoremail" class="form-control" id="vendoremail" required>
+                                    <input type="date" name="date" id="date" class="form-control" required>
                                 </div>
-                                @if ($errors->has('vendoremail'))
+                                @if ($errors->has('date'))
                                     <span class="invalid-feedback text-danger" role="alert">
-                                    <strong>{{ $errors->first('vendoremail') }}</strong>
+                                    <strong>{{ $errors->first('date') }}</strong>
                                     </span>
                                 @endif
                             </div>
                             <div class="form-group">
-                                <label for="vendorphone" class="col-sm-3 control-label">Phone</label>
+                                <label class="col-sm-3 control-label">Quantity</label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="vendorphone" class="form-control" id="vendorphone">
+                                    <input type="number" name="quantity" id="quantity" class="form-control" required>
                                 </div>
-                                @if ($errors->has('vendorphone'))
+                                @if ($errors->has('quantity'))
                                     <span class="invalid-feedback text-danger" role="alert">
-                                    <strong>{{ $errors->first('vendorphone') }}</strong>
+                                    <strong>{{ $errors->first('quantity') }}</strong>
                                     </span>
                                 @endif
                             </div>
                             <div class="form-group">
-                                <label for="vendoraddress" class="col-sm-3 control-label">Address</label>
+                                <label  class="col-sm-3 control-label">Status</label>
                                 <div class="col-sm-9">
-                                    <textarea class="form-control" rows="3" name="vendoraddress" id="vendoraddress"></textarea>
+                                    <select name="status" id="status" class="form-control" required>
+                                        <option value="1">Ordered</option>
+                                        <option value="2">Processing</option>
+                                        <option value="3">On the way</option>
+                                        <option value="4">Received</option>
+                                        <option value="5">Return</option>
+                                        <option value="6">Cancel</option>
+                                    </select>
                                 </div>
-                                @if ($errors->has('vendoraddress'))
+                                @if ($errors->has('status'))
                                     <span class="invalid-feedback text-danger" role="alert">
-                                    <strong>{{ $errors->first('vendoraddress') }}</strong>
+                                    <strong>{{ $errors->first('status') }}</strong>
                                     </span>
                                 @endif
                             </div>
                             
                             <div class="form-group">
-                                <label for="vendorcinfo" class="col-sm-3 control-label">Company Information</label>
+                                <label for="" class="col-sm-3 control-label">Company Information and Note</label>
                                 <div class="col-sm-9">
-                                    <textarea class="form-control" rows="3" name="vendorcinfo" id="vendorcinfo"></textarea>
+                                    <textarea class="form-control" rows="3" id="note" name="note" ></textarea>
                                 </div>
-                                @if ($errors->has('vendorcinfo'))
+                                @if ($errors->has('note'))
                                     <span class="invalid-feedback text-danger" role="alert">
-                                    <strong>{{ $errors->first('vendorcinfo') }}</strong>
+                                    <strong>{{ $errors->first('note') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -266,6 +301,7 @@
         $("#FormCloseBtn").click(function(){
             $("#editDiv").hide();
             $("#createDiv").show();
+            $('#editForm').trigger("reset");
         });
 
 
@@ -275,27 +311,25 @@
 
 
 
-
         // return stock
         $("#supplierTBL").on('click','#editThis', function(){
             $("#editDiv").show();
             $("#createDiv").hide();
-            vendorid = $(this).attr('vid');
-            vendorname = $(this).attr('name');
-            vendoremail = $(this).attr('email');
-            vendorphone = $(this).attr('phone');
-            vendorvatreg = $(this).attr('vatreg');
-            vendoraddress = $(this).attr('address');
-            vendorcinfo = $(this).attr('cinfo');
-            $('#vendorid').val(vendorid);
-            $('#vendorname').val(vendorname);
-            $('#vendoremail').val(vendoremail);
-            $('#vendorphone').val(vendorphone);
-            $('#vendorvatreg').val(vendorvatreg);
-            $('#vendoraddress').val(vendoraddress);
-            $('#vendorcinfo').val(vendorcinfo);
+            requestid = $(this).attr('vid');
+            name = $(this).attr('name');
+            quantity = $(this).attr('quantity');
+            note = $(this).attr('note');
+            date = $(this).attr('date');
+            status = $(this).attr('status');
+            $('#requestid').val(requestid);
+            $('#name').val(name);
+            $('#quantity').val(quantity);
+            $('#date').val(date);
+            $('#status').val(status);
+            $('#note').val(note);
+            
                 
-            });
+        });
         // return stock end
 
 
