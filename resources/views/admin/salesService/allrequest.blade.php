@@ -49,25 +49,7 @@ echo Session::put('message', '');
                         </thead>
                         <tbody>
                             
-                            {{-- @foreach ($data as $key => $item)
-                            <tr>
-                                <td>{{$key + 1}}</td>
-                                <td>{{$item->invoice_no}}</td>
-                                <td>{{$item->bill_no}}</td>
-                                <td>{{$item->date}}</td>
-                                <td>{{$item->customer_name}}</td>
-                                <td>{{$item->customer_phone}}</td>
-                                <td>{{$item->address}}</td>
-                                <td>{{$item->user->name}}</td>
-                                <td>{{$item->company->name}}</td>
-                                
-                                <td>{{$item->status}}</td>
-
-                                <td>
-                                    <div class="table-actions"><a href="{{route('admin.processingService', $item->id)}}" class="btn btn-sm btn-primary"><span title="View"><i class="fa fa-eye"></i>View</span></a></div>
-                                </td>
-                            </tr>
-                            @endforeach --}}
+                            
                     
                         </tbody>
                     
@@ -87,6 +69,9 @@ echo Session::put('message', '');
 @endsection
 @section('script')
 
+
+
+
 <script>
     $(document).ready(function() {
         $('.select2').select2();
@@ -100,7 +85,7 @@ echo Session::put('message', '');
             ajax: {
                 url: '{{ route("admin.getServiceRequest") }}',
                 data: function(d) {
-                    console.log(d);
+                    // console.log(d);
                 },
                 error: function(xhr, error, code) {
                     console.log("AJAX Error");
@@ -170,6 +155,34 @@ echo Session::put('message', '');
     });
 </script>
 
-
+<script>
+    $(document).ready(function() {
+        $(document).on('change', '.status-dropdown', function() {
+            var status = $(this).val();
+            var orderId = $(this).data('order-id');
+            console.log(status, orderId);
+            $.ajax({
+                url: '{{ route("admin.updateStatus") }}',
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    status: status,
+                    orderId: orderId
+                },
+                success: function(response) {
+                    if (response.status == 200) {
+                        alert('Status updated successfully');
+                    } else {
+                        alert('Failed to update status');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('An error occurred while updating status');
+                }
+            });
+        });
+    });
+</script>
 
 @endsection

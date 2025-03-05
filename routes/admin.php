@@ -230,6 +230,8 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('processing-service-request/{id}', [ServiceSalesController::class, 'processingServiceRequest'])->name('admin.processingService');
     Route::post('service-request', [ServiceSalesController::class, 'salesServiceRequestStore'])->name('salesServiceRequestStore');
     Route::get('get-service-request', [ServiceSalesController::class, 'getServiceRequest'])->name('admin.getServiceRequest');
+    Route::post('change-service-status', [ServiceSalesController::class, 'changeServiceStatus'])->name('admin.updateStatus');
+    Route::get('order-new-product/{id}', [ServiceSalesController::class, 'orderNewProduct'])->name('admin.orderproduct');
     
     // partno status 
     Route::get('/published-partno/{id}', [OrderController::class, 'published_partno']);

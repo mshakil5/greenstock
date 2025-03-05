@@ -215,16 +215,21 @@ class ServiceSalesController extends Controller
             ->addColumn('company', function ($invoice) {
                 return $invoice->company->name ?? 'N/A';
             })
-            ->addColumn('status', function ($invoice) {
-                if($invoice->status == 0){
-                    return 'Pending';
-                }elseif($invoice->status == 1){
-                    return 'Processing';
-                }elseif($invoice->status == 2){
-                    return 'Completed';
-                }elseif($invoice->status == 3){
-                    return 'Cancelled';
+            ->editColumn('status', function ($invoice) {
+                $statuses = [
+                    0 => 'Pending',
+                    1 => 'Processing',
+                    2 => 'Completed',
+                    3 => 'Cancelled'
+                ];
+            
+                $options = '';
+                foreach ($statuses as $key => $label) {
+                    $selected = $invoice->status == $key ? 'selected' : '';
+                    $options .= "<option value='{$key}' {$selected}>{$label}</option>";
                 }
+            
+                return "<select class='form-control status-dropdown' data-order-id='{$invoice->id}'>$options</select>";
             })
             ->addColumn('created_at', function ($invoice) {
                 return "<span data-title='" . Carbon::parse($invoice->created_at)->format('h:m A') . "'>" . Carbon::parse($invoice->created_at)->format('d M Y') . "</span>";
@@ -233,18 +238,25 @@ class ServiceSalesController extends Controller
                 $btn = '<div class="table-actions text-center">';
 
                     $btn .= '<a href="' . route('admin.serviceSales.edit', $invoice->id) . '"  class="btn btn-warning btn-xs ms-1" style="margin: 2px;">
-                        <i class="fa fa-pencil" aria-hidden="true"></i><span title="Edit">Edit</span>
+                        <span title="View">View</span>
                     </a>';
 
                     $btn .= '<a href="' . route('customer.invoice.print', $invoice->id) . '" class="btn btn-success btn-xs print-window" target="_blank">
                         <span title="Print Invoice">Print</span>
                     </a>';
 
-                    if($invoice->status == 1){
-                        $btn .= '<a href="' . route('admin.processingService', $invoice->id) . '" class="btn btn-primary btn-xs print-window" target="_blank">
-                            <span title="View">View</span>
-                        </a>';
-                    }
+                    $btn .= '<a href="' . route('admin.orderproduct', $invoice->id) . '" class="btn btn-primary btn-xs print-window" target="_blank">
+                                <span title="Order">Order</span>
+                            </a>';
+
+
+
+
+                    // if($invoice->status == 1){
+                    //     $btn .= '<a href="' . route('admin.processingService', $invoice->id) . '" class="btn btn-primary btn-xs print-window" target="_blank">
+                    //         <span title="View">View</span>
+                    //     </a>';
+                    // }
 
                     
 
@@ -252,11 +264,28 @@ class ServiceSalesController extends Controller
                 $btn .= '</div>';
                 return $btn;
             })
-            ->rawColumns(['created_at', 'action'])
+            ->rawColumns(['created_at', 'action','status'])
             ->make(true);
         }
         
         $data = ServiceRequest::orderby('id', 'DESC')->get();
         return view('admin.salesService.allrequest',compact('data'));
+    }
+
+    // onchange change status Service Request
+
+    public function changeServiceStatus(Request $request)
+    {
+        $serviceRequest = ServiceRequest::find($request->orderId);
+        $serviceRequest->status = $request->status;
+        $serviceRequest->save();
+
+        return response()->json(['status' => 200, 'message' => 'Status updated successfully']);
+    }
+
+    public function orderNewProduct($id)
+    {
+        $serviceRequest = ServiceRequest::where('id', $id)->first();
+        return view('admin.salesService.orderproduct', compact('serviceRequest'));
     }
 }

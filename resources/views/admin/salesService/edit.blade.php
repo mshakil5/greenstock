@@ -585,23 +585,7 @@
     });
 </script>
 
-<!-- <script>
-    $(document).ready(function() {
-        function calculateReturnAmount() {
 
-            let paidAmount = parseFloat($('#paid_amount').val()) || 0;
-            let netAmount = parseFloat($('#net_amount').val()) || 0;
-
-            let returnAmount = (paidAmount > netAmount) ? -(paidAmount - netAmount) : 0;
-
-            $('#return_amount').val(returnAmount);
-        }
-
-        $('#paid_amount').on('input', calculateReturnAmount);
-
-        calculateReturnAmount();
-    });
-</script> -->
 
 <script>
     function removeRow(event) {
