@@ -288,7 +288,7 @@
     @php
         $serviceRequest = \App\Models\ServiceRequest::where('status', 1)->get();
     @endphp
-        <div class="row">
+        <div class="row d-none">
             <div class="col-md-6">
                 <div class="panel panel-primary">
                     <div class="panel-heading"><i class="fa fa-users"></i>Service Request</div>
