@@ -885,9 +885,9 @@
         $("body").delegate("#salesBtn", "click", function(event) {
             event.preventDefault();
 
-            // $(this).find('.fa-spinner').remove();
-            // $(this).prepend('<i class="fa fa-spinner fa-spin"></i>');
-            // $(this).attr("disabled", 'disabled');
+            $(this).find('.fa-spinner').remove();
+            $(this).prepend('<i class="fa fa-spinner fa-spin"></i>');
+            $(this).attr("disabled", 'disabled');
 
             var formData = new FormData($('#serviceRequestForm')[0]);
 
@@ -910,9 +910,9 @@
                         $(".ermsg").html(response.message);
                     } else {
                         $(".ermsg").html(response.message);
-                        // setTimeout(function() {
-                        //     window.location.href = "{{ route('admin.home') }}";
-                        // }, 2000);
+                        setTimeout(function() {
+                            window.location.href = "{{ route('admin.home') }}";
+                        }, 2000);
                     }
 
                     
