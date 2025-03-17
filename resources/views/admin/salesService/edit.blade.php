@@ -114,7 +114,7 @@
 
                                 <div class="form-group col-md-4">
                                     <label for="">Company Name</label>
-                                    <p>{{$data->company->name}}</p>
+                                    <p>{{$data->company->name ?? ''}}</p>
                                 </div>
 
                                 <div class="form-group col-md-4">

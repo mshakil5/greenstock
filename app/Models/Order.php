@@ -37,4 +37,8 @@ class Order extends Model
     public function serviceAdditionalProduct(){
         return $this->hasMany('App\Models\ServiceAdditionalProduct');
     }
+
+    public function company(){
+        return $this->belongsTo('App\Models\Company');
+    }
 }

@@ -288,7 +288,7 @@
     @php
         $serviceRequest = \App\Models\ServiceRequest::where('status', 1)->get();
     @endphp
-        <div class="row d-none">
+        <div class="row">
             <div class="col-md-6">
                 <div class="panel panel-primary">
                     <div class="panel-heading"><i class="fa fa-users"></i>Service Request</div>
@@ -310,7 +310,11 @@
                                             <td>{{$item->invoice_no}}</td>
                                             <td>{{$item->bill_no}}</td>
                                             <td>{{$item->date}}</td>
-                                            <td><div class="table-actions"><a href="{{route('admin.processingService', $item->id)}}" class="btn btn-sm btn-primary"><span title="Return"><i class="fa fa-eye"></i>View</span></a></div></td>
+                                            <td>
+                                                {{-- <div class="table-actions"><a href="{{route('admin.processingService', $item->id)}}" class="btn btn-sm btn-primary"><span title="Return"><i class="fa fa-eye"></i>View</span></a></div> --}}
+
+                                                <div class="table-actions"><a href="{{route('admin.serviceSales.edit', $item->id)}}" class="btn btn-sm btn-primary"><span title="Return"><i class="fa fa-eye"></i>View</span></a></div>
+                                            </td>
                                         </tr>
                                         @endforeach
                                         

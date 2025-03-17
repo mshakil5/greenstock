@@ -1123,7 +1123,7 @@ class SalesController extends Controller
     public function serviceSalesEdit($id)
     {
 
-        $data  = ServiceRequest::with('order','order.orderdetails','order.transaction','order.serviceAdditionalProduct', 'serviceRequestProduct', 'serviceRequestProduct.product')->where('id', $id)->first();
+        $data  = ServiceRequest::with('order', 'company' ,'order.orderdetails','order.transaction','order.serviceAdditionalProduct', 'serviceRequestProduct', 'serviceRequestProduct.product')->where('id', $id)->first();
         // dd($data);
         return view('admin.salesService.edit', compact('data'));
     }
