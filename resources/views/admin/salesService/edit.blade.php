@@ -42,7 +42,7 @@
                                     <label for="date">Date *</label>
                                     <p>{{$data->date}}</p>
                                     <input type="hidden" name="serviceRequestID" value="{{$data->id}}">
-                                    <input type="hidden" name="orderId" value="{{$data->order->id}}">
+                                    <input type="hidden" name="orderId" value="{{$data->order->id ?? ''}}">
                                 </div>
 
                                 <div class="form-group col-md-4">
