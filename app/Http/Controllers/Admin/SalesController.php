@@ -1273,6 +1273,7 @@ class SalesController extends Controller
 
             }
 
+            ServiceRequestProduct::where('order_id', $order->id)->delete();
             $existingOrderDetails = $order->orderDetails->pluck('id')->toArray();
             $requestOrderDetails = $request->input('order_detail_id', []); 
 
@@ -1282,13 +1283,13 @@ class SalesController extends Controller
             }
 
             if ($request->input('service_id')) {
-                foreach ($request->input('service_id') as $key => $value) {
+                foreach ($request->input('service_id') as $key => $serviceId) {
 
-                    if ($request->get('order_detail_id')[$key]) {
-                        $orderDtl = OrderDetail::find($request->get('order_detail_id')[$key]);
+                    if (isset($request->input('order_detail_id')[$key])) {
+                        $orderDtl = OrderDetail::find($request->input('order_detail_id')[$key]);
                         $orderDtl->invoiceno = $order->invoiceno;
                         $orderDtl->order_id = $order->id;
-                        $orderDtl->service_id = $request->get('service_id')[$key];
+                        $orderDtl->service_id = $serviceId;
                         $orderDtl->quantity = $request->get('quantity')[$key];
                         $orderDtl->sellingprice = $request->get('unit_price')[$key];
                         $orderDtl->total_amount = $request->get('quantity')[$key] * $request->get('unit_price')[$key];
@@ -1298,55 +1299,53 @@ class SalesController extends Controller
                         $orderDtl = new OrderDetail();
                         $orderDtl->invoiceno = $order->invoiceno;
                         $orderDtl->order_id = $order->id;
-                        $orderDtl->service_id = $request->get('service_id')[$key];
+                        $orderDtl->service_id = $serviceId;
                         $orderDtl->quantity = $request->get('quantity')[$key];
                         $orderDtl->sellingprice = $request->get('unit_price')[$key];
                         $orderDtl->total_amount = $request->get('quantity')[$key] * $request->get('unit_price')[$key];
                         $orderDtl->created_by = Auth::user()->id;
                         $orderDtl->save();
-                    }
 
-
-
-                    
-                    
-                    
-                }
-            }
-
-            if ($request->input('spproduct_id')) {
-                foreach ($request->input('spproduct_id') as $key => $value) {
-                    $stockid = Stock::where('product_id', '=', $request->get('spproduct_id')[$key])
-                        ->where('branch_id', '=', Auth::user()->branch_id)
-                        ->first();
-                    if ($request->reduceQty == 1) {
-                        if (isset($stockid->id)) {
-                            $dstock = Stock::find($stockid->id);
-                            $dstock->quantity -= $request->get('spquantity')[$key];
-                            $dstock->save();
-                        } else {
-                            $newstock = new Stock();
-                            $newstock->branch_id = Auth::user()->branch_id;
-                            $newstock->product_id = $request->get('spproduct_id')[$key];
-                            $newstock->quantity = 0 - $request->get('spquantity')[$key];
-                            $newstock->created_by = Auth::user()->id;
-                            $newstock->save();
-                        }
-                    }
-                    
-                    ServiceRequestProduct::where('order_id', $order->id)->delete();
-
-                    $packageProduct = new ServiceRequestProduct();
-                    $packageProduct->order_id = $order->id;
-                    $packageProduct->product_id = $request->get('spproduct_id')[$key];
-                    $packageProduct->service_request_id = $request->serviceRequestID;
-                    $packageProduct->quantity = $request->get('spquantity')[$key];
-                    $packageProduct->save();
-                }
-            }
+                        // if ($request->input('spproduct_id')) {
+                        //     foreach ($request->input('spproduct_id') as $key => $value) {
+                        //         $stockid = Stock::where('product_id', '=', $request->get('spproduct_id')[$key])
+                        //             ->where('branch_id', '=', Auth::user()->branch_id)
+                        //             ->first();
+                        //         if ($request->reduceQty == 1) {
+                        //             if (isset($stockid->id)) {
+                        //                 $dstock = Stock::find($stockid->id);
+                        //                 $dstock->quantity -= $request->get('spquantity')[$key];
+                        //                 $dstock->save();
+                        //             } else {
+                        //                 $newstock = new Stock();
+                        //                 $newstock->branch_id = Auth::user()->branch_id;
+                        //                 $newstock->product_id = $request->get('spproduct_id')[$key];
+                        //                 $newstock->quantity = 0 - $request->get('spquantity')[$key];
+                        //                 $newstock->created_by = Auth::user()->id;
+                        //                 $newstock->save();
+                        //             }
+                        //         }
+                                
             
+                        //         $packageProduct = new ServiceRequestProduct();
+                        //         $packageProduct->order_id = $order->id;
+                        //         $packageProduct->product_id = $request->get('spproduct_id')[$key];
+                        //         $packageProduct->service_request_id = $request->serviceRequestID;
+                        //         $packageProduct->quantity = $request->get('spquantity')[$key];
+                        //         $packageProduct->save();
+                        //     }
+                        // }
 
 
+                        // Note: Stocking change hobe. order jokhn update korbe tokhn o stock update hobe. kono service jodi delete kore tokhn oi service er under e j product ache oita abr re stock hobe
+
+
+                    }
+
+                }
+            }
+
+            
             if ($request->input('approduct_id')) {
 
                 ServiceAdditionalProduct::where('order_id', $order->id)->delete();

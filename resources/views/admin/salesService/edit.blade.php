@@ -377,7 +377,7 @@
 
                             <div class="form-group col-md-12">
                                 <label for="subject">Subject</label>
-                                <input type="text" class="form-control" id="subject" name="subject">
+                                <input type="text" class="form-control" id="subject" name="subject" value="{{$data->order->subject}}">
                             </div>
 
                             <div class="form-group col-md-12">
@@ -615,7 +615,7 @@
             itemTotalAmount += parseFloat(rateunittotal) || 0;
         });
 
-        console.log("itemTotalAmount:" + itemTotalAmount);
+        // console.log("itemTotalAmount:" + itemTotalAmount);
 
         $('#adProductTable tbody tr').each(function() {
             var apquantity = parseFloat($(this).find('input.apquantity').val()) || 0;
@@ -885,13 +885,13 @@
         $("body").delegate("#salesBtn", "click", function(event) {
             event.preventDefault();
 
-            $(this).find('.fa-spinner').remove();
-            $(this).prepend('<i class="fa fa-spinner fa-spin"></i>');
-            $(this).attr("disabled", 'disabled');
+            // $(this).find('.fa-spinner').remove();
+            // $(this).prepend('<i class="fa fa-spinner fa-spin"></i>');
+            // $(this).attr("disabled", 'disabled');
 
             var formData = new FormData($('#serviceRequestForm')[0]);
 
-            console.log(formData);
+            // console.log(formData);
 
             $.ajax({
                 url: '{{ route("admin.ServiceSales.update") }}',
@@ -905,13 +905,14 @@
                 },
                 success: function(response) {
 
+                    console.log(response);
                     if (status == 400) {
                         $(".ermsg").html(response.message);
                     } else {
                         $(".ermsg").html(response.message);
-                        setTimeout(function() {
-                            window.location.href = "{{ route('admin.home') }}";
-                        }, 2000);
+                        // setTimeout(function() {
+                        //     window.location.href = "{{ route('admin.home') }}";
+                        // }, 2000);
                     }
 
                     

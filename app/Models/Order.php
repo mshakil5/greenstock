@@ -41,4 +41,8 @@ class Order extends Model
     public function company(){
         return $this->belongsTo('App\Models\Company');
     }
+
+    public function service(){
+        return $this->belongsTo('App\Models\Service');
+    }
 }
