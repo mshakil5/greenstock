@@ -401,7 +401,11 @@
             <div class="col-md-3">
                 <div class="box box-widget widget-user-2">
                     <div class="widget-user-header">
-                        <h3 class="widget-user-username"></h3>
+                        <h3 class="widget-user-username">
+                            <a href="{{ route('admin.orderproduct', $data->id) }}" class="btn btn-primary btn-md">
+                                <i class="fa fa-product-hunt"></i> Order Product
+                            </a>
+                        </h3>
                     </div>
                     <div class="box-body">
 

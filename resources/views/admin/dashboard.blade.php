@@ -286,12 +286,13 @@
     @endif
     @if ((Auth::user()->type == '1' || Auth::user()->type == '0') && in_array('36', json_decode(Auth::user()->role->permission)))
     @php
-        $serviceRequest = \App\Models\ServiceRequest::where('status', 1)->get();
+        $processingServiceRequest = \App\Models\ServiceRequest::where('status', 1)->get();
+        $pendingServiceRequest = \App\Models\ServiceRequest::where('status', 1)->get();
     @endphp
         <div class="row">
             <div class="col-md-6">
                 <div class="panel panel-primary">
-                    <div class="panel-heading"><i class="fa fa-users"></i>Service Request</div>
+                    <div class="panel-heading"><i class="fa fa-users"></i>Pending Service Request</div>
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-12">
@@ -305,7 +306,44 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($serviceRequest as $item)
+                                        @foreach ($processingServiceRequest as $item)
+                                        <tr>
+                                            <td>{{$item->invoice_no}}</td>
+                                            <td>{{$item->bill_no}}</td>
+                                            <td>{{$item->date}}</td>
+                                            <td>
+                                                {{-- <div class="table-actions"><a href="{{route('admin.processingService', $item->id)}}" class="btn btn-sm btn-primary"><span title="Return"><i class="fa fa-eye"></i>View</span></a></div> --}}
+
+                                                <div class="table-actions"><a href="{{route('admin.serviceSales.edit', $item->id)}}" class="btn btn-sm btn-primary"><span title="Return"><i class="fa fa-eye"></i>View</span></a></div>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><i class="fa fa-users"></i>Processing Service Request</div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table id="" class="table table-hover table-responsive " width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Invoice No</th>
+                                            <th>Bill No</th>
+                                            <th>Date</th>
+                                            <th><i class=""></i> Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($pendingServiceRequest as $item)
                                         <tr>
                                             <td>{{$item->invoice_no}}</td>
                                             <td>{{$item->bill_no}}</td>
