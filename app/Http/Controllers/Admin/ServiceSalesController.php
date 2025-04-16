@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\AssignStaff;
 use App\Models\CompanyProduct;
 use App\Models\Order;
 use App\Models\Service;
@@ -328,7 +329,64 @@ class ServiceSalesController extends Controller
         $data['note'] = $request->note;
         $data->save();
 
-        Session::put('success', 'Vendor Information Has Been Updated Successfully !');
+        Session::put('success', 'Data Has Been Updated Successfully !');
         return back();
     }
+
+    public function orderAssignStaff($id)
+    {
+        $data = AssignStaff::where('service_request_id', $id)->get();
+        $serviceRequest = ServiceRequest::where('id', $id)->first();
+        return view('admin.salesService.assignStaff', compact('data','serviceRequest'));
+    }
+
+    public function orderAssignStaffStore(Request $request)
+    {
+        
+        $request->validate([
+            'service_request_id' => 'required',
+            'note' => 'required',
+            'date' => 'required|date',
+        ], [
+            'service_request_id.required' => 'The service request ID is mandatory.',
+            'note.required' => 'Please provide a working details.',
+            'date.required' => 'The date is required.',
+            'date.date' => 'Please provide a valid date.',
+        ]);
+
+
+
+        $data = new AssignStaff();
+        $data['service_request_id'] = $request->service_request_id;
+        $data['date'] = $request->date;
+        $data['note'] = $request->note;
+        $data->save();
+
+        Session::put('success', 'Data Saved Successfully !');
+        return back();
+    }
+
+    public function assignStaffUpdate(Request $request)
+    {
+
+        $request->validate([
+            'note' => 'required',
+            'date' => 'required|date',
+        ], [
+            'note.required' => 'Please provide a working details.',
+            'date.required' => 'The date is required.',
+            'date.date' => 'Please provide a valid date.',
+        ]);
+
+        $data = AssignStaff::find($request->requestid);
+        $data['date'] = $request->date;
+        $data['note'] = $request->note;
+        $data->save();
+
+        Session::put('success', 'Data Has Been Updated Successfully !');
+        return back();
+    }
+
+
+
 }

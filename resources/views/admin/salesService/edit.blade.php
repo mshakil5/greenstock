@@ -405,6 +405,11 @@
                             <a href="{{ route('admin.orderproduct', $data->id) }}" class="btn btn-primary btn-md">
                                 <i class="fa fa-product-hunt"></i> Order Product
                             </a>
+
+                            <a href="{{ route('admin.assignStaff', $data->id) }}" class="btn btn-primary btn-md">
+                                <i class="fa fa-product-hunt"></i> Staff
+                            </a>
+
                         </h3>
                     </div>
                     <div class="box-body">

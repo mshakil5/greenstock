@@ -263,8 +263,10 @@
                                 @endif
                             </div>
 
-                            <button type="submit" class="btn btn-primary text-center"><i class="fa fa-save"></i> Update</button>
-                            <input type="button" class="btn btn-warning text-center" id="FormCloseBtn" value="Close">
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Update</button>
+                                <input type="button" class="btn btn-warning" id="FormCloseBtn" value="Close">
+                            </div>
 
                         </form>
                     </div>

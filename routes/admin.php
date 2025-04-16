@@ -239,6 +239,10 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('order-new-product/{id}', [ServiceSalesController::class, 'orderNewProduct'])->name('admin.orderproduct');
     Route::post('order-new-product/save', [ServiceSalesController::class, 'orderNewProductStore'])->name('admin.orderNewProductStore');
     Route::post('order-new-product/update', [ServiceSalesController::class, 'orderNewProductUpdate'])->name('admin.orderNewProductUpdate');
+
+    Route::get('order-assign-staff/{id}', [ServiceSalesController::class, 'orderAssignStaff'])->name('admin.assignStaff');
+    Route::post('order-assign-staff/save', [ServiceSalesController::class, 'orderAssignStaffStore'])->name('admin.assignStaffStore');
+    Route::post('order-assign-staff/update', [ServiceSalesController::class, 'assignStaffUpdate'])->name('admin.assignStaffUpdate');
     
     
     // partno status 
