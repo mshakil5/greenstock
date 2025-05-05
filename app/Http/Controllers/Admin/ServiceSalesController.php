@@ -230,10 +230,11 @@ class ServiceSalesController extends Controller
                 $options = '';
                 foreach ($statuses as $key => $label) {
                     $selected = $invoice->status == $key ? 'selected' : '';
-                    $options .= "<option value='{$key}' {$selected}>{$label}</option>";
+                    $disabled = $invoice->status == 2 ? 'disabled' : '';
+                    $options .= "<option value='{$key}' {$selected} {$disabled}>{$label}</option>";
                 }
             
-                return "<select class='form-control status-dropdown' data-order-id='{$invoice->id}'>$options</select>";
+                return "<select class='form-control status-dropdown' data-order-id='{$invoice->id}' {$disabled}>$options</select>";
             })
             ->addColumn('created_at', function ($invoice) {
                 return "<span data-title='" . Carbon::parse($invoice->created_at)->format('h:m A') . "'>" . Carbon::parse($invoice->created_at)->format('d M Y') . "</span>";
@@ -283,6 +284,13 @@ class ServiceSalesController extends Controller
         $serviceRequest = ServiceRequest::find($request->orderId);
         $serviceRequest->status = $request->status;
         $serviceRequest->save();
+
+        $data = new AssignStaff();
+        $data['service_request_id'] = $request->orderId;
+        $data['user_id'] = Auth::user()->id;
+        $data['note'] = $request->note;
+        $data['date'] = date('Y-m-d');
+        $data->save();
 
         return response()->json(['status' => 200, 'message' => 'Status updated successfully']);
     }
@@ -336,7 +344,7 @@ class ServiceSalesController extends Controller
 
     public function orderAssignStaff($id)
     {
-        $data = AssignStaff::where('service_request_id', $id)->whereNotNull('review')->get();
+        $data = AssignStaff::where('service_request_id', $id)->get();
         $serviceRequest = ServiceRequest::where('id', $id)->first();
 
         $users = User::where('type', 1)->get();
@@ -366,6 +374,7 @@ class ServiceSalesController extends Controller
         $data['service_request_id'] = $request->service_request_id;
         $data['date'] = $request->date;
         $data['note'] = $request->note;
+        $data['review'] = $request->note;
         $data->save();
 
         Session::put('success', 'Data Saved Successfully !');
