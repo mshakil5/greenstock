@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\Service;
 use App\Models\ServiceDetail;
 use App\Models\ServiceRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
@@ -335,9 +336,11 @@ class ServiceSalesController extends Controller
 
     public function orderAssignStaff($id)
     {
-        $data = AssignStaff::where('service_request_id', $id)->get();
+        $data = AssignStaff::where('service_request_id', $id)->whereNotNull('review')->get();
         $serviceRequest = ServiceRequest::where('id', $id)->first();
-        return view('admin.salesService.assignStaff', compact('data','serviceRequest'));
+
+        $users = User::where('type', 1)->get();
+        return view('admin.salesService.assignStaff', compact('data','serviceRequest','users'));
     }
 
     public function orderAssignStaffStore(Request $request)
@@ -345,10 +348,12 @@ class ServiceSalesController extends Controller
         
         $request->validate([
             'service_request_id' => 'required',
+            'user_id' => 'required',
             'note' => 'required',
             'date' => 'required|date',
         ], [
             'service_request_id.required' => 'The service request ID is mandatory.',
+            'user_id.required' => 'The staff name field is required.',
             'note.required' => 'Please provide a working details.',
             'date.required' => 'The date is required.',
             'date.date' => 'Please provide a valid date.',
@@ -357,6 +362,7 @@ class ServiceSalesController extends Controller
 
 
         $data = new AssignStaff();
+        $data['user_id'] = $request->user_id;
         $data['service_request_id'] = $request->service_request_id;
         $data['date'] = $request->date;
         $data['note'] = $request->note;
@@ -380,6 +386,7 @@ class ServiceSalesController extends Controller
 
         $data = AssignStaff::find($request->requestid);
         $data['date'] = $request->date;
+        $data['user_id'] = $request->user_id;
         $data['note'] = $request->note;
         $data->save();
 

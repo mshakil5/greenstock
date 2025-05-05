@@ -41,6 +41,7 @@
                             <thead>
                                 <tr>
                                     <th>Date</th>
+                                    <th>User</th>
                                     <th>Work details</th>
                                     <th><i class=""></i> Action</th>
                                 </tr>
@@ -50,9 +51,10 @@
                                 @foreach (\App\Models\AssignStaff::where('service_request_id', $serviceRequest->id)->get() as $data)
                                     <tr>
                                         <td>{{ $data->date}}</td>
+                                        <td>{{ $data->user->name ?? ""}}</td>
                                         <td>{{ $data->note}}</td>
                                         <td>
-                                            <span class="btn btn-success btn-sm editThis" id="editThis" vid="{{$data->id}}" code="{{$data->id}}" date="{{$data->date}}" note="{{$data->note}}"> <i class='fa fa-pencil'></i> Edit </span>
+                                            <span class="btn btn-success btn-sm editThis" id="editThis" vid="{{$data->id}}" code="{{$data->id}}" date="{{$data->date}}" note="{{$data->note}}" user_id="{{$data->user_id}}"> <i class='fa fa-pencil'></i> Edit </span>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -93,6 +95,24 @@
                                 @if ($errors->has('date'))
                                     <span class="invalid-feedback text-danger" role="alert">
                                     <strong>{{ $errors->first('date') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Staff<span
+                                class="text-danger">*</span></label>
+                                <div class="col-sm-9">
+                                    <select name="user_id" class="form-control" required>
+                                        <option value="">Select Staff</option>
+                                        @foreach ($users as $user)
+                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @if ($errors->has('user_id'))
+                                    <span class="invalid-feedback text-danger" role="alert">
+                                    <strong>{{ $errors->first('user_id') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -138,6 +158,24 @@
                                 @if ($errors->has('date'))
                                     <span class="invalid-feedback text-danger" role="alert">
                                     <strong>{{ $errors->first('date') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">Staff<span
+                                class="text-danger">*</span></label>
+                                <div class="col-sm-9">
+                                    <select name="user_id" id="user_id" class="form-control" required>
+                                        <option value="">Select Staff</option>
+                                        @foreach ($users as $user)
+                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @if ($errors->has('user_id'))
+                                    <span class="invalid-feedback text-danger" role="alert">
+                                    <strong>{{ $errors->first('user_id') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -212,10 +250,14 @@
             $("#createDiv").hide();
             requestid = $(this).attr('vid');
             note = $(this).attr('note');
+            user_id = $(this).attr('user_id');
             date = $(this).attr('date');
             $('#requestid').val(requestid);
             $('#date').val(date);
             $('#note').val(note);
+            $('#user_id').val(user_id);
+
+            
             
                 
         });

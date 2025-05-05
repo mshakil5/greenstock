@@ -65,6 +65,33 @@ echo Session::put('message', '');
     </div>
 </div>
 
+<!-- Modal for adding a note -->
+<div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="noteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="noteModalLabel">Add Note</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="noteForm">
+                <div class="modal-body">
+                    <input type="hidden" name="order_id" value="">
+                    <input type="hidden" name="status" value="">
+                    <div class="form-group">
+                        <label for="note">Note</label>
+                        <textarea name="note" class="form-control" rows="4" placeholder="Enter your note here"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="changeStatus" class="btn btn-primary">Save Note</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @endsection
 @section('script')
@@ -160,6 +187,23 @@ echo Session::put('message', '');
         $(document).on('change', '.status-dropdown', function() {
             var status = $(this).val();
             var orderId = $(this).data('order-id');
+
+            // Open a modal with a note field
+            var modal = $('#noteModal');
+            modal.find('textarea[name="note"]').val(''); // Clear the note field
+            modal.find('input[name="order_id"]').val(orderId); // Set the order ID in the modal
+            modal.find('input[name="status"]').val(status); // Set the order ID in the modal
+            modal.modal('show');
+        });
+
+        $(document).on('click', '#changeStatus', function() {
+            
+
+            var note = $('#noteForm').find('textarea[name="note"]').val();
+            var orderId = $('#noteForm').find('input[name="order_id"]').val();
+            var status = $('#noteForm').find('input[name="status"]').val();
+
+
             console.log(status, orderId);
             $.ajax({
                 url: '{{ route("admin.updateStatus") }}',
@@ -167,11 +211,14 @@ echo Session::put('message', '');
                 data: {
                     _token: '{{ csrf_token() }}',
                     status: status,
-                    orderId: orderId
+                    orderId: orderId,
+                    note: note
                 },
                 success: function(response) {
                     if (response.status == 200) {
                         alert('Status updated successfully');
+                        $('#noteModal').modal('hide');
+                        $('#allinvoiceTBL').DataTable().ajax.reload();
                     } else {
                         alert('Failed to update status');
                     }
