@@ -286,8 +286,16 @@ class ServiceSalesController extends Controller
 
     public function changeServiceStatus(Request $request)
     {
+        $serviceRequestID = $request->orderId;
         $serviceRequest = ServiceRequest::find($request->orderId);
         $serviceRequest->status = $request->status;
+        if ($request->status == 2) {
+            $order = $this->decreaseStock($serviceRequestID);
+        }else{
+            $order = Order::with('orderdetails')->where('service_request_id', $serviceRequestID)->first();
+            $order->status = $request->status;
+            $order->save();
+        }
         $serviceRequest->save();
 
         $data = new AssignStaff();
@@ -299,7 +307,33 @@ class ServiceSalesController extends Controller
         $data['date'] = date('Y-m-d');
         $data->save();
 
-        return response()->json(['status' => 200, 'message' => 'Status updated successfully']);
+        
+
+        return response()->json(['status' => 200, 'message' => 'Status updated successfully', 'order' => $order]);
+    }
+
+    public function decreaseStock($serviceRequestID)
+    {
+        $serviceRequest = ServiceRequest::find($serviceRequestID);
+        $order = Order::with('orderdetails')->where('service_request_id', $serviceRequestID)->first();
+        $serviceIds = $order->orderdetails->pluck('service_id')->toArray();
+        $serviceDetails = ServiceDetail::whereIn('service_id', $serviceIds)->get();
+        $productList = $serviceDetails->map(function ($detail) {
+            return [
+            'product_id' => $detail->product_id,
+            'product_name' => $detail->product->productname ?? 'N/A',
+            'quantity' => $detail->quantity,
+            ];
+        });
+
+        foreach ($productList as $product) {
+            DB::table('stocks')
+                ->where('product_id', $product['product_id'])
+                ->decrement('quantity', $product['quantity']);
+        }
+
+        return $productList;
+
     }
 
     public function getServiceStaffReview(Request $request)
@@ -309,7 +343,7 @@ class ServiceSalesController extends Controller
         return response()->json(['status' => 200, 'message' => 'Status updated successfully', 'data' => $data, 'serviceRequest' => $serviceRequest]);
     }
 
-    
+
 
     public function orderNewProduct($id)
     {

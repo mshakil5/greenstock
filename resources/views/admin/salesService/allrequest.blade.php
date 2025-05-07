@@ -247,6 +247,8 @@ echo Session::put('message', '');
                     note: note
                 },
                 success: function(response) {
+
+                    console.log(response);
                     if (response.status == 200) {
                         alert('Status updated successfully');
                         $('#noteModal').modal('hide');
