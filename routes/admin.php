@@ -233,6 +233,7 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::post('service-request', [ServiceSalesController::class, 'salesServiceRequestStore'])->name('salesServiceRequestStore');
     Route::get('get-service-request', [ServiceSalesController::class, 'getServiceRequest'])->name('admin.getServiceRequest');
     Route::post('change-service-status', [ServiceSalesController::class, 'changeServiceStatus'])->name('admin.updateStatus');
+    Route::get('get-service-status-review', [ServiceSalesController::class, 'getServiceStaffReview'])->name('admin.getStaffReviews');
 
 
 

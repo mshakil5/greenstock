@@ -93,6 +93,38 @@ echo Session::put('message', '');
     </div>
 </div>
 
+
+<!-- Modal for viewing all reviews -->
+<div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reviewModalLabel">Staff Reviews</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Review</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reviewTableBody">
+                        <!-- Reviews will be dynamically loaded here -->
+                        
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 @section('script')
 
@@ -227,6 +259,46 @@ echo Session::put('message', '');
                     console.error(xhr.responseText);
                     alert('An error occurred while updating status');
                 }
+            });
+        });
+
+
+        $(document).on('click', '.reviewModal', function() {
+            var serviceid = $(this).data('serviceid');
+
+            console.log(serviceid);
+            $.ajax({
+            url: '{{ route("admin.getStaffReviews") }}',
+            method: 'GET',
+            data: {
+                serviceid: serviceid
+            },
+            success: function(response) {
+
+                console.log(response);
+                if (response.status == 200) {
+                var reviews = response.data;
+                var reviewTableBody = $('#reviewTableBody');
+                reviewTableBody.empty();
+
+                reviews.forEach(function(review) {
+                    reviewTableBody.append(`
+                    <tr>
+                        <td>${review.date}</td>
+                        <td>${review.review}</td>
+                    </tr>
+                    `);
+                });
+
+                $('#reviewModal').modal('show');
+                } else {
+                alert('Failed to fetch reviews');
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                alert('An error occurred while fetching reviews');
+            }
             });
         });
     });

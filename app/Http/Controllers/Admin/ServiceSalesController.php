@@ -255,6 +255,11 @@ class ServiceSalesController extends Controller
                             </a>';
 
 
+                    $btn .= '<button type="button" class="btn btn-info btn-xs reviewModal" data-toggle="modal" data-target="#reviewModal" data-serviceid="' . $invoice->id . '">
+                                <span title="Show Review">Review</span>
+                            </button>';
+
+
 
 
                     // if($invoice->status == 1){
@@ -289,11 +294,22 @@ class ServiceSalesController extends Controller
         $data['service_request_id'] = $request->orderId;
         $data['user_id'] = Auth::user()->id;
         $data['note'] = $request->note;
+        $data['review'] = $request->note;
+        $data['status'] = $request->status;
         $data['date'] = date('Y-m-d');
         $data->save();
 
         return response()->json(['status' => 200, 'message' => 'Status updated successfully']);
     }
+
+    public function getServiceStaffReview(Request $request)
+    {
+        $serviceRequest = ServiceRequest::find($request->serviceid);
+        $data = AssignStaff::where('service_request_id', $request->serviceid)->get();
+        return response()->json(['status' => 200, 'message' => 'Status updated successfully', 'data' => $data, 'serviceRequest' => $serviceRequest]);
+    }
+
+    
 
     public function orderNewProduct($id)
     {
