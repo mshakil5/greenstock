@@ -327,9 +327,20 @@ class ServiceSalesController extends Controller
         });
 
         foreach ($productList as $product) {
-            DB::table('stocks')
-                ->where('product_id', $product['product_id'])
-                ->decrement('quantity', $product['quantity']);
+            $stock = DB::table('stocks')->where('product_id', $product['product_id'])->first();
+
+            if ($stock) {
+                DB::table('stocks')
+                    ->where('product_id', $product['product_id'])
+                    ->decrement('quantity', $product['quantity']);
+            } else {
+                DB::table('stocks')->insert([
+                    'product_id' => $product['product_id'],
+                    'quantity' => -$product['quantity'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         }
 
         return $productList;
