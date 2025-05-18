@@ -306,7 +306,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($processingServiceRequest as $item)
+                                        @foreach ($pendingServiceRequest as $item)
                                         <tr>
                                             <td>{{$item->invoice_no}}</td>
                                             <td>{{$item->bill_no}}</td>
@@ -343,7 +343,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($pendingServiceRequest as $item)
+                                        @foreach ($processingServiceRequest as $item)
                                         <tr>
                                             <td>{{$item->invoice_no}}</td>
                                             <td>{{$item->bill_no}}</td>
