@@ -287,7 +287,7 @@
     @if ((Auth::user()->type == '1' || Auth::user()->type == '0') && in_array('36', json_decode(Auth::user()->role->permission)))
     @php
         $processingServiceRequest = \App\Models\ServiceRequest::where('status', 1)->get();
-        $pendingServiceRequest = \App\Models\ServiceRequest::where('status', 1)->get();
+        $pendingServiceRequest = \App\Models\ServiceRequest::where('status', 0)->get();
     @endphp
         <div class="row">
             <div class="col-md-6">

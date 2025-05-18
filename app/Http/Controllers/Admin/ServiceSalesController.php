@@ -181,6 +181,7 @@ class ServiceSalesController extends Controller
                 $service->branch_id = Auth::user()->branch_id;
                 $service->document = $imagePath;
                 $service->created_by= Auth::user()->id;
+                $service->status = 0;
 
                 if ($service->save()) {
 
