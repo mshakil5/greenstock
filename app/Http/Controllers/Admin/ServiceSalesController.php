@@ -224,6 +224,7 @@ class ServiceSalesController extends Controller
                 $statuses = [
                     0 => 'Pending',
                     1 => 'Processing',
+                    4 => 'Pre Completed',
                     2 => 'Completed',
                     3 => 'Cancelled'
                 ];

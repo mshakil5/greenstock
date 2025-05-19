@@ -502,12 +502,25 @@
                         </div>
 
                         <div class="form-group row">
+                            <label for="due_amount" class="col-sm-6 col-form-label">Change Status</label>
+                            <div class="col-sm-6">
+                                <select name="service_status" id="service_status" class="form-control">
+                                    <option value="">Select</option>
+                                    <option value="0" {{ $data->order->status == '0' ? 'selected' : '' }}>Pending</option>
+                                    <option value="1" {{ $data->order->status == '1' ? 'selected' : '' }}>Processing</option>
+                                    <option value="4" {{ $data->order->status == '4' ? 'selected' : '' }}>Pre Completed</option>
+                                    <option value="3" {{ $data->order->status == '3' ? 'selected' : '' }}>Cancelled</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
                             <div class="col-sm-12">
 
-                                <input class="form-check-input" type="checkbox" value="1" id="reduceQty" checked name="reduceQty">
+                                {{-- <input class="form-check-input" type="checkbox" value="1" id="reduceQty" checked name="reduceQty">
                                 <label class="form-check-label" for="reduceQty">
                                     Reduce from stock
-                                </label>
+                                </label> --}}
                                 
                                 <div class="ermsg"></div>
 

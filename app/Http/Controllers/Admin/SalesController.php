@@ -1153,7 +1153,7 @@ class SalesController extends Controller
             $serviceRequest->product_model = $request->product_model;
             $serviceRequest->product_serial = $request->product_serial;
             $serviceRequest->product_capacity = $request->product_capacity;
-            // $serviceRequest->status = 2;
+            $serviceRequest->status = $request->service_status;
             $serviceRequest->save();
         }   
 
