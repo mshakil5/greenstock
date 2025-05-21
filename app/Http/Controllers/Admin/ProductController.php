@@ -161,14 +161,14 @@ class ProductController extends Controller
 
     public function editProduct($id)
     {
-        $product = Product::with('brand','size','category','alternativeproduct','group','replacement')->where('id',$id)->first();
+        $product = Product::with('brand','size','category','alternativeproduct','group')->where('id',$id)->first();
         // dd($product);
         $alternatives = Product::where('branch_id', Auth::user()->branch_id)->where('id','!=', $id)->get();
         return view("admin.product.editproduct", compact('product','alternatives'));
     }
 
     public function get_product(Product $product){
-        return $product->load('brand','size','category','alternativeproduct','group','replacement');
+        return $product->load('brand','size','category','alternativeproduct','group');
     }
 
     public function update_product_details(Request $request)

@@ -122,7 +122,8 @@ class InvoiceController extends Controller
 
     public function customer_invoice_print_bg($id)
     {
-        $order = Order::findOrFail($id);
+        $order = Order::with('serviceAdditionalProduct')->where('id',$id)->first();
+        // dd($order);
         $amountInWords = NumberToWords::convert($order->cash_amount + $order->bank_amount);
 
         $customerdtl = Customer::where('id','=',$order->customer_id)->first();

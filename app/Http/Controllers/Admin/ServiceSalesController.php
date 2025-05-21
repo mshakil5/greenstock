@@ -252,6 +252,10 @@ class ServiceSalesController extends Controller
                         <span title="Print Invoice">Print</span>
                     </a>';
 
+                    $btn .= '<a href="' . route('customer.invoice.bgprint', $invoice->id) . '" class="btn btn-success btn-xs print-window" target="_blank">
+                        <span title="Print Invoice">Print BG</span>
+                    </a>';
+
                     $btn .= '<a href="' . route('admin.orderproduct', $invoice->id) . '" class="btn btn-primary btn-xs print-window" target="_blank">
                                 <span title="Order">Order</span>
                             </a>';
