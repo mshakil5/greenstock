@@ -115,9 +115,12 @@
                 </tr>
             </thead>
             <tbody>
+                @php
+                    $count = 0;
+                @endphp
                 @foreach ($order->orderdetails as $key => $orderdetail)
                 <tr>
-                    <td>{{ $key + 1 }}</td>
+                    <td>{{ $count + 1 }}</td>
                     <td>
                         @if ($orderdetail->product)
                             {{ $orderdetail->product->productname ?? " "}}<br>
