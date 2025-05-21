@@ -94,12 +94,12 @@
             @if ($order->serviceRequest)
             {{ $order->serviceRequest->customer_name ?? "" }}<br>
             {{ $order->serviceRequest->customer_phone ?? "" }}<br>
-            {{ $order->serviceRequest->address ?? ""  }}</p>
+            {{ $order->serviceRequest->address ?? ""  }}
             @else
             {{ $order->customer->name ?? "" }}<br>
-            {{ $order->customer->address ?? ""  }}</p>
+            {{ $order->customer->address ?? ""  }}
             @endif
-
+        </p>
         <p><strong>Subject:</strong> {{ $order->subject }}</p>
         {{-- <p>Dear Sir,<br>
             Reference to above mention subject we are pleased to submit our quotation for your kind Consideration under as follows.</p> --}}
