@@ -506,10 +506,10 @@
                             <div class="col-sm-6">
                                 <select name="service_status" id="service_status" class="form-control">
                                     <option value="">Select</option>
-                                    <option value="0" {{ $data->order->status == '0' ? 'selected' : '' }}>Pending</option>
-                                    <option value="1" {{ $data->order->status == '1' ? 'selected' : '' }}>Processing</option>
-                                    <option value="4" {{ $data->order->status == '4' ? 'selected' : '' }}>Pre Completed</option>
-                                    <option value="3" {{ $data->order->status == '3' ? 'selected' : '' }}>Cancelled</option>
+                                    <option value="0" {{ $data->status == '0' ? 'selected' : '' }}>Pending</option>
+                                    <option value="1" {{ $data->status == '1' ? 'selected' : '' }}>Processing</option>
+                                    <option value="4" {{ $data->status == '4' ? 'selected' : '' }}>Pre Completed</option>
+                                    <option value="3" {{ $data->status == '3' ? 'selected' : '' }}>Cancelled</option>
                                 </select>
                             </div>
                         </div>

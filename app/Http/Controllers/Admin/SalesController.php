@@ -1171,7 +1171,7 @@ class SalesController extends Controller
         $order->net_total = $request->net_amount;
         $order->customer_paid = $request->paid_amount ?: "0";
         $order->due = $request->due_amount ?: "0";
-        $order->reduceqty = $request->reduceQty;
+        $order->reduceqty = $request->reduceQty ?: "0";
         $order->sales_status = "1";
         $order->ordertype = "Product";
         $order->return_amount = $request->return_amount;
