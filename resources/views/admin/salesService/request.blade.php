@@ -65,7 +65,7 @@
                                 <label for="staff">Assign to staff</label>
                                 <select name="staff" id="staff" class="form-control select2">
                                     <option value="">Select</option>
-                                    @foreach (\App\Models\User::where('branch_id', Auth::user()->branch_id)->where('role_id','4')->get() as $staff)
+                                    @foreach (\App\Models\User::where('branch_id', Auth::user()->branch_id)->get() as $staff)
                                     <option value="{{ $staff->id }}">{{ $staff->name }}</option>
                                     @endforeach
                                 </select>
