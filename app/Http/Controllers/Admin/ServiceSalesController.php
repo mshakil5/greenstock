@@ -288,6 +288,290 @@ class ServiceSalesController extends Controller
         return view('admin.salesService.allrequest',compact('data'));
     }
 
+
+    
+
+    public function getServiceRequestProcessing(Request $request)
+    {
+
+        if ($request->ajax()) {
+            $allInvoice = ServiceRequest::where('branch_id', auth()->user()->branch_id)->where('status', 1)->get();
+
+        return Datatables::of($allInvoice)
+            ->addIndexColumn()
+            ->editColumn('assign_staff', function ($invoice) {
+                return $invoice->user->name ?? 'N/A';
+            })
+            ->addColumn('company', function ($invoice) {
+                return $invoice->company->name ?? 'N/A';
+            })
+            ->editColumn('status', function ($invoice) {
+                $statuses = [
+                    0 => 'Pending',
+                    1 => 'Processing',
+                    4 => 'Pre Completed',
+                    2 => 'Completed',
+                    3 => 'Cancelled'
+                ];
+            
+                $options = '';
+                foreach ($statuses as $key => $label) {
+                    $selected = $invoice->status == $key ? 'selected' : '';
+                    $disabled = $invoice->status == 2 ? 'disabled' : '';
+                    $options .= "<option value='{$key}' {$selected} {$disabled}>{$label}</option>";
+                }
+            
+                return "<select class='form-control status-dropdown' data-order-id='{$invoice->id}' {$disabled}>$options</select>";
+            })
+            ->addColumn('created_at', function ($invoice) {
+                return "<span data-title='" . Carbon::parse($invoice->created_at)->format('h:m A') . "'>" . Carbon::parse($invoice->created_at)->format('d M Y') . "</span>";
+            })
+            ->addColumn('action', function ($invoice) {
+                $btn = '<div class="table-actions text-center">';
+
+                    $btn .= '<a href="' . route('admin.serviceSales.edit', $invoice->id) . '"  class="btn btn-warning btn-xs ms-1" style="margin: 2px;">
+                        <span title="View">View</span>
+                    </a>';
+
+                    $btn .= '<a href="' . route('customer.invoice.print', $invoice->id) . '" class="btn btn-success btn-xs print-window" target="_blank">
+                        <span title="Print Invoice">Print</span>
+                    </a>';
+
+                    $btn .= '<a href="' . route('customer.invoice.bgprint', $invoice->id) . '" class="btn btn-success btn-xs print-window" target="_blank">
+                        <span title="Print Invoice">Print BG</span>
+                    </a>';
+
+                    $btn .= '<a href="' . route('admin.orderproduct', $invoice->id) . '" class="btn btn-primary btn-xs print-window" target="_blank">
+                                <span title="Order">Order</span>
+                            </a>';
+
+
+                    $btn .= '<button type="button" class="btn btn-info btn-xs reviewModal" data-toggle="modal" data-target="#reviewModal" data-serviceid="' . $invoice->id . '">
+                                <span title="Show Review">Review</span>
+                            </button>';
+
+                $btn .= '</div>';
+                return $btn;
+            })
+            ->rawColumns(['created_at', 'action','status'])
+            ->make(true);
+        }
+        
+        $data = ServiceRequest::orderby('id', 'DESC')->get();
+        return view('admin.salesService.processingv2',compact('data'));
+    }
+
+
+    public function getServiceRequestPending(Request $request)
+    {
+
+        if ($request->ajax()) {
+            $allInvoice = ServiceRequest::where('branch_id', auth()->user()->branch_id)->where('status', 0)->get();
+
+        return Datatables::of($allInvoice)
+            ->addIndexColumn()
+            ->editColumn('assign_staff', function ($invoice) {
+                return $invoice->user->name ?? 'N/A';
+            })
+            ->addColumn('company', function ($invoice) {
+                return $invoice->company->name ?? 'N/A';
+            })
+            ->editColumn('status', function ($invoice) {
+                $statuses = [
+                    0 => 'Pending',
+                    1 => 'Processing',
+                    4 => 'Pre Completed',
+                    2 => 'Completed',
+                    3 => 'Cancelled'
+                ];
+            
+                $options = '';
+                foreach ($statuses as $key => $label) {
+                    $selected = $invoice->status == $key ? 'selected' : '';
+                    $disabled = $invoice->status == 2 ? 'disabled' : '';
+                    $options .= "<option value='{$key}' {$selected} {$disabled}>{$label}</option>";
+                }
+            
+                return "<select class='form-control status-dropdown' data-order-id='{$invoice->id}' {$disabled}>$options</select>";
+            })
+            ->addColumn('created_at', function ($invoice) {
+                return "<span data-title='" . Carbon::parse($invoice->created_at)->format('h:m A') . "'>" . Carbon::parse($invoice->created_at)->format('d M Y') . "</span>";
+            })
+            ->addColumn('action', function ($invoice) {
+                $btn = '<div class="table-actions text-center">';
+
+                    $btn .= '<a href="' . route('admin.serviceSales.edit', $invoice->id) . '"  class="btn btn-warning btn-xs ms-1" style="margin: 2px;">
+                        <span title="View">View</span>
+                    </a>';
+
+                    $btn .= '<a href="' . route('customer.invoice.print', $invoice->id) . '" class="btn btn-success btn-xs print-window" target="_blank">
+                        <span title="Print Invoice">Print</span>
+                    </a>';
+
+                    $btn .= '<a href="' . route('customer.invoice.bgprint', $invoice->id) . '" class="btn btn-success btn-xs print-window" target="_blank">
+                        <span title="Print Invoice">Print BG</span>
+                    </a>';
+
+                    $btn .= '<a href="' . route('admin.orderproduct', $invoice->id) . '" class="btn btn-primary btn-xs print-window" target="_blank">
+                                <span title="Order">Order</span>
+                            </a>';
+
+
+                    $btn .= '<button type="button" class="btn btn-info btn-xs reviewModal" data-toggle="modal" data-target="#reviewModal" data-serviceid="' . $invoice->id . '">
+                                <span title="Show Review">Review</span>
+                            </button>';
+
+                $btn .= '</div>';
+                return $btn;
+            })
+            ->rawColumns(['created_at', 'action','status'])
+            ->make(true);
+        }
+        
+        $data = ServiceRequest::orderby('id', 'DESC')->get();
+        return view('admin.salesService.pending',compact('data'));
+    }
+
+    public function getServiceRequestPrecomplete(Request $request)
+    {
+
+        if ($request->ajax()) {
+            $allInvoice = ServiceRequest::where('branch_id', auth()->user()->branch_id)->where('status', 0)->get();
+
+        return Datatables::of($allInvoice)
+            ->addIndexColumn()
+            ->editColumn('assign_staff', function ($invoice) {
+                return $invoice->user->name ?? 'N/A';
+            })
+            ->addColumn('company', function ($invoice) {
+                return $invoice->company->name ?? 'N/A';
+            })
+            ->editColumn('status', function ($invoice) {
+                $statuses = [
+                    0 => 'Pending',
+                    1 => 'Processing',
+                    4 => 'Pre Completed',
+                    2 => 'Completed',
+                    3 => 'Cancelled'
+                ];
+            
+                $options = '';
+                foreach ($statuses as $key => $label) {
+                    $selected = $invoice->status == $key ? 'selected' : '';
+                    $disabled = $invoice->status == 2 ? 'disabled' : '';
+                    $options .= "<option value='{$key}' {$selected} {$disabled}>{$label}</option>";
+                }
+            
+                return "<select class='form-control status-dropdown' data-order-id='{$invoice->id}' {$disabled}>$options</select>";
+            })
+            ->addColumn('created_at', function ($invoice) {
+                return "<span data-title='" . Carbon::parse($invoice->created_at)->format('h:m A') . "'>" . Carbon::parse($invoice->created_at)->format('d M Y') . "</span>";
+            })
+            ->addColumn('action', function ($invoice) {
+                $btn = '<div class="table-actions text-center">';
+
+                    $btn .= '<a href="' . route('admin.serviceSales.edit', $invoice->id) . '"  class="btn btn-warning btn-xs ms-1" style="margin: 2px;">
+                        <span title="View">View</span>
+                    </a>';
+
+                    $btn .= '<a href="' . route('customer.invoice.print', $invoice->id) . '" class="btn btn-success btn-xs print-window" target="_blank">
+                        <span title="Print Invoice">Print</span>
+                    </a>';
+
+                    $btn .= '<a href="' . route('customer.invoice.bgprint', $invoice->id) . '" class="btn btn-success btn-xs print-window" target="_blank">
+                        <span title="Print Invoice">Print BG</span>
+                    </a>';
+
+                    $btn .= '<a href="' . route('admin.orderproduct', $invoice->id) . '" class="btn btn-primary btn-xs print-window" target="_blank">
+                                <span title="Order">Order</span>
+                            </a>';
+
+
+                    $btn .= '<button type="button" class="btn btn-info btn-xs reviewModal" data-toggle="modal" data-target="#reviewModal" data-serviceid="' . $invoice->id . '">
+                                <span title="Show Review">Review</span>
+                            </button>';
+
+                $btn .= '</div>';
+                return $btn;
+            })
+            ->rawColumns(['created_at', 'action','status'])
+            ->make(true);
+        }
+        
+        $data = ServiceRequest::orderby('id', 'DESC')->get();
+        return view('admin.salesService.precomplete',compact('data'));
+    }
+
+    public function getServiceRequestComplete(Request $request)
+    {
+
+        if ($request->ajax()) {
+            $allInvoice = ServiceRequest::where('branch_id', auth()->user()->branch_id)->where('status', 0)->get();
+
+        return Datatables::of($allInvoice)
+            ->addIndexColumn()
+            ->editColumn('assign_staff', function ($invoice) {
+                return $invoice->user->name ?? 'N/A';
+            })
+            ->addColumn('company', function ($invoice) {
+                return $invoice->company->name ?? 'N/A';
+            })
+            ->editColumn('status', function ($invoice) {
+                $statuses = [
+                    0 => 'Pending',
+                    1 => 'Processing',
+                    4 => 'Pre Completed',
+                    2 => 'Completed',
+                    3 => 'Cancelled'
+                ];
+            
+                $options = '';
+                foreach ($statuses as $key => $label) {
+                    $selected = $invoice->status == $key ? 'selected' : '';
+                    $disabled = $invoice->status == 2 ? 'disabled' : '';
+                    $options .= "<option value='{$key}' {$selected} {$disabled}>{$label}</option>";
+                }
+            
+                return "<select class='form-control status-dropdown' data-order-id='{$invoice->id}' {$disabled}>$options</select>";
+            })
+            ->addColumn('created_at', function ($invoice) {
+                return "<span data-title='" . Carbon::parse($invoice->created_at)->format('h:m A') . "'>" . Carbon::parse($invoice->created_at)->format('d M Y') . "</span>";
+            })
+            ->addColumn('action', function ($invoice) {
+                $btn = '<div class="table-actions text-center">';
+
+                    $btn .= '<a href="' . route('admin.serviceSales.edit', $invoice->id) . '"  class="btn btn-warning btn-xs ms-1" style="margin: 2px;">
+                        <span title="View">View</span>
+                    </a>';
+
+                    $btn .= '<a href="' . route('customer.invoice.print', $invoice->id) . '" class="btn btn-success btn-xs print-window" target="_blank">
+                        <span title="Print Invoice">Print</span>
+                    </a>';
+
+                    $btn .= '<a href="' . route('customer.invoice.bgprint', $invoice->id) . '" class="btn btn-success btn-xs print-window" target="_blank">
+                        <span title="Print Invoice">Print BG</span>
+                    </a>';
+
+                    $btn .= '<a href="' . route('admin.orderproduct', $invoice->id) . '" class="btn btn-primary btn-xs print-window" target="_blank">
+                                <span title="Order">Order</span>
+                            </a>';
+
+
+                    $btn .= '<button type="button" class="btn btn-info btn-xs reviewModal" data-toggle="modal" data-target="#reviewModal" data-serviceid="' . $invoice->id . '">
+                                <span title="Show Review">Review</span>
+                            </button>';
+
+                $btn .= '</div>';
+                return $btn;
+            })
+            ->rawColumns(['created_at', 'action','status'])
+            ->make(true);
+        }
+        
+        $data = ServiceRequest::orderby('id', 'DESC')->get();
+        return view('admin.salesService.complete',compact('data'));
+    }
+
     // onchange change status Service Request
 
     public function changeServiceStatus(Request $request)

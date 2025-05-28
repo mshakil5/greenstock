@@ -162,6 +162,23 @@
                 </a>
             </li>
 
+            <li class="{{ (request()->is('admin/get-service-request-pending')) ? 'active' : '' }}{{ (request()->is('admin/processing-service-request/*')) ? 'active' : '' }}">
+                <a href="{{ route('admin.getServiceRequestPending')}}"><i class="fa fa-adjust"></i>Pending Service Request
+                </a>
+            </li>
+            <li class="{{ (request()->is('admin/get-service-request-processing')) ? 'active' : '' }}{{ (request()->is('admin/processing-service-request/*')) ? 'active' : '' }}">
+                <a href="{{ route('admin.getServiceRequestProcessing')}}"><i class="fa fa-adjust"></i>Processing Service Request
+                </a>
+            </li>
+            <li class="{{ (request()->is('admin/get-service-request-precomplete')) ? 'active' : '' }}{{ (request()->is('admin/processing-service-request/*')) ? 'active' : '' }}">
+                <a href="{{ route('admin.getServiceRequestPrecomplete')}}"><i class="fa fa-adjust"></i>Pre-complete Service Request
+                </a>
+            </li>
+            <li class="{{ (request()->is('admin/get-service-request-complete')) ? 'active' : '' }}{{ (request()->is('admin/processing-service-request/*')) ? 'active' : '' }}">
+                <a href="{{ route('admin.getServiceRequestComplete')}}"><i class="fa fa-adjust"></i>Complete Service Request
+                </a>
+            </li>
+
             @endif
 
             {{-- @if(Auth::user()->type == '1' && in_array('3', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('3', json_decode(Auth::user()->role->permission)))

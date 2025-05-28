@@ -231,7 +231,18 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('service-request', [ServiceSalesController::class, 'salesServiceRequest'])->name('admin.salesServiceRequest');
     Route::get('processing-service-request/{id}', [ServiceSalesController::class, 'processingServiceRequest'])->name('admin.processingService');
     Route::post('service-request', [ServiceSalesController::class, 'salesServiceRequestStore'])->name('salesServiceRequestStore');
+
+
     Route::get('get-service-request', [ServiceSalesController::class, 'getServiceRequest'])->name('admin.getServiceRequest');
+
+
+    Route::get('get-service-request-processing', [ServiceSalesController::class, 'getServiceRequestProcessing'])->name('admin.getServiceRequestProcessing');
+    Route::get('get-service-request-pending', [ServiceSalesController::class, 'getServiceRequestPending'])->name('admin.getServiceRequestPending');
+    Route::get('get-service-request-precomplete', [ServiceSalesController::class, 'getServiceRequestPrecomplete'])->name('admin.getServiceRequestPrecomplete');
+    Route::get('get-service-request-complete', [ServiceSalesController::class, 'getServiceRequestComplete'])->name('admin.getServiceRequestComplete');
+    Route::get('get-service-request-cancel', [ServiceSalesController::class, 'getServiceRequestCancel'])->name('admin.getServiceRequestCancel');
+
+
     Route::post('change-service-status', [ServiceSalesController::class, 'changeServiceStatus'])->name('admin.updateStatus');
     Route::get('get-service-status-review', [ServiceSalesController::class, 'getServiceStaffReview'])->name('admin.getStaffReviews');
 
