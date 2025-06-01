@@ -142,7 +142,7 @@ echo Session::put('message', '');
             dom: '<"dt-top-container"<l><"dt-center-in-div"B><f>r>t<"dt-filter-spacer"f><ip>',
             buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
             ajax: {
-                url: '{{ route("admin.getServiceRequest") }}',
+                url: '{{ route("admin.getServiceRequestPrecomplete") }}',
                 data: function(d) {
                     // console.log(d);
                 },

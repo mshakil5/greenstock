@@ -501,7 +501,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group row">
+                        {{-- <div class="form-group row">
                             <label for="due_amount" class="col-sm-6 col-form-label">Change Status</label>
                             <div class="col-sm-6">
                                 <select name="service_status" id="service_status" class="form-control">
@@ -512,7 +512,7 @@
                                     <option value="3" {{ $data->status == '3' ? 'selected' : '' }}>Cancelled</option>
                                 </select>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="form-group row">
                             <div class="col-sm-12">
@@ -531,8 +531,16 @@
                                     {{-- <button class="btn btn-success btn-md btn-submit" id="deliveryBtn" type="submit">
                                         <i class="fa fa-plus-circle"></i> Delivery Note
                                     </button> --}}
-                                    <button class="btn btn-success btn-md btn-submit" id="salesBtn" type="submit">
+                                    {{-- <button class="btn btn-success btn-md btn-submit" id="salesBtn" type="submit">
                                         <i class="fa fa-plus-circle"></i> Submit
+                                    </button> --}}
+
+                                    <button class="btn btn-success btn-md btn-submit" id="processBtn" type="submit" data-sts="1">
+                                        <i class="fa fa-plus-circle"></i> Processing
+                                    </button>
+
+                                    <button class="btn btn-success btn-md btn-submit" id="pcomBtn" type="submit" data-sts="4">
+                                        <i class="fa fa-plus-circle"></i> Pre-Complete
                                     </button>
                                 </div>
                                 <div class="button-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
@@ -904,14 +912,17 @@
 
         // submit to sales 
         
-        $("body").delegate("#salesBtn", "click", function(event) {
+        $("body").delegate("#salesBtn, #processBtn, #pcomBtn", "click", function(event) {
             event.preventDefault();
 
             $(this).find('.fa-spinner').remove();
             $(this).prepend('<i class="fa fa-spinner fa-spin"></i>');
             $(this).attr("disabled", 'disabled');
 
+            var status = $(this).data('sts');
+
             var formData = new FormData($('#serviceRequestForm')[0]);
+            formData.append('service_status', status);
 
             // console.log(formData);
 

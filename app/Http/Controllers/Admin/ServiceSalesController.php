@@ -436,7 +436,7 @@ class ServiceSalesController extends Controller
     {
 
         if ($request->ajax()) {
-            $allInvoice = ServiceRequest::where('branch_id', auth()->user()->branch_id)->where('status', 0)->get();
+            $allInvoice = ServiceRequest::where('branch_id', auth()->user()->branch_id)->where('status', 4)->get();
 
         return Datatables::of($allInvoice)
             ->addIndexColumn()
@@ -506,7 +506,7 @@ class ServiceSalesController extends Controller
     {
 
         if ($request->ajax()) {
-            $allInvoice = ServiceRequest::where('branch_id', auth()->user()->branch_id)->where('status', 0)->get();
+            $allInvoice = ServiceRequest::where('branch_id', auth()->user()->branch_id)->where('status', 2)->get();
 
         return Datatables::of($allInvoice)
             ->addIndexColumn()
