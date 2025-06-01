@@ -116,11 +116,11 @@
         <table>
             <thead>
                 <tr>
-                    <th>SL.</th>
+                    <th style="text-align:center; width: 5%">SL</th>
                     <th>Description</th>
-                    <th>Unit</th>
-                    <th>Unit Price</th>
-                    <th>Total Price</th>
+                    <th style="text-align:center; width: 5%">Unit</th>
+                    <th style="text-align:center; width: 10%">Unit Price</th>
+                    <th style="text-align:center; width: 10%">Total Price</th>
                 </tr>
             </thead>
             <tbody>
@@ -129,7 +129,7 @@
                 @endphp
                 @foreach ($order->orderdetails as $key => $orderdetail)
                 <tr>
-                    <td>{{ $count + 1 }}</td>
+                    <td style="text-align:center">{{ $count + 1 }}</td>
                     <td>
                         @if ($orderdetail->product)
                             {{ $orderdetail->product->productname ?? " "}}<br>
@@ -150,7 +150,7 @@
                             {{ $orderdetail->service->name ?? " "}}<br>
                         @endif
                     </td>
-                    <td>{{ $orderdetail->quantity }}</td>
+                    <td style="text-align:center">{{ $orderdetail->quantity }}</td>
                     <td style="text-align:right">{{ number_format($orderdetail->sellingprice, 2) }}</td>
                     <td style="text-align:right">{{ number_format($orderdetail->total_amount, 2) }}</td>
                 </tr>
@@ -159,11 +159,11 @@
 
                 @foreach ($order->serviceAdditionalProduct as $key => $orderdetail)
                 <tr>
-                    <td>{{ $count + 1 }}</td>
+                    <td style="text-align:center">{{ $count + 1 }}</td>
                     <td>
                         {{ $orderdetail->product->productname ?? " "}}<br>
                     </td>
-                    <td>{{ $orderdetail->quantity }}</td>
+                    <td style="text-align:center">{{ $orderdetail->quantity }}</td>
                     <td style="text-align:right">{{ number_format($orderdetail->selling_price_per_unit, 2) }}</td>
                     <td style="text-align:right">{{ number_format($orderdetail->total_selling_price, 2) }}</td>
                 </tr>
