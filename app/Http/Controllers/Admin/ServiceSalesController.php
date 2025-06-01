@@ -729,7 +729,7 @@ class ServiceSalesController extends Controller
         $data->save();
 
         Session::put('success', 'Data Saved Successfully !');
-        return back();
+        return redirect()->route('admin.serviceSales.edit', ['id' => $request->service_request_id]);
     }
 
     public function assignStaffUpdate(Request $request)
@@ -751,7 +751,7 @@ class ServiceSalesController extends Controller
         $data->save();
 
         Session::put('success', 'Data Has Been Updated Successfully !');
-        return back();
+        return redirect()->route('admin.serviceSales.edit', ['id' => $data->service_request_id]);
     }
 
 
