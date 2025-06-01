@@ -47,7 +47,7 @@
 
                                 <div class="form-group col-md-4">
                                     <label>Bill Number</label>
-                                    <p>{{$data->bill_no}}</p>
+                                    <input type="text" class="form-control" id="bill_no" name="bill_no" value="{{$data->bill_no}}">
                                     
                                 </div>
 

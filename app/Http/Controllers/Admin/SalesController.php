@@ -1150,6 +1150,7 @@ class SalesController extends Controller
             return response()->json(['status' => 303, 'message' => 'Service Request not found.']);
         }else{
             
+            $serviceRequest->bill_no = $request->bill_no;
             $serviceRequest->product_model = $request->product_model;
             $serviceRequest->product_serial = $request->product_serial;
             $serviceRequest->product_capacity = $request->product_capacity;
