@@ -383,7 +383,13 @@
                             <div class="form-group col-md-12">
                                 <label for="bill_body">Body</label>
                                 <textarea name="bill_body" id="bill_body" cols="30" rows="5" class="form-control">
-                                    <p class="MsoNormal" style="margin-bottom: 0.0001pt;"><b>N.B:<o:p></o:p></b></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">1.&nbsp; This billing amount Excluded of VAT &amp; TAX.<b><o:p></o:p></b></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">2.&nbsp; Payment will be made in favor of&nbsp;<b>“Green Technology”.<o:p></o:p></b></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;"><b>&nbsp;</b></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;"><b><u>Warranty:</u></b><u><o:p></o:p></u></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">01.<u>&nbsp;Service Warranty -3 years.<o:p></o:p></u></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">02.<u>&nbsp;Compressor Warranty – 5 years.</u></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">03.&nbsp;<u>Spare Parts Warranty -2 year.</u></p>
+                                    @if ($data->order->bill_body)
+                                        {!! $data->order->bill_body !!} 
+                                        
+                                    @else
+                                        <p class="MsoNormal" style="margin-bottom: 0.0001pt;"><b>N.B:<o:p></o:p></b></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">1.&nbsp; This billing amount Excluded of VAT &amp; TAX.<b><o:p></o:p></b></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">2.&nbsp; Payment will be made in favor of&nbsp;<b>“Green Technology”.<o:p></o:p></b></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;"><b>&nbsp;</b></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;"><b><u>Warranty:</u></b><u><o:p></o:p></u></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">01.<u>&nbsp;Service Warranty -3 years.<o:p></o:p></u></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">02.<u>&nbsp;Compressor Warranty – 5 years.</u></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">03.&nbsp;<u>Spare Parts Warranty -2 year.</u></p>
+                                    @endif
+                                    
                                 
                                 </textarea>
                             </div>
@@ -535,13 +541,16 @@
                                         <i class="fa fa-plus-circle"></i> Submit
                                     </button> --}}
 
-                                    <button class="btn btn-success btn-md btn-submit" id="processBtn" type="submit" data-sts="1">
+                                    @if ($data->status != '2')
+                                        <button class="btn btn-success btn-md btn-submit" id="processBtn" type="submit" data-sts="1">
                                         <i class="fa fa-plus-circle"></i> Processing
-                                    </button>
+                                        </button>
 
-                                    <button class="btn btn-success btn-md btn-submit" id="pcomBtn" type="submit" data-sts="4">
-                                        <i class="fa fa-plus-circle"></i> Pre-Complete
-                                    </button>
+                                        <button class="btn btn-success btn-md btn-submit" id="pcomBtn" type="submit" data-sts="4">
+                                            <i class="fa fa-plus-circle"></i> Pre-Complete
+                                        </button>
+                                    @endif
+                                    
                                 </div>
                                 <div class="button-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
                                     
