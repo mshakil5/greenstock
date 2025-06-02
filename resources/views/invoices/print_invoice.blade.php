@@ -117,6 +117,7 @@
             <tbody>
                 @php
                     $count = 0;
+                    $additionalAmount = 0;
                 @endphp
                 @foreach ($order->orderdetails as $key => $orderdetail)
                 <tr>
@@ -158,12 +159,15 @@
                     <td style="text-align:right">{{ number_format($orderdetail->selling_price_per_unit, 2) }}</td>
                     <td style="text-align:right">{{ number_format($orderdetail->total_selling_price, 2) }}</td>
                 </tr>
+                @php
+                    $additionalAmount += $orderdetail->total_selling_price;
+                @endphp
                 @endforeach
 
                 
                 <tr class="total-row">
                     <td colspan="4" style="text-align: right;">Total</td>
-                    <td style="text-align:right">{{ number_format($order->grand_total, 2) }}</td>
+                    <td style="text-align:right">{{ number_format($order->grand_total + $additionalAmount, 2) }}</td>
                 </tr>
                 @if ($order->discount_amount > 0)
                 <tr class="total-row">
