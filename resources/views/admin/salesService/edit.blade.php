@@ -383,8 +383,8 @@
                             <div class="form-group col-md-12">
                                 <label for="bill_body">Body</label>
                                 <textarea name="bill_body" id="bill_body" cols="30" rows="5" class="form-control">
-                                    @if ($data->order->bill_body)
-                                        {!! $data->order->bill_body !!} 
+                                    @if ($data->order->body)
+                                        {!! $data->order->body !!} 
                                         
                                     @else
                                         <p class="MsoNormal" style="margin-bottom: 0.0001pt;"><b>N.B:<o:p></o:p></b></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">1.&nbsp; This billing amount Excluded of VAT &amp; TAX.<b><o:p></o:p></b></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">2.&nbsp; Payment will be made in favor of&nbsp;<b>“Green Technology”.<o:p></o:p></b></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;"><b>&nbsp;</b></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;"><b><u>Warranty:</u></b><u><o:p></o:p></u></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">01.<u>&nbsp;Service Warranty -3 years.<o:p></o:p></u></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">02.<u>&nbsp;Compressor Warranty – 5 years.</u></p><p class="MsoNormal" style="margin-bottom: 0.0001pt;">03.&nbsp;<u>Spare Parts Warranty -2 year.</u></p>
@@ -930,10 +930,13 @@
 
             var status = $(this).data('sts');
 
+            var bill_body = $('#bill_body').summernote('code');
+
             var formData = new FormData($('#serviceRequestForm')[0]);
             formData.append('service_status', status);
+            formData.append('bill_body', bill_body);
 
-            // console.log(formData);
+            console.log(bill_body);
 
             $.ajax({
                 url: '{{ route("admin.ServiceSales.update") }}',
@@ -948,6 +951,7 @@
                 success: function(response) {
 
                     console.log(response);
+
                     if (status == 400) {
                         $(".ermsg").html(response.message);
                     } else {

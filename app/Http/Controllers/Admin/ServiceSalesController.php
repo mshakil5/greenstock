@@ -708,12 +708,10 @@ class ServiceSalesController extends Controller
         $request->validate([
             'service_request_id' => 'required',
             'user_id' => 'required',
-            'note' => 'required',
             'date' => 'required|date',
         ], [
             'service_request_id.required' => 'The service request ID is mandatory.',
             'user_id.required' => 'The staff name field is required.',
-            'note.required' => 'Please provide a working details.',
             'date.required' => 'The date is required.',
             'date.date' => 'Please provide a valid date.',
         ]);

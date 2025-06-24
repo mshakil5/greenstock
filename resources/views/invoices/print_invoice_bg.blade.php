@@ -97,16 +97,16 @@
         <p>Date: {{ $order->orderdate }}</p>
         <p><strong>To:</strong><br>
             @if ($order->serviceRequest)
-            {{ $order->serviceRequest->customer_name ?? "" }}<br>
+            <b>{{ $order->serviceRequest->customer_name ?? "" }}</b><br>
             {{ $order->serviceRequest->customer_phone ?? "" }}<br>
             {{ $order->serviceRequest->address ?? ""  }}
             @else
-            {{ $order->customer->name ?? "" }}<br>
+            <b>{{ $order->customer->name ?? "" }}</b><br>
             {{ $order->customer->address ?? ""  }}
             @endif
         </p>
 
-        <p><strong>Subject:</strong> {{ $order->subject }}</p>
+        <p><strong>Subject:</strong> <b>{{ $order->subject }}</b></p>
         {{-- <p>Dear Sir,<br>
             Reference to above mention subject we are pleased to submit our quotation for your kind Consideration under as follows.</p> --}}
 
@@ -117,7 +117,7 @@
             <thead>
                 <tr>
                     <th style="text-align:center; width: 5%">SL</th>
-                    <th>Description</th>
+                    <th style="text-align:center;">Description</th>
                     <th style="text-align:center; width: 5%">Unit</th>
                     <th style="text-align:center; width: 10%">Unit Price</th>
                     <th style="text-align:center; width: 10%">Total Price</th>
@@ -205,7 +205,7 @@
 
         {{-- <p><strong>In words:</strong> {{ ucwords(\NumberFormatter::create('en', \NumberFormatter::SPELLOUT)->format($order->net_total)) }}</p> --}}
 
-        <p><strong>In words:</strong> {{$amountInWords}}</p>
+        <p><strong>In words:</strong> {{$amountInWords}} TK only.</p>
 
         <div class="note">
             {!! $order->body !!}

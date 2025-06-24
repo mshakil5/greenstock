@@ -1181,7 +1181,7 @@ class SalesController extends Controller
         $order->adv_amount = $request->adv_amount;
         $order->subject = $request->subject;
         $order->body = $request->bill_body;
-        $order->created_by = Auth::user()->id;
+        $order->updated_by = Auth::user()->id;
         $order->status = 0;
 
         if ($order->save()) {
@@ -1371,7 +1371,7 @@ class SalesController extends Controller
 
             $message = "<div class='alert alert-success'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Thank you for this service order.</b></div>";
             
-            return response()->json(['status' => 300, 'message' => $message, 'id' => $order->id, 'data' => $alldata]);
+            return response()->json(['status' => 300, 'message' => $message, 'order' => $order, 'data' => $alldata, 'body' => $request->bill_body]);
         }
 
         // return response()->json(['status' => 303, 'message' => 'Failed to save the order.']);
