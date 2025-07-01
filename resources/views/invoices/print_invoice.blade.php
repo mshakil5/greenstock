@@ -88,7 +88,8 @@
             <h1>Invoice</h1>
         </div>
         
-        <p>{{ $order->invoiceno }}</p>
+        <br><br>
+        <p><b>{{ $order->invoiceno }}</b></p>
         <p>Date: {{ $order->orderdate }}</p>
         <p><strong>To:</strong><br>
             @if ($order->serviceRequest)

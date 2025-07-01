@@ -89,11 +89,12 @@
 </head>
 <body>
     <div class="container">
-        <div class="header mt-3">
+        <div class="header mt-5">
             <h1>Invoice</h1>
         </div>
-        
-        <p>{{ $order->invoiceno }}</p>
+        <br>
+        <p></p>
+        <p><b>{{ $order->invoiceno }}</b></p>
         <p>Date: {{ $order->orderdate }}</p>
         <p><strong>To:</strong><br>
             @if ($order->serviceRequest)

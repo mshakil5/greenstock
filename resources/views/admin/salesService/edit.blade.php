@@ -551,8 +551,17 @@
                                         </button>
                                     @endif
                                     
+                                    
                                 </div>
                                 <div class="button-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
+
+                                    <a href="{{route('customer.invoice.print', $data->id)}}" class="btn btn-success btn-md " target="_blank">
+                                        <span title="Print Invoice"><i class="fa fa-print"></i> Print</span>
+                                    </a>
+
+                                    <a href="{{route('customer.invoice.bgprint', $data->id)}}" class="btn btn-success btn-md " target="_blank">
+                                        <span title="Print Invoice"><i class="fa fa-print"></i> Print BG</span>
+                                    </a>
                                     
                                 </div>
                             </div>
