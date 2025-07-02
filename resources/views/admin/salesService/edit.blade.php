@@ -531,15 +531,6 @@
                                 <div class="ermsg"></div>
 
                                 <div class="button-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
-                                    {{-- <button class="btn btn-success btn-md btn-submit" id="quotationBtn" type="submit">
-                                        <i class="fa fa-plus-circle"></i> Quotation
-                                    </button> --}}
-                                    {{-- <button class="btn btn-success btn-md btn-submit" id="deliveryBtn" type="submit">
-                                        <i class="fa fa-plus-circle"></i> Delivery Note
-                                    </button> --}}
-                                    {{-- <button class="btn btn-success btn-md btn-submit" id="salesBtn" type="submit">
-                                        <i class="fa fa-plus-circle"></i> Submit
-                                    </button> --}}
 
                                     @if ($data->status != '2')
                                         <button class="btn btn-success btn-md btn-submit" id="processBtn" type="submit" data-sts="1">
@@ -555,13 +546,10 @@
                                 </div>
                                 <div class="button-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
 
-                                    <a href="{{route('customer.invoice.print', $data->id)}}" class="btn btn-success btn-md " target="_blank">
-                                        <span title="Print Invoice"><i class="fa fa-print"></i> Print</span>
-                                    </a>
-
-                                    <a href="{{route('customer.invoice.bgprint', $data->id)}}" class="btn btn-success btn-md " target="_blank">
+                                    
+                                    <button type="button" class="btn btn-success btn-md " id="printBgBtn" data-sts="4">
                                         <span title="Print Invoice"><i class="fa fa-print"></i> Print BG</span>
-                                    </a>
+                                    </button>
                                     
                                 </div>
                             </div>
@@ -930,22 +918,19 @@
 
         // submit to sales 
         
-        $("body").delegate("#salesBtn, #processBtn, #pcomBtn", "click", function(event) {
+        $("body").on("click", "#salesBtn, #processBtn, #pcomBtn, #printBgBtn", function(event) {
             event.preventDefault();
 
             $(this).find('.fa-spinner').remove();
             $(this).prepend('<i class="fa fa-spinner fa-spin"></i>');
-            $(this).attr("disabled", 'disabled');
+            $(this).attr("disabled", "disabled");
 
             var status = $(this).data('sts');
-
             var bill_body = $('#bill_body').summernote('code');
 
             var formData = new FormData($('#serviceRequestForm')[0]);
             formData.append('service_status', status);
             formData.append('bill_body', bill_body);
-
-            console.log(bill_body);
 
             $.ajax({
                 url: '{{ route("admin.ServiceSales.update") }}',
@@ -958,30 +943,28 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function(response) {
-
-                    console.log(response);
-
                     if (status == 400) {
                         $(".ermsg").html(response.message);
                     } else {
-                        $(".ermsg").html(response.message);
-                        setTimeout(function() {
-                            window.location.href = "{{ route('admin.home') }}";
-                        }, 2000);
+                        if ($(this).attr('id') === 'printBgBtn') {
+                            window.open("{{ route('customer.invoice.bgprint', $data->id) }}", '_blank');
+                            $(".ermsg").html(response.message);
+                        } else {
+                            $(".ermsg").html(response.message);
+                            setTimeout(function() {
+                                window.location.href = "{{ route('admin.home') }}";
+                            }, 2000);
+                        }
                     }
-
-                    
-                },
+                }.bind(this), // Bind `this` to maintain context
                 error: function(xhr, status, error) {
                     console.log(xhr.responseJSON.message);
-                    // console.error(xhr.responseText);
                 },
                 complete: function() {
                     $('#loader').hide();
-                    $('#addBtn').attr('disabled', false);
+                    $('#salesBtn, #processBtn, #pcomBtn, #printBgBtn').attr('disabled', false);
                 }
             });
-
         });
         // submit to sales end
 
