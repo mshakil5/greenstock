@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\CompanyProduct;
 use Illuminate\Http\Request;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Auth;
@@ -1124,8 +1125,9 @@ class SalesController extends Controller
     {
 
         $data  = ServiceRequest::with('order', 'company' ,'order.orderdetails','order.transaction','order.serviceAdditionalProduct', 'serviceRequestProduct', 'serviceRequestProduct.product')->where('id', $id)->first();
-        // dd($data);
-        return view('admin.salesService.edit', compact('data'));
+        $companyProduct = CompanyProduct::where('service_request_id', $data->id)->get();
+        // dd($product);
+        return view('admin.salesService.edit', compact('data','companyProduct'));
     }
 
     // service sales part start
@@ -1138,6 +1140,9 @@ class SalesController extends Controller
         $validator = Validator::make($request->all(), [
             'service_id' => 'required_without:approduct_id|array',
             'approduct_id' => 'required_without:service_id|array',
+        ], [
+            'service_id.required_without' => 'Service or additional product is required.',
+            'approduct_id.required_without' => 'Additional product  or service is required.',
         ]);
 
         if ($validator->fails()) {
