@@ -140,6 +140,8 @@ class ServiceSalesController extends Controller
         
 
         $validator = Validator::make($request->all(), [
+            'bill_no' => 'required|string|unique:service_requests,bill_no',
+            'invoice_no' => 'required|string|unique:service_requests,invoice_no',
             'customer_name' => 'required|string|max:255',
             'customer_phone' => 'required|string|max:255',
             'address' => 'required|string|max:255',
@@ -204,6 +206,18 @@ class ServiceSalesController extends Controller
             ], 500);
         }
 
+    }
+
+
+    // check bill no exits
+    public function checkBillNoExists(Request $request)
+    {
+        $checkdata = ServiceRequest::where('bill_no', 'like', $request->bill_no)->first();
+        if ($checkdata) {
+            return response()->json(['exists' => true]);
+        } else {
+            return response()->json(['exists' => false]);
+        }
     }
 
     public function getServiceRequest(Request $request)

@@ -231,6 +231,7 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('service-request', [ServiceSalesController::class, 'salesServiceRequest'])->name('admin.salesServiceRequest');
     Route::get('processing-service-request/{id}', [ServiceSalesController::class, 'processingServiceRequest'])->name('admin.processingService');
     Route::post('service-request', [ServiceSalesController::class, 'salesServiceRequestStore'])->name('salesServiceRequestStore');
+    Route::post('check-bill-no-exits', [ServiceSalesController::class, 'checkBillNoExists'])->name('checkBillNoExists');
 
 
     Route::get('get-service-request', [ServiceSalesController::class, 'getServiceRequest'])->name('admin.getServiceRequest');

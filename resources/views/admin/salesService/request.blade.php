@@ -197,6 +197,34 @@
         
         // submit to quotation end
 
+        $("#bill_no").on("keyup", function() {
+            var billNo = $(this).val();
+            if (billNo.length > 0) {
+                $.ajax({
+                    url: '{{ route("checkBillNoExists") }}',
+                    method: "POST",
+                    data: { bill_no: billNo },
+                    success: function(response) {
+                        
+                        console.log(response);
+                        if (response.exists) {
+                            $(".ermsg").html('<div class="alert alert-danger">This Bill Number already exists.</div>');
+                            setTimeout(function() {
+                                $(".ermsg").html('');
+                            }, 3000);
+                        } else {
+                            $(".ermsg").html('');
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            } else {
+                $(".ermsg").html('');
+            }
+        });
+
 
 
 
