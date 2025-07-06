@@ -208,10 +208,10 @@
                         
                         console.log(response);
                         if (response.exists) {
-                            $(".ermsg").html('<div class="alert alert-danger">This Bill Number already exists.</div>');
+                            
                             setTimeout(function() {
-                                $(".ermsg").html('');
-                            }, 3000);
+                                $(".ermsg").html('<div class="alert alert-danger">This Bill Number already exists.</div>');
+                            }, 5000);
                         } else {
                             $(".ermsg").html('');
                         }
