@@ -208,9 +208,9 @@
                         
                         console.log(response);
                         if (response.exists) {
-                            
+                            $(".ermsg").html('<div class="alert alert-danger">This Bill Number already exists.</div>');
                             setTimeout(function() {
-                                $(".ermsg").html('<div class="alert alert-danger">This Bill Number already exists.</div>');
+                                $(".ermsg").html('');
                             }, 5000);
                         } else {
                             $(".ermsg").html('');
