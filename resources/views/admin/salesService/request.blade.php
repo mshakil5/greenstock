@@ -42,7 +42,7 @@
 
                             <div class="form-group col-md-3">
                                 <label for="bill_no">Bill Number</label>
-                                <input type="text" class="form-control" id="bill_no" name="bill_no">
+                                <input type="text" class="form-control" id="bill_no" name="bill_no" onkeydown="return event.key !== ''" oninput="this.value = this.value.replace(/\s/g, '')">
                             </div>
 
                             <div class="form-group col-md-3">

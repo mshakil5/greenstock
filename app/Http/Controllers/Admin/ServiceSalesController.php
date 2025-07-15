@@ -670,13 +670,13 @@ class ServiceSalesController extends Controller
     {
         $request->validate([
             'service_request_id' => 'required',
-            'name' => 'required',
+            'product' => 'required',
             'quantity' => 'required',
             'date' => 'required',
         ]);
         $data = new CompanyProduct();
         $data['service_request_id'] = $request->service_request_id;
-        $data['name'] = $request->name;
+        $data['product_id'] = $request->product;
         $data['quantity'] = $request->quantity;
         $data['date'] = $request->date;
         $data['status'] = $request->status;
@@ -691,12 +691,12 @@ class ServiceSalesController extends Controller
     {
 
         $request->validate([
-            'name' => 'required',
+            'product' => 'required',
             'quantity' => 'required',
             'date' => 'required',
         ]);
         $data = CompanyProduct::find($request->requestid);
-        $data['name'] = $request->name;
+        $data['product_id'] = $request->product;
         $data['quantity'] = $request->quantity;
         $data['date'] = $request->date;
         $data['status'] = $request->status;

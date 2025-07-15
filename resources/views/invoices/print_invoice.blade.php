@@ -117,12 +117,12 @@
             </thead>
             <tbody>
                 @php
-                    $count = 0;
+                    $count = 1;
                     $additionalAmount = 0;
                 @endphp
                 @foreach ($order->orderdetails as $key => $orderdetail)
                 <tr>
-                    <td style="text-align:center">{{ $count + 1 }}</td>
+                    <td style="text-align:center">{{ $count }}</td>
                     <td>
                         @if ($orderdetail->product)
                             {{ $orderdetail->product->productname ?? " "}}<br>
@@ -147,12 +147,15 @@
                     <td style="text-align:right">{{ number_format($orderdetail->sellingprice, 2) }}</td>
                     <td style="text-align:right">{{ number_format($orderdetail->total_amount, 2) }}</td>
                 </tr>
+                @php
+                    $count += 1;
+                @endphp
                 @endforeach
 
 
                 @foreach ($order->serviceAdditionalProduct as $key => $orderdetail)
                 <tr>
-                    <td style="text-align:center">{{ $count + 1 }}</td>
+                    <td style="text-align:center">{{ $count }}</td>
                     <td>
                         {{ $orderdetail->product->productname ?? " "}}<br>
                     </td>
@@ -162,6 +165,7 @@
                 </tr>
                 @php
                     $additionalAmount += $orderdetail->total_selling_price;
+                    $count += 1;
                 @endphp
                 @endforeach
 

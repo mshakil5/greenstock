@@ -53,7 +53,9 @@
                                 @foreach (\App\Models\CompanyProduct::where('service_request_id', $serviceRequest->id)->get() as $data)
                                     <tr>
                                         <td>{{ $data->date}}</td>
-                                        <td>{{ $data->name}}</td>
+                                        <td>{{ $data->name ?? ""}}
+                                            {{ $data->product->productname ?? ""}}
+                                        </td>
                                         <td>{{ $data->quantity}}</td>
                                         <td>{{ $data->note}}</td>
                                         <td>
@@ -83,7 +85,7 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <span class="btn btn-success btn-sm editThis" id="editThis" vid="{{$data->id}}" code="{{$data->id}}" name="{{$data->name}}" quantity="{{$data->quantity}}" date="{{$data->date}}" note="{{$data->note}}" status="{{$data->status}}" > <i class='fa fa-pencil'></i> Edit </span>
+                                            <span class="btn btn-success btn-sm editThis" id="editThis" vid="{{$data->id}}" code="{{$data->id}}" name="{{$data->name}}" quantity="{{$data->quantity}}" date="{{$data->date}}" note="{{$data->note}}" product="{{$data->product_id}}" status="{{$data->status}}" > <i class='fa fa-pencil'></i> Edit </span>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -117,7 +119,13 @@
                                 <input type="hidden" name="service_request_id" value="{{$serviceRequest->id}}">
                                 <label class="col-sm-3 control-label">Product Name<span class="text-danger">*</span></label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="name" class="form-control" required>
+                                    {{-- <input type="text" name="name" class="form-control" required> --}}
+                                    <select name="product" id="product" class="form-control select2">
+                                        <option value="">Select</option>
+                                        @foreach (\App\Models\Product::select('id','productname')->get() as $product)
+                                        <option value="{{ $product->id }}">{{ $product->productname }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 @if ($errors->has('name'))
                                     <span class="invalid-feedback text-danger" role="alert">
@@ -125,6 +133,10 @@
                                     </span>
                                 @endif
                             </div>
+
+                            
+
+
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Date<span
                                 class="text-danger">*</span></label>
@@ -201,7 +213,12 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">Product Name<span class="text-danger">*</span></label>
                                 <div class="col-sm-9">
-                                    <input type="text" name="name" id="name" class="form-control" required>
+                                    <select name="product" id="productupdate" class="form-control select2">
+                                        <option value="">Select</option>
+                                        @foreach (\App\Models\Product::select('id','productname')->get() as $product)
+                                        <option value="{{ $product->id }}">{{ $product->productname }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 @if ($errors->has('name'))
                                     <span class="invalid-feedback text-danger" role="alert">
@@ -322,9 +339,12 @@
             quantity = $(this).attr('quantity');
             note = $(this).attr('note');
             date = $(this).attr('date');
+            product = $(this).attr('product');
+            console.log(product);
             status = $(this).attr('status');
             $('#requestid').val(requestid);
             $('#name').val(name);
+            $('#productupdate').val(product).trigger('change');
             $('#quantity').val(quantity);
             $('#date').val(date);
             $('#status').val(status);
