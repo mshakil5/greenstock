@@ -101,47 +101,49 @@ class ServiceController extends Controller
                 $service->capacity = $request->capacity;
                 $service->created_by= Auth::user()->id;
 
-            if ($service->save()) {
+                if ($service->save()) {
 
-                if (isset($request->product_id)) {
+                    $existingOrderDetails = $service->serviceDetail->pluck('id')->toArray();
+                    $requestOrderDetails = $request->input('service_detail_id', []); 
 
-                    foreach($request->input('product_id') as $key => $value)
-                    {
-                        $existingOrderDetails = $service->serviceDetail->pluck('id')->toArray();
-                        $requestOrderDetails = $request->input('service_detail_id', []); 
-
-                        $toDelete = array_diff($existingOrderDetails, $requestOrderDetails);
-                        if (!empty($toDelete)) {
-                            ServiceDetail::whereIn('id', $toDelete)->delete();
-                        }
-
-                        if (isset($request->input('service_detail_id')[$key])) {
-                            $purchasehistry = ServiceDetail::find($request->input('service_detail_id')[$key]);
-                            $purchasehistry->branch_id = Auth::user()->branch_id;
-                            $purchasehistry->service_id = $service->id;
-                            $purchasehistry->product_id = $request->get('product_id')[$key];
-                            $purchasehistry->quantity = $request->get('quantity')[$key];
-                            $purchasehistry->save();
-                        } else {
-                            $purchasehistry = new ServiceDetail();
-                            $purchasehistry->branch_id = Auth::user()->branch_id;
-                            $purchasehistry->service_id = $service->id;
-                            $purchasehistry->product_id = $request->get('product_id')[$key];
-                            $purchasehistry->quantity = $request->get('quantity')[$key];
-                            $purchasehistry->save();
-                        }
-                        
-
-                        
-
+                    $toDelete = array_diff($existingOrderDetails, $requestOrderDetails);
+                    if (!empty($toDelete)) {
+                        ServiceDetail::whereIn('id', $toDelete)->delete();
                     }
+
+                    if (isset($request->product_id)) {
+
+                        foreach($request->product_id as $key => $value)
+                        {
+                            
+
+                            if (isset($request->input('service_detail_id')[$key])) {
+                                $purchasehistry = ServiceDetail::find($request->input('service_detail_id')[$key]);
+                                $purchasehistry->branch_id = Auth::user()->branch_id;
+                                $purchasehistry->service_id = $service->id;
+                                $purchasehistry->product_id = $request->get('product_id')[$key];
+                                $purchasehistry->quantity = $request->get('quantity')[$key];
+                                $purchasehistry->save();
+                            } else {
+                                $purchasehistry = new ServiceDetail();
+                                $purchasehistry->branch_id = Auth::user()->branch_id;
+                                $purchasehistry->service_id = $service->id;
+                                $purchasehistry->product_id = $request->get('product_id')[$key];
+                                $purchasehistry->quantity = $request->get('quantity')[$key];
+                                $purchasehistry->save();
+                            }
+                            
+
+                            
+
+                        }
+                    }
+
+                    
+
+                    $message ="<div class='alert alert-success' style='color:white'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Service Create Successfully.</b></div>";
+                    return response()->json(['status'=> 300,'message'=>$message]);
                 }
-
-                
-
-                $message ="<div class='alert alert-success' style='color:white'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><b>Service Create Successfully.</b></div>";
-                return response()->json(['status'=> 300,'message'=>$message]);
-            }
 
             }catch (\Exception $e) {
             return response()->json([
