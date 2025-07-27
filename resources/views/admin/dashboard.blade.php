@@ -296,7 +296,7 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <table id="" class="table table-hover table-responsive " width="100%">
+                                <table id="pendingTable" class="table table-hover table-responsive " width="100%">
                                     <thead>
                                         <tr>
                                             <th>Invoice No</th>
@@ -333,7 +333,7 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <table id="" class="table table-hover table-responsive " width="100%">
+                                <table id="processingTable" class="table table-hover table-responsive " width="100%">
                                     <thead>
                                         <tr>
                                             <th>Invoice No</th>
@@ -365,4 +365,18 @@
             </div>
         </div>
     @endif
+@endsection
+
+@section('script')
+
+<script>
+$(document).ready(function() {
+    $('#pendingTable').DataTable({
+        "pageLength": 20
+    });
+    $('#processingTable').DataTable({
+        "pageLength": 20
+    });
+});
+</script>
 @endsection
