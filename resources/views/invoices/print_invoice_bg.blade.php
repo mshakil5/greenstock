@@ -20,7 +20,7 @@
             background-repeat: no-repeat;
             background-attachment: fixed;
             margin: 0;
-            font-size: 10px; /* Optional: Adjust for better readability */
+            font-size: 12px; /* Optional: Adjust for better readability */
         }
         .container {
             width: 100%;
@@ -40,7 +40,7 @@
             position: fixed;
             bottom: 70px; /* Adjust as needed */
             left: 10px;   /* Adjust as needed */
-            font-size: 12px; /* Optional: Adjust for better readability */
+            font-size: 14px; /* Optional: Adjust for better readability */
             display: flex;
             justify-content: space-between;
             width: 95%;
