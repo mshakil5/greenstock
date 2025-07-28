@@ -90,6 +90,7 @@
         
         <br><br>
         <p><b>{{ $order->invoiceno }}</b></p>
+        <p><b>Ref: {{ $order->bill_no ?? '' }}</b></p>
         <p>Date: {{ $order->orderdate }}</p>
         <p><strong>To:</strong><br>
             @if ($order->serviceRequest)
