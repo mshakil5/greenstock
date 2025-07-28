@@ -193,6 +193,7 @@ echo Session::put('info', '');
         var modal = $(this);
         if (purpose) {
             let id = button.val();
+            console.log(id);
             $.ajax({
                 url: customerurl +'/' + id,
                 type: 'GET',
@@ -203,7 +204,7 @@ echo Session::put('info', '');
                     modal.find('#name').val(response.customername);
                     
 
-                    $('#customerModal .submit-btn').removeClass('save-btn').addClass('update-btn').text('Update').val(response.id);
+                    $('#customerModal .submit-btn').removeClass('save-btn').addClass('update-btn').text('Update').val(id);
                 }
             });
         } else {
@@ -290,11 +291,17 @@ echo Session::put('info', '');
             return;
         }
 
+        console.log($('#name').val());
+
         let formData = $('#customer-form').serialize();
         let id = $(this).val();
+        if (!id) {
+            alert("Something went wrong, Please try again");
+            return;
+        }
         $.ajax({
             url: customerurl + '/' + id,
-            type: 'PUT',
+            type: 'POST',
             data: formData,
             beforeSend: function (request) {
                 return request.setRequestHeader('X-CSRF-Token', $("meta[name='csrf-token']").attr('content'));

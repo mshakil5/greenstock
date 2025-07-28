@@ -112,7 +112,7 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('company', [CompanyController::class, 'index'])->name('admin.company');
     Route::post('company', [CompanyController::class, 'store']);
     Route::get('company/{id}', [CompanyController::class, 'edit']);
-    Route::put('company/{id}', [CompanyController::class, 'update']);
+    Route::post('company/{id}', [CompanyController::class, 'update']);
 
     // add group
     Route::get('/product-group', [GroupController::class, 'view_product_group'])->name('view_product_group');
