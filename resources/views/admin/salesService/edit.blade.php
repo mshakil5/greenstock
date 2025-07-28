@@ -82,29 +82,31 @@
 
                                 
                                 <div class="form-group col-md-3">
-                                    <label for="">Customer Name</label>
-                                    <p>{{$data->customer_name}}</p>
+                                    <label for="customer_name">Customer Name</label>
+                                    <input type="text" class="form-control" id="customer_name" name="customer_name" value="{{ $data->customer_name }}">
                                 </div>
 
-                                
-                                
                                 <div class="form-group col-md-3">
-                                    <label for="">Customer Phone</label>
-                                    <p>{{$data->customer_phone}}</p>
+                                    <label for="customer_phone">Customer Phone</label>
+                                    <input type="text" class="form-control" id="customer_phone" name="customer_phone" value="{{ $data->customer_phone }}">
                                 </div>
 
-                                
-                                
                                 <div class="form-group col-md-3">
-                                    <label for="">Address</label>
-                                    <p>{{$data->address}}</p>
+                                    <label for="address">Address</label>
+                                    <input type="text" class="form-control" id="address" name="address" value="{{ $data->address }}">
                                 </div>
 
                                 
                                 
                                 <div class="form-group col-md-3">
                                     <label for="">Warranty Status</label>
-                                    <p>{{$data->warranty}}</p>
+                                    <select name="warranty" id="warranty" class="form-control">
+                                        <option value="">Please Select</option>
+                                        <option value="Full Warranty" {{ $data->warranty == 'Full Warranty' ? 'selected' : '' }}>Full Warranty</option>
+                                        <option value="Service Only" {{ $data->warranty == 'Service Only' ? 'selected' : '' }}>Service Only</option>
+                                        <option value="Parts Only" {{ $data->warranty == 'Parts Only' ? 'selected' : '' }}>Parts Only</option>
+                                        <option value="Out of Warranty" {{ $data->warranty == 'Out of Warranty' ? 'selected' : '' }}>Out of Warranty</option>
+                                    </select>
                                 </div>
 
                                 <div class="form-group col-md-12">
