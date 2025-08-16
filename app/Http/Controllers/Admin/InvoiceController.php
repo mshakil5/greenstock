@@ -110,8 +110,8 @@ class InvoiceController extends Controller
     public function customer_invoice_print($id)
     {
         
-        $order = Order::with('serviceAdditionalProduct','serviceRequest')->where('id',$id)->first();
-        $amountInWords = NumberToWords::convert($order->cash_amount + $order->bank_amount);
+        $order = Order::with('serviceAdditionalProduct','serviceRequest')->where('id',$id)->first();$totalAdditionalProduct = $order->serviceAdditionalProduct?->sum('total_selling_price') ?? 0;
+        $amountInWords = NumberToWords::convert($order->grand_total + $totalAdditionalProduct);
 
         $customerdtl = Customer::where('id','=',$order->customer_id)->first();
         $pdf = PDF::loadView('invoices.print_invoice', compact('order','customerdtl','amountInWords'));
@@ -124,8 +124,8 @@ class InvoiceController extends Controller
     public function customer_invoice_print_bg($id)
     {
         $order = Order::with('serviceAdditionalProduct')->where('id',$id)->first();
-        // dd($order);
-        $amountInWords = NumberToWords::convert($order->cash_amount + $order->bank_amount);
+        $totalAdditionalProduct = $order->serviceAdditionalProduct?->sum('total_selling_price') ?? 0;
+        $amountInWords = NumberToWords::convert($order->grand_total + $totalAdditionalProduct);
 
         $customerdtl = Customer::where('id','=',$order->customer_id)->first();
         // $pdf = PDF::loadView('invoices.print_invoice_bg', compact('order','customerdtl','amountInWords'));
