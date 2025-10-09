@@ -767,5 +767,20 @@ class ServiceSalesController extends Controller
     }
 
 
+    public function assignStaffDelete($id)
+    {
+        $data = AssignStaff::find($id);
+        if ($data) {
+            $serviceRequestId = $data->service_request_id; // Store service_request_id before deletion
+            $data->delete();
+            Session::put('success', 'Assignment deleted successfully!');
+            return redirect()->route('admin.serviceSales.edit', ['id' => $serviceRequestId]);
+        } else {
+            Session::put('error', 'Assignment not found!');
+            return back();
+        }
+    }
+
+
 
 }

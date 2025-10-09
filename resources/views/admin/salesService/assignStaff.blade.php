@@ -55,6 +55,16 @@
                                         <td>{{ $data->note}}</td>
                                         <td>
                                             <span class="btn btn-success btn-sm editThis" id="editThis" vid="{{$data->id}}" code="{{$data->id}}" date="{{$data->date}}" note="{{$data->note}}" user_id="{{$data->user_id}}"> <i class='fa fa-pencil'></i> Edit </span>
+
+                                            <form action="{{ route('admin.assignStaffDelete', $data->id) }}" method="POST" style="display:inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this assignment?');">
+                                                    <i class="fa fa-trash"></i> Delete
+                                                </button>
+                                            </form>
+
+
                                         </td>
                                     </tr>
                                 @endforeach

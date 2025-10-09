@@ -181,33 +181,6 @@
 
             @endif
 
-            {{-- @if(Auth::user()->type == '1' && in_array('3', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('3', json_decode(Auth::user()->role->permission)))
-            <li class="{{ (request()->is('admin/service-sales')) ? 'active' : '' }}">
-                <a href="{{ route('admin.salesService')}}"><i class="fa fa-adjust"></i>Create Service Sales
-                </a>
-            </li>
-            @endif --}}
-
-
-            {{-- @if(Auth::user()->type == '1' && in_array('4', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('4', json_decode(Auth::user()->role->permission)))
-            <li class="{{ (request()->is('admin/all-sellsinvoice') || request()->routeIs('admin.sales.edit') || request()->routeIs('admin.sales.return')) ? 'active' : '' }}">
-                <a href="{{ route('admin.allsellinvoice')}}"><i class="fa fa-adjust"></i> Manage Sales
-                </a>
-            </li>
-            @endif
-            @if(Auth::user()->type == '1' && in_array('9', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('9', json_decode(Auth::user()->role->permission)))
-            <li class="{{ (request()->is('admin/all-quotation') || request()->routeIs('admin.quotation.edit')) ? 'active' : '' }}">
-                <a href="{{ route('admin.allquotation')}}"><i class="fa fa-adjust"></i> Quotations
-                </a>
-            </li>
-            @endif
-            @if(Auth::user()->type == '1' && in_array('11', json_decode(Auth::user()->role->permission)) || Auth::user()->type == '0' && in_array('11', json_decode(Auth::user()->role->permission)))
-            <li class="{{ (request()->is('admin/all-delivery-note') || request()->routeIs('admin.deliverynote.edit')) ? 'active' : '' }}">
-                <a href="{{ route('admin.alldeliverynote')}}"><i class="fa fa-adjust"></i> Delivery Notes
-                </a>
-            </li>
-            @endif --}}
-            
         </ul>
     </li>
 

@@ -41,6 +41,45 @@
         .d-none{
             display: none;
         }
+
+
+                /* === Fixed Sidebar Layout === */
+        .main-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh; /* full height */
+            width: 230px; /* adjust to your sidebar width */
+            background: #222d32; /* AdminLTE default */
+            overflow-y: auto; /* make it scrollable if content is long */
+            z-index: 1000; /* keep it above content */
+        }
+
+        /* Prevent scrollbar from hiding behind header (optional if you have header) */
+        .main-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .main-sidebar::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 3px;
+        }
+
+        /* === Content area adjustment === */
+        .content-wrapper {
+            margin-left: 230px; /* same as sidebar width */
+            padding: 20px;
+            min-height: 100vh;
+            background: #f4f6f9; /* typical background */
+        }
+
+        /* Optional: fix header if you have one */
+        .main-header {
+            position: fixed;
+            width: 100%;
+            z-index: 1050;
+        }
+
+
     </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -138,8 +177,6 @@
     </header>
     <!-- Left side column. contains the logo and sidebar -->
     <aside class=" main-sidebar">
-        <!-- sidebar: style can be found in sidebar.less -->
-        {{-- <h4 style="color:white;font-size:11px" class="text-center">{{Auth::user()->branch->name}}</h4> --}}
         <section class="sidebar">
             <!-- Sidebar user panel -->
             <div class="user-panel">
@@ -174,14 +211,6 @@
         <!-- Main content -->
         <div id="snackbar">Data updated successfully.</div>
         <section class="content">
-            {{-- <div class="spinner">
-                 
-                <img class="mx-auto d-block" src="{{asset('loader.gif')}}">
-            </div> --}}
-            
-            
-                
-            <br>
             @yield('content')
         </section>
         <!-- /.content -->

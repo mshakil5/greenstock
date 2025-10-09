@@ -256,6 +256,7 @@ Route::group(['prefix' =>'admin/', 'middleware' => ['auth', 'is_admin']], functi
     Route::get('order-assign-staff/{id}', [ServiceSalesController::class, 'orderAssignStaff'])->name('admin.assignStaff');
     Route::post('order-assign-staff/save', [ServiceSalesController::class, 'orderAssignStaffStore'])->name('admin.assignStaffStore');
     Route::post('order-assign-staff/update', [ServiceSalesController::class, 'assignStaffUpdate'])->name('admin.assignStaffUpdate');
+    Route::delete('order-assign-staff/delete/{id}', [ServiceSalesController::class, 'assignStaffDelete'])->name('admin.assignStaffDelete');
     
     
     // partno status 
