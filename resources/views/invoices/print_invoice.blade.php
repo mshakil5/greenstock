@@ -182,6 +182,14 @@
                 </tr>
                 @endif
 
+                
+                @if ($order->vatamount > 0)
+                <tr class="total-row">
+                    <td colspan="4" style="text-align: right;">Vat Amount @if ($order->vatpercentage > 0) ({{$order->vatpercentage}}%) @endif</td>
+                    <td style="text-align:right">{{ number_format($order->vatamount, 2) }}</td>
+                </tr>
+                @endif
+
                 @if ($order->adv_amount > 0)
                 <tr class="total-row">
                     <td colspan="4" style="text-align: right;">Advance Received</td>

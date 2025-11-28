@@ -124,6 +124,7 @@ class InvoiceController extends Controller
     public function customer_invoice_print_bg($id)
     {
         $order = Order::with('serviceAdditionalProduct')->where('id',$id)->first();
+        
         $totalAdditionalProduct = $order->serviceAdditionalProduct?->sum('total_selling_price') ?? 0;
         $amountInWords = NumberToWords::convert($order->grand_total + $totalAdditionalProduct);
 
