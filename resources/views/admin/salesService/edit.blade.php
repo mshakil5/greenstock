@@ -6,174 +6,175 @@
 <!-- Summernote JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-lite.min.js"></script>
 
+
+
 <div class="row ">
     <div class="container-fluid">
 
         <form id="serviceRequestForm">
 
             <div class="col-md-9">
-                <div class="box box-default box-solid">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Services</h3>
-                    </div>
-                    <div class="ermsg"></div>
-                    <div>
-                        @if (Session::has('success'))
-                        <div class="alert alert-success">
-                            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
-                            <p>{{ Session::get('success') }}</p>
+                <div class="box box-primary box-solid" id="printableArea" style="border-radius: 4px; box-shadow: 0 2px 10px rgba(0,0,0,.1);">
+                    <div class="box-header with-border" style="padding: 12px 15px;">
+                        <h3 class="box-title" style="font-weight: 600; font-size: 18px;">
+                            <i class="fa fa-wrench" style="margin-right: 8px;"></i>Service Request Management
+                        </h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-default btn-sm" onclick="printServiceReport()" style="background: #fff; border: 1px solid #3c8dbc; color: #3c8dbc; font-weight: bold;">
+                                <i class="fa fa-print"></i> PRINT SERVICE REPORT
+                            </button>
                         </div>
-                        {{ Session::forget('success') }}
-                        @endif
-                        @if (Session::has('warning'))
-                        <div class="alert alert-warning">
-                            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
-                            <p>{{ Session::get('warning') }}</p>
-                        </div>
-                        {{ Session::forget('warning') }}
-                        @endif
                     </div>
 
-                    <div class="box-body ir-table">
-
-                            <div class="form-row">
-
-                                <div class="form-group col-md-2">
-                                    <label for="date">Date *</label>
-                                    <p>{{$data->date}}</p>
-                                    <input type="hidden" name="serviceRequestID" value="{{$data->id}}">
-                                    <input type="hidden" name="orderId" value="{{$data->order->id ?? ''}}">
+                    <div class="box-body" style="padding-bottom: 0;">
+                        @foreach (['success', 'warning', 'danger'] as $msg)
+                            @if (Session::has($msg))
+                                <div class="alert alert-{{ $msg }} alert-dismissible" style="margin-bottom: 15px; border-radius: 3px;">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                    <strong><i class="fa {{ $msg == 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle' }}"></i></strong> 
+                                    {{ Session::get($msg) }}
+                                    {{ Session::forget($msg) }}
                                 </div>
+                            @endif
+                        @endforeach
+                        <div class="ermsg"></div>
+                    </div>
 
-                                <div class="form-group col-md-4">
-                                    <label>Bill Number</label>
-                                    <input type="text" class="form-control" id="bill_no" name="bill_no" value="{{$data->bill_no}}">
-                                    
+                    <div class="box-body">
+                        <div class="row" style="background-color: #fcfcfc; border: 1px solid #eee; margin: 0 0 25px 0; padding: 15px 5px; border-radius: 4px;">
+                            <div class="col-md-3">
+                                <label style="color: #777; text-transform: uppercase; font-size: 11px; display: block; margin-bottom: 5px;">Request Date</label>
+                                <span style="font-size: 16px; font-weight: bold; color: #333;">{{$data->date}}</span>
+                                <input type="hidden" name="serviceRequestID" value="{{$data->id}}">
+                                <input type="hidden" name="orderId" value="{{$data->order->id ?? ''}}">
+                            </div>
+                            <div class="col-md-3">
+                                <label style="color: #777; text-transform: uppercase; font-size: 11px; display: block; margin-bottom: 5px;">Our Invoice #</label>
+                                <span style="font-size: 16px; color: #333;">{{$data->invoice_no}}</span>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="bill_no" style="font-size: 12px;">Customer Bill Number</label>
+                                <input type="text" class="form-control input-sm" id="bill_no" name="bill_no" value="{{$data->bill_no}}" style="border-radius: 2px;">
+                            </div>
+                            <div class="col-md-3 text-right">
+                                <label style="display: block; visibility: hidden;">Actions</label>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#newCustomerModal" style="border-radius: 2px 0 0 2px;">
+                                        <i class="fa fa-file-text-o"></i> View Doc
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#newProductModal" style="border-radius: 0 2px 2px 0;">
+                                        <i class="fa fa-barcode"></i> Product
+                                    </button>
                                 </div>
+                            </div>
+                        </div>
 
-                                <div class="form-group col-md-4">
-                                    <label for="invoiceno">Our Invoice Number</label>
-                                    <p>{{$data->invoice_no}}</p>
-                                    
-                                </div>
-
-                                {{-- <div class="form-group col-md-4">
-                                    <label for="date">Payment Type *</label>
-                                    <select name="salestype" id="salestype" class="form-control">
-                                        <option value="Cash">Cash</option>
-                                        <option value="Bank">Bank</option>
-                                        <option value="Credit">Credit</option>
-                                    </select>
-                                </div> --}}
-
-
-                                <div class="form-group col-md-1">
-                                    <label for=""> Document</label>
-                                    <a class="btn btn-primary btn-sm btn-return" data-toggle="modal" data-target="#newCustomerModal">
-                                         View
-                                    </a>
-                                    <a class="btn btn-primary btn-sm btn-return" data-toggle="modal" data-target="#newProductModal">
-                                         Product
-                                    </a>
-                                </div>
-
-                                <div class="form-group col-md-12">
-                                </div>
-
+                        <div class="row">
+                            <div class="col-md-6" style="border-right: 1px solid #f4f4f4;">
+                                <h4 style="border-bottom: 2px solid #3c8dbc; display: inline-block; padding-bottom: 5px; margin-bottom: 20px; font-size: 16px; font-weight: 600;">
+                                    Customer Details
+                                </h4>
                                 
-                                <div class="form-group col-md-3">
-                                    <label for="customer_name">Customer Name</label>
-                                    <input type="text" class="form-control" id="customer_name" name="customer_name" value="{{ $data->customer_name }}">
+                                <div class="form-group">
+                                    <label style="font-size: 13px;">Full Name</label>
+                                    <input type="text" class="form-control" name="customer_name" value="{{ $data->customer_name }}">
                                 </div>
 
-                                <div class="form-group col-md-3">
-                                    <label for="customer_phone">Customer Phone</label>
-                                    <input type="text" class="form-control" id="customer_phone" name="customer_phone" value="{{ $data->customer_phone }}">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label style="font-size: 13px;">Phone Number</label>
+                                            <input type="text" class="form-control" name="customer_phone" value="{{ $data->customer_phone }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label style="font-size: 13px;">Warranty Status</label>
+                                            <select name="warranty" id="warranty" class="form-control">
+                                                <option value="">Please Select</option>
+                                                @foreach(['Full Warranty', 'Service Only', 'Parts Only', 'Out of Warranty'] as $status)
+                                                    <option value="{{ $status }}" {{ $data->warranty == $status ? 'selected' : '' }}>{{ $status }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div class="form-group col-md-3">
-                                    <label for="address">Address</label>
-                                    <input type="text" class="form-control" id="address" name="address" value="{{ $data->address }}">
+                                <div class="form-group">
+                                    <label style="font-size: 13px;">Address</label>
+                                    <textarea class="form-control" name="address" rows="3" style="resize: vertical;">{{ $data->address }}</textarea>
                                 </div>
-
-                                
-                                
-                                <div class="form-group col-md-3">
-                                    <label for="">Warranty Status</label>
-                                    <select name="warranty" id="warranty" class="form-control">
-                                        <option value="">Please Select</option>
-                                        <option value="Full Warranty" {{ $data->warranty == 'Full Warranty' ? 'selected' : '' }}>Full Warranty</option>
-                                        <option value="Service Only" {{ $data->warranty == 'Service Only' ? 'selected' : '' }}>Service Only</option>
-                                        <option value="Parts Only" {{ $data->warranty == 'Parts Only' ? 'selected' : '' }}>Parts Only</option>
-                                        <option value="Out of Warranty" {{ $data->warranty == 'Out of Warranty' ? 'selected' : '' }}>Out of Warranty</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group col-md-12">
-                                </div>
-
-                                <div class="form-group col-md-3">
-                                    <label for="">Work assign to Staff</label>
-                                    <p>{{$data->user->name}}</p>
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <label for="">Company Name</label>
-                                    <p>{{$data->company->name ?? ''}}</p>
-                                </div>
-
-                                <div class="form-group col-md-4">
-                                    <label for="">Product Desc</label>
-                                    <p>{{$data->product_desc}}</p>
-                                </div>
-
-
-                                <div class="form-group col-md-4">
-                                    <label for="product_model">Product Model</label>
-                                    <input type="text" class="form-control" id="product_model" name="product_model" value="{{$data->product_model}}">
-                                </div>
-    
-                                <div class="form-group col-md-4">
-                                    <label for="product_serial">Product Serial</label>
-                                    <input type="text" class="form-control" id="product_serial" name="product_serial" value="{{$data->product_serial}}">
-                                </div>
-    
-                                <div class="form-group col-md-4">
-                                    <label for="product_capacity">Product Capacity</label>
-                                    <input type="text" class="form-control" id="product_capacity" name="product_capacity" value="{{$data->product_capacity}}">
-                                </div>
-    
-
-
-                                <div class="form-group col-md-6">
-                                    <label for="service">Select Package*</label>
-                                    <select name="service" id="service" class="form-control select2">
-                                        <option value="">Select</option>
-                                        @foreach (\App\Models\Service::select('id','name','code')->get() as $service)
-                                        <option value="{{ $service->id }}">{{ $service->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-
-
-                                <div class="form-group col-md-6">
-                                    <label for="product">Additional Product</label>
-                                    <select name="product" id="product" class="form-control select2">
-                                        <option value="">Select</option>
-                                        @foreach (\App\Models\Product::select('id','productname')->get() as $product)
-                                        <option value="{{ $product->id }}">{{ $product->productname }}</option>
-                                        @endforeach
-                                    </select>
-
-                                </div>
-
-
                             </div>
 
+                            <div class="col-md-6">
+                                <h4 style="border-bottom: 2px solid #3c8dbc; display: inline-block; padding-bottom: 5px; margin-bottom: 20px; font-size: 16px; font-weight: 600;">
+                                    Technical Info
+                                </h4>
+
+                                <div class="row" style="margin-bottom: 15px;">
+                                    <div class="col-xs-6">
+                                        <label style="color: #777; font-size: 12px; display: block;">Assigned Staff</label>
+                                        <p style="font-weight: 600;"><i class="fa fa-user" style="color: #3c8dbc;"></i> {{$data->user->name}}</p>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <label style="color: #777; font-size: 12px; display: block;">Company</label>
+                                        <p>{{$data->company->name ?? 'N/A'}}</p>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="font-size: 13px;">Product Description</label>
+                                    <p class="well well-sm" style="background-color: #f9f9f9; margin-bottom: 10px; border-radius: 2px;">{{$data->product_desc}}</p>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label style="font-size: 12px;">Model</label>
+                                            <input type="text" class="form-control input-sm" name="product_model" value="{{$data->product_model}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label style="font-size: 12px;">Serial</label>
+                                            <input type="text" class="form-control input-sm" name="product_serial" value="{{$data->product_serial}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label style="font-size: 12px;">Capacity</label>
+                                            <input type="text" class="form-control input-sm" name="product_capacity" value="{{$data->product_capacity}}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin-top: 20px; padding-top: 20px; border-top: 1px dashed #ddd;">
+                            <div class="col-md-6">
+                                <div class="form-group" style="background: #eff7ff; padding: 15px; border-radius: 4px; border: 1px solid #d2e8ff;">
+                                    <label for="service" style="color: #004a99;">Select Service Package *</label>
+                                    <select name="service" id="service" class="form-control select2" style="width: 100%;">
+                                        <option value="">Search for package...</option>
+                                        @foreach (\App\Models\Service::select('id','name')->get() as $service)
+                                            <option value="{{ $service->id }}">{{ $service->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group" style="padding: 15px;">
+                                    <label for="product">Include Additional Product</label>
+                                    <select name="product" id="product" class="form-control select2" style="width: 100%;">
+                                        <option value="">Search for product...</option>
+                                        @foreach (\App\Models\Product::select('id','productname')->get() as $product)
+                                            <option value="{{ $product->id }}">{{ $product->productname }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
-
                 </div>
 
 
@@ -674,6 +675,125 @@
 @endsection
 
 @section('script')
+
+
+<script>
+function printServiceReport() {
+    const data = {
+        date: "{{$data->date}}",
+        invoice: "{{$data->invoice_no}}",
+        bill: document.getElementById('bill_no').value || 'N/A',
+        customer: "{{$data->customer_name}}",
+        phone: "{{$data->customer_phone}}",
+        address: "{{$data->address}}",
+        warranty: document.getElementById('warranty').value || 'N/A',
+        staff: "{{$data->user->name}}",
+        company: "{{$data->company->name ?? 'N/A'}}",
+        desc: "{{$data->product_desc}}",
+        model: "{{$data->product_model}}",
+        serial: "{{$data->product_serial}}",
+        capacity: "{{$data->product_capacity}}",
+        package: document.getElementById('service').options[document.getElementById('service').selectedIndex].text,
+    };
+
+    var printWindow = window.open('', '', 'height=900,width=800');
+    
+    printWindow.document.write('<html><head><title>Service Report - ' + data.invoice + '</title>');
+    printWindow.document.write('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">');
+    printWindow.document.write('<style>');
+    printWindow.document.write(`
+        body { font-family: 'sans-serif'; padding: 40px; color: #333; }
+        .report-header { border-bottom: 3px solid #3c8dbc; margin-bottom: 20px; padding-bottom: 10px; }
+        .report-title { font-size: 24px; font-weight: bold; color: #3c8dbc; text-transform: uppercase; }
+        .company-info { text-align: right; font-size: 12px; }
+        .info-table { width: 100%; margin-bottom: 20px; border: 1px solid #eee; }
+        .info-table td { padding: 10px; border: 1px solid #eee; }
+        .label-bg { background: #f9f9f9; font-weight: bold; width: 25%; }
+        .section-head { background: #3c8dbc; color: white; padding: 5px 10px; font-weight: bold; margin-top: 20px; }
+        .footer-sig { margin-top: 50px; }
+        .sig-box { border-top: 1px solid #333; margin-top: 40px; padding-top: 5px; text-align: center; font-size: 12px; }
+        @media print { .no-print { display: none; } body { padding: 0; } }
+    `);
+    printWindow.document.write('</style></head><body>');
+
+    // Header Section
+    printWindow.document.write(`
+        <div class="row report-header">
+            <div class="col-xs-6">
+                <div class="report-title">Service Report</div>
+                <div>Invoice #: <strong>${data.invoice}</strong></div>
+            </div>
+            <div class="col-xs-6 company-info">
+                <strong>${data.company}</strong><br>
+                Official Technical Service Document<br>
+                Date: ${data.date}
+            </div>
+        </div>
+
+        <div class="section-head">CUSTOMER & WORK INFORMATION</div>
+        <table class="info-table">
+            <tr>
+                <td class="label-bg">Customer Name</td><td>${data.customer}</td>
+                <td class="label-bg">Date</td><td>${data.date}</td>
+            </tr>
+            <tr>
+                <td class="label-bg">Contact Number</td><td>${data.phone}</td>
+                <td class="label-bg">Warranty Status</td><td>${data.warranty}</td>
+            </tr>
+            <tr>
+                <td class="label-bg">Address</td><td colspan="3">${data.address}</td>
+            </tr>
+        </table>
+
+        <div class="section-head">PRODUCT DETAILS</div>
+        <table class="info-table">
+            <tr>
+                <td class="label-bg">Product</td><td colspan="3">${data.desc}</td>
+            </tr>
+            <tr>
+                <td class="label-bg">Model</td><td>${data.model}</td>
+                <td class="label-bg">Serial Number</td><td>${data.serial}</td>
+            </tr>
+            <tr>
+                <td class="label-bg">Capacity</td><td>${data.capacity}</td>
+                <td class="label-bg">Staff Assigned</td><td>${data.staff}</td>
+            </tr>
+        </table>
+
+        <div class="section-head">SERVICE PERFORMED</div>
+        <table class="info-table">
+            <tr>
+                <td class="label-bg" style="height: 100px;">Package Selected</td>
+                <td colspan="3" valign="top">${data.package}</td>
+            </tr>
+        </table>
+
+        <div class="row footer-sig">
+            <div class="col-xs-4">
+                <div class="sig-box">Customer Signature</div>
+            </div>
+            <div class="col-xs-4"></div>
+            <div class="col-xs-4">
+                <div class="sig-box">Technician Signature</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center; font-size: 10px; color: #999;">
+            GREEN TECHNOLOGY
+        </div>
+    `);
+
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    
+    setTimeout(function() {
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+    }, 500);
+}
+</script>
+
 
 <script>
     $(document).ready(function() {
