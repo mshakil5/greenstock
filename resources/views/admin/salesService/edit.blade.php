@@ -528,14 +528,12 @@
 
                         <div class="form-group row">
                             <div class="col-sm-12">
-
                                 {{-- <input class="form-check-input" type="checkbox" value="1" id="reduceQty" checked name="reduceQty">
                                 <label class="form-check-label" for="reduceQty">
                                     Reduce from stock
                                 </label> --}}
                                 
                                 <div class="ermsg"></div>
-
                                 <div class="button-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
 
                                     @if ($data->status != '2')
@@ -560,123 +558,18 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
         </form>
-
     </div>
 </div>
 
-<div class="modal fade" id="newCustomerModal">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header alert alert-success" style="text-align: left;">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Document</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row p-3">
-                </div>
-
-                <div class="form-group row">
-                    <div class="col-sm-12">
-                        <div class="button-container" style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
-                            <img src="{{asset('images/document/'. $data->document)}}" width="450px" alt="">
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div class="modal fade" id="newProductModal">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header alert alert-success" style="text-align: left;">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Ordered Product List</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row p-3">
-                </div>
-
-                <div class="form-group row">
-                    <div class="col-sm-12">
-                        <table  class="table table-hover table-responsive " width="100%" id="supplierTBL">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Name</th>
-                                    <th>Quantity</th>
-                                    <th>Note</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                @foreach ($companyProduct as $data)
-                                    <tr>
-                                        <td>{{ $data->date}}</td>
-                                        <td>{{ $data->name}}</td>
-                                        <td>{{ $data->quantity}}</td>
-                                        <td>{{ $data->note}}</td>
-                                        <td>
-                                            <span class="badge badge-info">
-                                                @switch($data->status)
-                                                    @case(1)
-                                                        Ordered
-                                                        @break
-                                                    @case(2)
-                                                        Processing
-                                                        @break
-                                                    @case(3)
-                                                        On the way
-                                                        @break
-                                                    @case(4)
-                                                        Received
-                                                        @break
-                                                    @case(5)
-                                                        Return
-                                                        @break
-                                                    @case(6)
-                                                        Cancel
-                                                        @break
-                                                    @default
-                                                        Unknown
-                                                @endswitch
-                                            </span>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                            <tfoot>
-                            
-                            </tfoot>
-                        
-                        </table>
-                    </div>
-                </div>
-
-
-            </div>
-        </div>
-    </div>
-</div>
+@include('admin.salesService.partials.modal')
 
 @endsection
 
 @section('script')
-
-
 <script>
 function printServiceReport() {
     const data = {
@@ -793,8 +686,6 @@ function printServiceReport() {
     }, 500);
 }
 </script>
-
-
 <script>
     $(document).ready(function() {
         $('.select2').select2();
@@ -820,9 +711,6 @@ function printServiceReport() {
         });
     });
 </script>
-
-
-
 <script>
     function removeRow(event) {
         event.target.parentElement.parentElement.remove();
@@ -1171,73 +1059,7 @@ function printServiceReport() {
         });
         // submit to sales end
 
-        // submit to quotation 
-        var quotationStoreurl = "{{URL::to('/admin/quotation-store')}}";
 
-        $("body").delegate("#quotationBtn", "click", function(event) {
-            event.preventDefault();
-
-            $(this).find('.fa-spinner').remove();
-            $(this).prepend('<i class="fa fa-spinner fa-spin"></i>');
-            $(this).attr("disabled", 'disabled');
-
-            var data = {
-                invoiceno: $("#invoiceno").val(),
-                date: $("#date").val(),
-                customer_id: $("#customer_id").val(),
-                ref: $("#ref").val(),
-                salestype: $("#salestype").val(),
-                grand_total: $("#grand_total").val(),
-                discount: $("#discount").val(),
-                vat_percent: $("#vat_percent").val(),
-                total_vat_amount: $("#total_vat_amount").val(),
-                net_amount: $("#net_amount").val(),
-                paid_amount: $("#paid_amount").val(),
-                due_amount: $("#due_amount").val(),
-                return_amount: $("#return_amount").val(),
-                service_id: $("input[name='service_id[]']").map(function() {
-                    return $(this).val();
-                }).get(),
-                quantity: $("input[name='quantity[]']").map(function() {
-                    return $(this).val();
-                }).get(),
-                unit_price: $("input[name='unit_price[]']").map(function() {
-                    return $(this).val();
-                }).get()
-            };
-
-            // console.log(data);
-
-
-            $.ajax({
-                url: quotationStoreurl,
-                method: "POST",
-                data: data,
-
-                success: function(d) {
-                    $("#loader").removeClass('fa fa-spinner fa-spin');
-                    $(".btn-submit").removeAttr("disabled", true);
-                    if (d.status == 303) {
-                        $(".ermsg").html(d.message);
-                        pagetop();
-                    } else if (d.status == 300) {
-                        $(".ermsg").html(d.message);
-                        pagetop();
-                        window.setTimeout(function() {
-                            location.reload()
-                        }, 2000)
-
-                    }
-                },
-                error: function(xhr, status, error) {
-                    $("#loader").removeClass('fa fa-spinner fa-spin');
-                    $(".btn-submit").removeAttr("disabled", true);
-                    console.error(xhr.responseText);
-                }
-            });
-
-        });
-        // submit to quotation end
 
 
 
@@ -1245,7 +1067,5 @@ function printServiceReport() {
       
     });
 </script>
-
-
 
 @endsection
