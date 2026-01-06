@@ -5,7 +5,59 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-lite.min.css" rel="stylesheet">
 <!-- Summernote JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-lite.min.js"></script>
+<style>
+@media print {
+    /* 1. Hide everything except the printable area */
+    body * { visibility: hidden; }
+    #printableArea, #printableArea * { visibility: visible; }
+    #printableArea { 
+        position: absolute; 
+        left: 0; 
+        top: 0; 
+        width: 100%;
+    }
 
+    /* 2. Hide UI elements like "X" buttons and dropdown arrows */
+    .no-print, 
+    [onclick^="removeRow"], 
+    .btn-group, 
+    .fa-wrench { 
+        display: none !important; 
+    }
+
+    /* 3. Force Bootstrap columns to maintain width on paper */
+    .col-md-3 { width: 25% !important; float: left !important; }
+    .col-md-4 { width: 33.33% !important; float: left !important; }
+    .col-md-6 { width: 50% !important; float: left !important; }
+    .row { display: block !important; clear: both !important; }
+
+    /* 4. Fix form inputs so they look like text, not boxes */
+    .form-control {
+        border: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+        height: auto !important;
+    }
+    
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* 5. Force background colors and borders to show */
+    .box-primary { border-top: 3px solid #3c8dbc !important; }
+    .well, .row[style*="background-color"] {
+        background-color: #fcfcfc !important;
+        border: 1px solid #eee !important;
+        -webkit-print-color-adjust: exact;
+    }
+    
+    table { width: 100% !important; border-collapse: collapse; }
+    th, td { border: 1px solid #ddd !important; padding: 8px !important; }
+}
+</style>
 
 
 <div class="row ">
@@ -19,10 +71,15 @@
                         <h3 class="box-title" style="font-weight: 600; font-size: 18px;">
                             <i class="fa fa-wrench" style="margin-right: 8px;"></i>Service Request Management
                         </h3>
-                        <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-default btn-sm" onclick="printServiceReport()" style="background: #fff; border: 1px solid #3c8dbc; color: #3c8dbc; font-weight: bold;">
-                                <i class="fa fa-print"></i> PRINT SERVICE REPORT
-                            </button>
+
+                        <div class="row no-print" style="margin-bottom: 15px; padding: 0 15px;">
+                            <div class="col-md-12 text-right">
+                                <div class="text-right no-print" style="margin-bottom: 20px;">
+                                    <button onclick="window.print();" class="btn btn-primary">
+                                        <i class="fa fa-print"></i> Print Service Request
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -570,122 +627,9 @@
 @endsection
 
 @section('script')
-<script>
-function printServiceReport() {
-    const data = {
-        date: "{{$data->date}}",
-        invoice: "{{$data->invoice_no}}",
-        bill: document.getElementById('bill_no').value || 'N/A',
-        customer: "{{$data->customer_name}}",
-        phone: "{{$data->customer_phone}}",
-        address: "{{$data->address}}",
-        warranty: document.getElementById('warranty').value || 'N/A',
-        staff: "{{$data->user->name}}",
-        company: "{{$data->company->name ?? 'N/A'}}",
-        desc: "{{$data->product_desc}}",
-        model: "{{$data->product_model}}",
-        serial: "{{$data->product_serial}}",
-        capacity: "{{$data->product_capacity}}",
-        package: document.getElementById('service').options[document.getElementById('service').selectedIndex].text,
-    };
 
-    var printWindow = window.open('', '', 'height=900,width=800');
-    
-    printWindow.document.write('<html><head><title>Service Report - ' + data.invoice + '</title>');
-    printWindow.document.write('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">');
-    printWindow.document.write('<style>');
-    printWindow.document.write(`
-        body { font-family: 'sans-serif'; padding: 40px; color: #333; }
-        .report-header { border-bottom: 3px solid #3c8dbc; margin-bottom: 20px; padding-bottom: 10px; }
-        .report-title { font-size: 24px; font-weight: bold; color: #3c8dbc; text-transform: uppercase; }
-        .company-info { text-align: right; font-size: 12px; }
-        .info-table { width: 100%; margin-bottom: 20px; border: 1px solid #eee; }
-        .info-table td { padding: 10px; border: 1px solid #eee; }
-        .label-bg { background: #f9f9f9; font-weight: bold; width: 25%; }
-        .section-head { background: #3c8dbc; color: white; padding: 5px 10px; font-weight: bold; margin-top: 20px; }
-        .footer-sig { margin-top: 50px; }
-        .sig-box { border-top: 1px solid #333; margin-top: 40px; padding-top: 5px; text-align: center; font-size: 12px; }
-        @media print { .no-print { display: none; } body { padding: 0; } }
-    `);
-    printWindow.document.write('</style></head><body>');
 
-    // Header Section
-    printWindow.document.write(`
-        <div class="row report-header">
-            <div class="col-xs-6">
-                <div class="report-title">Service Report</div>
-                <div>Invoice #: <strong>${data.invoice}</strong></div>
-            </div>
-            <div class="col-xs-6 company-info">
-                <strong>${data.company}</strong><br>
-                Official Technical Service Document<br>
-                Date: ${data.date}
-            </div>
-        </div>
 
-        <div class="section-head">CUSTOMER & WORK INFORMATION</div>
-        <table class="info-table">
-            <tr>
-                <td class="label-bg">Customer Name</td><td>${data.customer}</td>
-                <td class="label-bg">Date</td><td>${data.date}</td>
-            </tr>
-            <tr>
-                <td class="label-bg">Contact Number</td><td>${data.phone}</td>
-                <td class="label-bg">Warranty Status</td><td>${data.warranty}</td>
-            </tr>
-            <tr>
-                <td class="label-bg">Address</td><td colspan="3">${data.address}</td>
-            </tr>
-        </table>
-
-        <div class="section-head">PRODUCT DETAILS</div>
-        <table class="info-table">
-            <tr>
-                <td class="label-bg">Product</td><td colspan="3">${data.desc}</td>
-            </tr>
-            <tr>
-                <td class="label-bg">Model</td><td>${data.model}</td>
-                <td class="label-bg">Serial Number</td><td>${data.serial}</td>
-            </tr>
-            <tr>
-                <td class="label-bg">Capacity</td><td>${data.capacity}</td>
-                <td class="label-bg">Staff Assigned</td><td>${data.staff}</td>
-            </tr>
-        </table>
-
-        <div class="section-head">SERVICE PERFORMED</div>
-        <table class="info-table">
-            <tr>
-                <td class="label-bg" style="height: 100px;">Package Selected</td>
-                <td colspan="3" valign="top">${data.package}</td>
-            </tr>
-        </table>
-
-        <div class="row footer-sig">
-            <div class="col-xs-4">
-                <div class="sig-box">Customer Signature</div>
-            </div>
-            <div class="col-xs-4"></div>
-            <div class="col-xs-4">
-                <div class="sig-box">Technician Signature</div>
-            </div>
-        </div>
-
-        <div style="margin-top: 30px; text-align: center; font-size: 10px; color: #999;">
-            GREEN TECHNOLOGY
-        </div>
-    `);
-
-    printWindow.document.write('</body></html>');
-    printWindow.document.close();
-    
-    setTimeout(function() {
-        printWindow.focus();
-        printWindow.print();
-        printWindow.close();
-    }, 500);
-}
-</script>
 <script>
     $(document).ready(function() {
         $('.select2').select2();
@@ -1058,14 +1002,10 @@ function printServiceReport() {
             });
         });
         // submit to sales end
-
-
-
-
-
-    
       
     });
 </script>
+
+
 
 @endsection
