@@ -145,7 +145,7 @@
                                             <label style="font-size: 13px;">Warranty Status</label>
                                             <select name="warranty" id="warranty" class="form-control">
                                                 <option value="">Please Select</option>
-                                                @foreach(['Full Warranty', 'Service Only', 'Parts Only', 'Out of Warranty'] as $status)
+                                                @foreach(['Full Warranty', 'Service Only', 'Parts Only', 'Out of Warranty', 'Compressor Warranty'] as $status)
                                                     <option value="{{ $status }}" {{ $data->warranty == $status ? 'selected' : '' }}>{{ $status }}</option>
                                                 @endforeach
                                             </select>
