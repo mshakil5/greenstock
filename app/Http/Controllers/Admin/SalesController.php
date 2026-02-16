@@ -1126,12 +1126,11 @@ class SalesController extends Controller
 
         $data  = ServiceRequest::with('order', 'company' ,'order.orderdetails','order.transaction','order.serviceAdditionalProduct', 'serviceRequestProduct', 'serviceRequestProduct.product')->where('id', $id)->first();
         $companyProduct = CompanyProduct::where('service_request_id', $data->id)->get();
-        // dd($product);
         return view('admin.salesService.edit', compact('data','companyProduct'));
     }
 
     // service sales part start
-    public function serviceSalesUpdate(Request $request)
+    public function serviceSalesUpdate_old(Request $request)
     {
         $productIDs = $request->input('product_id');
 
@@ -1385,4 +1384,269 @@ class SalesController extends Controller
 
         // return response()->json(['status' => 303, 'message' => 'Failed to save the order.']);
     }
+
+
+
+
+    public function serviceSalesUpdate(Request $request)
+    {
+        // 1. Validation
+        $validator = Validator::make($request->all(), [
+            'service_id' => 'required_without:approduct_id|array',
+            'approduct_id' => 'required_without:service_id|array',
+            'serviceRequestID' => 'required|exists:service_requests,id',
+            'orderId' => 'required|exists:orders,id',
+        ], [
+            'service_id.required_without' => 'Service or additional product is required.',
+            'approduct_id.required_without' => 'Additional product or service is required.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 400, 
+                'message' => $this->formatAlert('warning', implode('<br>', $validator->errors()->all()))
+            ]);
+        }
+
+        DB::beginTransaction();
+        try {
+            // 2. Update Service Request
+            $this->updateServiceRequest($request);
+
+            // 3. Update Order
+            $order = $this->updateOrder($request);
+
+            // 4. Manage Transactions (Credit, Cash, Bank)
+            $this->handleFinancialTransactions($order, $request);
+
+            // 5. Sync Order Details (Services)
+            $this->syncOrderDetails($order, $request);
+
+            // 6. Sync Additional Products
+            $this->syncAdditionalProducts($order, $request);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 300,
+                'message' => $this->formatAlert('success', 'Thank you for this service order.'),
+                'order' => $order
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 303, 
+                'message' => 'Error: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    // --- Private Helper Methods ---
+
+    private function updateServiceRequest(Request $request)
+    {
+        $serviceRequest = ServiceRequest::findOrFail($request->serviceRequestID);
+        $serviceRequest->update([
+            'customer_name'    => $request->customer_name,
+            'customer_phone'   => $request->customer_phone,
+            'address'          => $request->address,
+            'warranty'         => $request->warranty,
+            'bill_no'          => $request->bill_no,
+            'product_model'    => $request->product_model,
+            'product_serial'   => $request->product_serial,
+            'product_capacity' => $request->product_capacity,
+            'status'           => $request->service_status,
+        ]);
+    }
+
+    private function updateOrder(Request $request)
+    {
+        $order = Order::findOrFail($request->orderId);
+        $order->update([
+            'orderdate'       => now()->format('Y-m-d'),
+            'branch_id'       => Auth::user()->branch_id,
+            'ref'             => $request->ref,
+            'qn_no'           => $request->order_id ?? "0",
+            'dn_no'           => $request->delivery_note_id ?? "0",
+            'vatpercentage'   => $request->vat_percent ?? "0",
+            'vatamount'       => $request->total_vat_amount ?? "0",
+            'discount_amount' => $request->discount ?? "0",
+            'grand_total'     => $request->grand_total,
+            'net_total'       => $request->net_amount,
+            'customer_paid'   => $request->paid_amount ?? "0",
+            'due'             => $request->due_amount ?? "0",
+            'reduceqty'       => $request->reduceQty ?? "0",
+            'sales_status'    => "1",
+            'ordertype'       => "Product",
+            'return_amount'   => $request->return_amount,
+            'bank_amount'     => $request->bank_amount,
+            'cash_amount'     => $request->cash_amount,
+            'adv_amount'      => $request->adv_amount,
+            'subject'         => $request->subject,
+            'body'            => $request->bill_body,
+            'updated_by'      => Auth::id(),
+            'status'          => 0,
+        ]);
+        return $order;
+    }
+
+    private function handleFinancialTransactions($order, $request)
+    {
+        // Handle Credit (Account Receivable)
+        Transaction::updateOrCreate(
+            ['order_id' => $order->id, 'table_type' => 'Income', 'transaction_type' => 'Credit'],
+            [
+                'date'           => now()->format('Y-m-d'),
+                'description'    => 'Service',
+                'amount'         => $request->grand_total,
+                'vat_amount'     => $request->total_vat_amount,
+                'at_amount'      => $request->net_amount,
+                'payment_type'   => "Account Receivable",
+                'branch_id'      => Auth::user()->branch_id,
+                'created_by'     => Auth::id(),
+                'created_ip'     => $request->ip(),
+            ]
+        );
+
+        // Dynamic Payment Handling (Cash/Bank)
+        $payments = ['Cash' => $request->cash_amount, 'Bank' => $request->bank_amount];
+        
+        foreach ($payments as $type => $amount) {
+            if ($amount > 0) {
+                Transaction::updateOrCreate(
+                    ['order_id' => $order->id, 'table_type' => 'Income', 'payment_type' => $type],
+                    [
+                        'date'           => $request->date ?? now()->format('Y-m-d'),
+                        'description'    => 'Sales',
+                        'amount'         => $request->grand_total,
+                        'vat_amount'     => $request->total_vat_amount,
+                        'at_amount'      => $request->net_amount,
+                        'transaction_type' => 'Current',
+                        'customer_id'    => $request->customer_id,
+                        'branch_id'      => Auth::user()->branch_id,
+                        'created_by'     => Auth::id(),
+                        'created_ip'     => $request->ip(),
+                    ]
+                );
+            }
+        }
+    }
+
+    private function syncOrderDetails($order, $request)
+    {
+        $submittedDetails = $request->input('order_detail_id', []);
+
+        // 1. Restore Stock for items about to be deleted or updated
+        // This ensures we start from a "zero-sum" state for this order
+        $existingDetails = OrderDetail::where('order_id', $order->id)->get();
+        foreach ($existingDetails as $oldDetail) {
+            if ($order->reduceqty == 1) {
+                // We use a negative quantity to "add back" the stock
+                $this->updateStock($oldDetail->product_id, $oldDetail->quantity, 'increment');
+            }
+        }
+
+        // 2. Delete removed items
+        OrderDetail::where('order_id', $order->id)->whereNotIn('id', $submittedDetails)->delete();
+
+        // 3. Process/Update and Deduct New Stock
+        if ($request->has('service_id')) {
+            foreach ($request->service_id as $key => $serviceId) {
+                $qty = $request->quantity[$key];
+                $productId = $request->product_id[$key] ?? null; // Assuming product linked to service
+
+                $data = [
+                    'invoiceno'    => $order->invoiceno,
+                    'order_id'     => $order->id,
+                    'service_id'   => $serviceId,
+                    'product_id'   => $productId,
+                    'quantity'     => $qty,
+                    'sellingprice' => $request->unit_price[$key],
+                    'total_amount' => $qty * $request->unit_price[$key],
+                ];
+
+                // Update or Create the Detail record
+                if (isset($submittedDetails[$key])) {
+                    OrderDetail::where('id', $submittedDetails[$key])->update($data);
+                } else {
+                    OrderDetail::create(array_merge($data, ['created_by' => Auth::id()]));
+                }
+
+                // 4. Deduct Stock for the new quantity
+                if ($request->reduceQty == 1 && $productId) {
+                    $this->updateStock($productId, $qty, 'decrement');
+                }
+            }
+        }
+    }
+
+    private function syncAdditionalProducts($order, $request)
+    {
+        // Clean and Re-insert (Professional approach for child items that don't need tracking IDs)
+        ServiceAdditionalProduct::where('order_id', $order->id)->delete();
+
+        if ($request->has('approduct_id')) {
+            foreach ($request->approduct_id as $key => $productId) {
+                ServiceAdditionalProduct::create([
+                    'order_id'                 => $order->id,
+                    'service_request_id'       => $request->serviceRequestID,
+                    'product_id'               => $productId,
+                    'quantity'                 => $request->apquantity[$key],
+                    'purchase_price_per_unit'  => $request->apunit_price[$key],
+                    'selling_price_per_unit'   => $request->apselling_price_unit[$key],
+                    'total_purchase_price'     => $request->apquantity[$key] * $request->apunit_price[$key],
+                    'total_selling_price'      => $request->apquantity[$key] * $request->apselling_price_unit[$key],
+                ]);
+            }
+        }
+    }
+
+    private function formatAlert($type, $message)
+    {
+        return "<div class='alert alert-{$type}'><a href='#' class='close' data-dismiss='alert'>&times;</a><b>{$message}</b></div>";
+    }
+
+    /**
+     * Professional Stock Adjustment Helper
+     * Handles incrementing or decrementing stock for a specific branch.
+     */
+    private function updateStock($productId, $quantity, $action = 'decrement')
+    {
+        if (!$productId) return;
+
+        // Fetch the product name first so we can give a professional error message
+        $productName = \App\Models\Product::where('id', $productId)->value('name') ?? 'Unknown Product';
+
+        // Find the current stock record for this branch
+        $stock = Stock::where('product_id', $productId)
+            ->where('branch_id', Auth::user()->branch_id)
+            ->first();
+
+        if ($action === 'decrement') {
+            $currentQty = $stock ? $stock->quantity : 0;
+
+            // VALIDATION: Check if requested quantity exceeds available stock
+            if ($currentQty < $quantity) {
+                throw new \Exception("Insufficient stock for <b>{$productName}</b>. Available: {$currentQty}, Requested: {$quantity}.");
+            }
+
+            $stock->quantity -= $quantity;
+        } else {
+            // Incrementing (Restoring stock): Safely handle if record doesn't exist yet
+            if (!$stock) {
+                $stock = new Stock();
+                $stock->product_id = $productId;
+                $stock->branch_id = Auth::user()->branch_id;
+                $stock->quantity = 0;
+            }
+            $stock->quantity += $quantity;
+        }
+
+        $stock->updated_by = Auth::id();
+        $stock->save();
+    }
+
+
+
 }

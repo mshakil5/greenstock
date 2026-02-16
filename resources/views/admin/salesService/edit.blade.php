@@ -67,19 +67,15 @@
 
             <div class="col-md-9">
                 <div class="box box-primary box-solid" id="printableArea" style="border-radius: 4px; box-shadow: 0 2px 10px rgba(0,0,0,.1);">
-                    <div class="box-header with-border" style="padding: 12px 15px;">
-                        <h3 class="box-title" style="font-weight: 600; font-size: 18px;">
+                    <div class="box-header with-border" style="padding: 12px 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <h3 class="box-title" style="font-weight: 600; font-size: 18px; margin: 0;">
                             <i class="fa fa-wrench" style="margin-right: 8px;"></i>Service Request Management
                         </h3>
 
-                        <div class="row no-print" style="margin-bottom: 15px; padding: 0 15px;">
-                            <div class="col-md-12 text-right">
-                                <div class="text-right no-print" style="margin-bottom: 20px;">
-                                    <button onclick="window.print();" class="btn btn-primary">
-                                        <i class="fa fa-print"></i> Print Service Request
-                                    </button>
-                                </div>
-                            </div>
+                        <div class="no-print" style="margin: 0;">
+                            <button onclick="window.print();" class="btn btn-primary">
+                                <i class="fa fa-print"></i> Print Service Request
+                            </button>
                         </div>
                     </div>
 
@@ -311,6 +307,7 @@
                             <tr>
                                 <th class="text-center">Product Name</th>
                                 <th class="text-center">Qty</th>
+                                <th class="text-center">Available Stock</th>
                                 <th class="text-center">Action</th>
                             </tr>
                         </thead>
@@ -324,6 +321,8 @@
                                 </td>
                                 <td class="text-center">
                                      <input type="number" class="form-control" name="spquantity[]" value="{{$serviceRequestProduct->quantity}}">
+                                </td>
+                                <td class="text-center">
                                 </td>
                                 <td class="text-center">
                                     <div style="
@@ -760,9 +759,6 @@
                     if (d.status == 303) {
 
                     } else if (d.status == 300) {
-
-                        // console.log(d);
-
                         var markup = `
                         <tr>
                             <td class="text-center">

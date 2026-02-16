@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\Service;
 use App\Models\ServiceDetail;
 use App\Models\ServiceRequest;
+use App\Models\Stock;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -67,34 +68,35 @@ class ServiceSalesController extends Controller
 
         if(empty($serviceDtl)){
             return response()->json(['status'=> 303,'message'=>"No data found"]);
-        }else{
+        } else {
             $serviceProducts = ServiceDetail::where('service_id', $serviceDtl->id)->get();
-
             $prop = '';
 
             foreach ($serviceProducts as $rate){
-                // <!-- Single Property Start -->
-                $prop.= '<tr>
+                // Fetch stock for the specific product and branch
+                $checkStock = Stock::where('product_id', $rate->product_id)
+                                ->where('branch_id', Auth::user()->branch_id)
+                                ->first();
+
+                // Logic: If stock exists and quantity > 0, green. Otherwise, yellow.
+                $currentStock = $checkStock ? $checkStock->quantity : 0;
+                $bgColor = ($currentStock > 0) ? '#28a745' : '#ffc107'; // Green or Yellow
+                $textColor = ($currentStock > 0) ? 'white' : 'black';
+
+                $prop .= '<tr>
                             <td class="text-center">
-                                <input type="text" class="form-control" name="spproductname[]" value="'.$rate->product->productname.'"><input type="hidden" class="form-control" name="spproduct_id[]" value="'.$rate->product_id.'"<input type="hidden" class="form-control" name="servicedtlid[]" value="'.$rate->id.'">
+                                <input type="text" class="form-control" name="spproductname[]" value="'.$rate->product->productname.'">
+                                <input type="hidden" name="spproduct_id[]" value="'.$rate->product_id.'">
+                                <input type="hidden" name="servicedtlid[]" value="'.$rate->id.'">
                             </td>
                             <td class="text-center">
-                                 <input type="number" class="form-control" name="spquantity[]" value="'.$rate->quantity.'">
+                                <input type="number" class="form-control" name="spquantity[]" value="'.$rate->quantity.'">
                             </td>
                             <td class="text-center">
-                                <div style="
-                                    color: white; 
-                                    user-select: none; 
-                                    padding: 5px; 
-                                    background: red; 
-                                    width: 45px; 
-                                    display: flex; 
-                                    align-items: center; 
-                                    margin-right: 5px; 
-                                    justify-content: center; 
-                                    border-radius: 4px;
-                                    left: 4px;
-                                    top: 81px;" 
+                                <input type="text" class="form-control" style="background-color: '.$bgColor.'; color: '.$textColor.';" value="'.$currentStock.'" readonly>
+                            </td>
+                            <td class="text-center">
+                                <div style="color: white; user-select: none; padding: 5px; background: red; width: 45px; display: flex; align-items: center; margin: 0 auto; justify-content: center; border-radius: 4px; cursor: pointer;" 
                                     onclick="removeRow(event)">
                                     X
                                 </div>
@@ -102,12 +104,14 @@ class ServiceSalesController extends Controller
                         </tr>';
             }
 
-
-
-            return response()->json(['status'=> 300,'name'=>$serviceDtl->name,'service_id'=>$serviceDtl->id, 'price'=>$serviceDtl->price, 'serviceDtl'=>$prop]);
-            
+            return response()->json([
+                'status' => 300,
+                'name' => $serviceDtl->name,
+                'service_id' => $serviceDtl->id, 
+                'price' => $serviceDtl->price, 
+                'serviceDtl' => $prop
+            ]);
         }
-
     }
 
     public function generateInvoiceNo()
