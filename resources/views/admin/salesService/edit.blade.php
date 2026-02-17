@@ -5,6 +5,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-lite.min.css" rel="stylesheet">
 <!-- Summernote JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.20/summernote-lite.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 @media print {
     /* 1. Hide everything except the printable area */
@@ -76,6 +77,9 @@
                             <button onclick="window.print();" class="btn btn-primary">
                                 <i class="fa fa-print"></i> Print Service Request
                             </button>
+                            <div id="download-png" class="btn btn-success">
+                                <i class="fa fa-image"></i> Save as PNG
+                            </div>
                         </div>
                     </div>
 
@@ -627,12 +631,50 @@
 
 @section('script')
 
-
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.min.js"></script> --}}
 
 <script>
     $(document).ready(function() {
         $('.select2').select2();
     });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const downloadBtn = document.getElementById('download-png');
+    
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', function() {
+            const element = document.getElementById('printableArea');
+            
+            // 1. Hide the "Print" button from the final image
+            const noPrintElements = element.querySelectorAll('.no-print');
+            noPrintElements.forEach(el => el.style.visibility = 'hidden');
+
+            // 2. Run html2canvas
+            html2canvas(element, {
+                allowTaint: true,
+                useCORS: true,
+                logging: true, // Check your browser console (F12) for errors
+                scale: 2,      // Better quality
+                backgroundColor: "#ffffff"
+            }).then(canvas => {
+                // Restore the hidden buttons
+                noPrintElements.forEach(el => el.style.visibility = 'visible');
+
+                // 3. Convert to image and download
+                const image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+                const link = document.createElement('a');
+                link.download = 'Service-Request.png';
+                link.href = image;
+                link.click();
+            }).catch(err => {
+                console.error("Snapshot failed:", err);
+                alert("Could not generate image. Check console for details.");
+            });
+        });
+    }
+});
 </script>
 
 <script>
@@ -662,6 +704,7 @@
 </script>
 
 <script>
+
 
 
     function calculation() {
