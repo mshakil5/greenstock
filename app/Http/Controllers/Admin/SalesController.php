@@ -1390,6 +1390,10 @@ class SalesController extends Controller
 
     public function serviceSalesUpdate(Request $request)
     {
+
+    
+            $this->updateServiceRequest($request);
+
         // 1. Validation
         $validator = Validator::make($request->all(), [
             'service_id' => 'required_without:approduct_id|array',
@@ -1451,6 +1455,7 @@ class SalesController extends Controller
             'customer_name'    => $request->customer_name,
             'customer_phone'   => $request->customer_phone,
             'address'          => $request->address,
+            'remark'          => $request->remark,
             'warranty'         => $request->warranty,
             'bill_no'          => $request->bill_no,
             'product_model'    => $request->product_model,

@@ -106,6 +106,12 @@
                                 <input type="file" class="form-control" id="document" name="document">
                             </div>
 
+                            
+                            <div class="form-group col-md-12">
+                                <label for="remark">Remarks</label>
+                                <textarea class="form-control" id="remark" name="remark" rows="3"></textarea>
+                            </div>
+
                         </div>
 
                         <div class="form-group row">

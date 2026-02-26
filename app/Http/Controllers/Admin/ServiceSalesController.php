@@ -183,6 +183,7 @@ class ServiceSalesController extends Controller
                 $service->product_model = $request->product_model;
                 $service->product_serial = $request->product_serial;
                 $service->product_capacity = $request->product_capacity;
+                $service->remark = $request->remark;
                 $service->inputer = Auth::user()->id;
                 $service->branch_id = Auth::user()->branch_id;
                 $service->document = $imagePath;

@@ -138,13 +138,13 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <label style="font-size: 13px;">Phone Number</label>
                                             <input type="text" class="form-control" name="customer_phone" value="{{ $data->customer_phone }}">
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <label style="font-size: 13px;">Warranty Status</label>
                                             <select name="warranty" id="warranty" class="form-control">
@@ -203,6 +203,14 @@
                                             <input type="text" class="form-control input-sm" name="product_capacity" value="{{$data->product_capacity}}">
                                         </div>
                                     </div>
+
+                                    
+                                    <div class="form-group">
+                                        <label style="font-size: 13px;">Remarks</label>
+                                        <textarea class="form-control" name="remark" rows="3" style="resize: vertical;">{{ $data->remark }}</textarea>
+                                    </div>
+
+
                                 </div>
                             </div>
                         </div>
