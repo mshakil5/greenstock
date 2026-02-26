@@ -1392,7 +1392,7 @@ class SalesController extends Controller
     {
 
     
-            $this->updateServiceRequest($request);
+        $this->updateServiceRequest2($request);
 
         // 1. Validation
         $validator = Validator::make($request->all(), [
@@ -1447,6 +1447,22 @@ class SalesController extends Controller
     }
 
     // --- Private Helper Methods ---
+
+    private function updateServiceRequest2(Request $request)
+    {
+        $serviceRequest = ServiceRequest::findOrFail($request->serviceRequestID);
+        $serviceRequest->update([
+            'customer_name'    => $request->customer_name,
+            'customer_phone'   => $request->customer_phone,
+            'address'          => $request->address,
+            'remark'          => $request->remark,
+            'warranty'         => $request->warranty,
+            'bill_no'          => $request->bill_no,
+            'product_model'    => $request->product_model,
+            'product_serial'   => $request->product_serial,
+            'product_capacity' => $request->product_capacity,
+        ]);
+    }
 
     private function updateServiceRequest(Request $request)
     {
