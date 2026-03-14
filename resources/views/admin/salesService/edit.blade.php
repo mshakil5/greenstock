@@ -67,6 +67,7 @@
         <form id="serviceRequestForm">
 
             <div class="col-md-9">
+
                 <div class="box box-primary box-solid" id="printableArea" style="border-radius: 4px; box-shadow: 0 2px 10px rgba(0,0,0,.1);">
                     <div class="box-header with-border" style="padding: 12px 15px; display: flex; justify-content: space-between; align-items: center;">
                         <h3 class="box-title" style="font-weight: 600; font-size: 18px; margin: 0;">
@@ -157,10 +158,6 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <label style="font-size: 13px;">Address</label>
-                                    <textarea class="form-control" name="address" rows="3" style="resize: vertical;">{{ $data->address }}</textarea>
-                                </div>
                             </div>
 
                             <div class="col-md-6">
@@ -203,16 +200,25 @@
                                             <input type="text" class="form-control input-sm" name="product_capacity" value="{{$data->product_capacity}}">
                                         </div>
                                     </div>
+                                </div>
+                            </div>
 
-                                    
-                                    <div class="form-group">
+
+                            <div class="col-md-12">
+
+                                
+                                <div class="form-group">
+                                    <label style="font-size: 13px;">Address</label>
+                                    <textarea class="form-control" name="address" rows="3" style="resize: vertical;">{{ $data->address }}</textarea>
+                                </div>
+
+                                <div class="form-group">
                                         <label style="font-size: 13px;">Remarks</label>
                                         <textarea class="form-control" name="remark" rows="3" style="resize: vertical;">{{ $data->remark }}</textarea>
                                     </div>
-
-
-                                </div>
                             </div>
+
+
                         </div>
 
                         <div class="row" style="margin-top: 20px; padding-top: 20px; border-top: 1px dashed #ddd;">
@@ -655,30 +661,52 @@ document.addEventListener('DOMContentLoaded', function() {
         downloadBtn.addEventListener('click', function() {
             const element = document.getElementById('printableArea');
             
-            // 1. Hide the "Print" button from the final image
+            // 1. Select the Remarks and Address textareas
+            const textareas = element.querySelectorAll('textarea');
+            const originalStyles = [];
+
+            // 2. Expand textareas so all content is visible
+            textareas.forEach((el, index) => {
+                // Save original style to restore later
+                originalStyles[index] = {
+                    height: el.style.height,
+                    overflow: el.style.overflow
+                };
+                // Set height to scrollHeight (the full height of the text)
+                el.style.height = el.scrollHeight + 'px';
+                el.style.overflow = 'hidden';
+            });
+
+            // Hide the "Print" buttons
             const noPrintElements = element.querySelectorAll('.no-print');
             noPrintElements.forEach(el => el.style.visibility = 'hidden');
 
-            // 2. Run html2canvas
+            // 3. Run html2canvas
             html2canvas(element, {
                 allowTaint: true,
                 useCORS: true,
-                logging: true, // Check your browser console (F12) for errors
-                scale: 2,      // Better quality
+                logging: false, 
+                scale: 2,      
                 backgroundColor: "#ffffff"
             }).then(canvas => {
-                // Restore the hidden buttons
+                // 4. Restore original textarea heights
+                textareas.forEach((el, index) => {
+                    el.style.height = originalStyles[index].height;
+                    el.style.overflow = originalStyles[index].overflow;
+                });
+
+                // Restore hidden buttons
                 noPrintElements.forEach(el => el.style.visibility = 'visible');
 
-                // 3. Convert to image and download
-                const image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+                // 5. Convert to image and download
+                const image = canvas.toDataURL("image/png");
                 const link = document.createElement('a');
                 link.download = 'Service-Request.png';
                 link.href = image;
                 link.click();
             }).catch(err => {
                 console.error("Snapshot failed:", err);
-                alert("Could not generate image. Check console for details.");
+                alert("Could not generate image.");
             });
         });
     }
